@@ -279,6 +279,14 @@ is notified (the notification never contains the details) and told to
 change the password and move the bound email at once, because the seller
 still knows the password.
 
+## Plans and free trial (ticket 22)
+A Plans page shows Monthly, Bi-annual and Annual plans with prices "to be
+announced" and "Coming soon" buttons, what's included today, and perks
+planned for paid plans (clearly marked planned). Every account gets a
+14-day free trial counted from sign-up, shown in the top bar and on your
+profile. Nothing is charged and nothing is locked: after the trial,
+everything stays free during beta.
+
 ## Stretch: listing photos (ticket 08)
 Only after everything above works live. The seller may add up to 4
 photos of the listed account to their Deal Room, stored in a private

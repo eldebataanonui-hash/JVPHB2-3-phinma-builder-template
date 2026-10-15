@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   BookOpen,
+  Crown,
   Home,
   KeyRound,
   MessageCircle,
@@ -24,11 +25,13 @@ const LOGGED_IN = [
   { href: "/messages", label: "Messages", icon: MessageCircle },
   { href: "/traders", label: "Find traders", icon: Search },
   { href: "/rules", label: "Trading Rules", icon: BookOpen },
+  { href: "/pricing", label: "Plans", icon: Crown },
 ];
 
 const LOGGED_OUT = [
   { href: "/", label: "Home", icon: Home },
   { href: "/rules", label: "Trading Rules", icon: BookOpen },
+  { href: "/pricing", label: "Plans", icon: Crown },
 ];
 
 function isActive(pathname: string, href: string, myId?: string) {
@@ -97,7 +100,7 @@ export function MobileNav({ loggedIn, myId }: { loggedIn: boolean; myId?: string
   // and in every Messages conversation; the Rules are on Home and in
   // every Deal Room.
   const items = (loggedIn ? LOGGED_IN : LOGGED_OUT).filter(
-    (item) => !loggedIn || (item.href !== "/rules" && item.href !== "/deals/join"),
+    (item) => !loggedIn || !["/rules", "/deals/join", "/pricing"].includes(item.href),
   );
 
   return (

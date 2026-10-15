@@ -16,6 +16,7 @@ import { createClient } from "@/lib/supabase/server";
 import { startIdVerification, updateBio, updateSocials } from "@/app/profile/actions";
 import { BadgeCheck } from "lucide-react";
 import { SOCIALS } from "@/lib/socials";
+import { trialInfo } from "@/lib/plans";
 import { AtSign, ExternalLink } from "lucide-react";
 import { STEP_LABELS, formatPesos } from "@/lib/deals";
 
@@ -146,6 +147,32 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
                 Save description
               </Button>
             </form>
+          </CardContent>
+        </Card>
+      )}
+
+      {isMe && (
+        <Card id="plan">
+          <CardHeader className="flex flex-row items-center justify-between gap-3">
+            <CardTitle>Your plan</CardTitle>
+            <Link href="/pricing" className={buttonVariants({ variant: "outline", size: "sm" })}>
+              See plans
+            </Link>
+          </CardHeader>
+          <CardContent>
+            {trialInfo(profile.created_at).active ? (
+              <p className="text-sm">
+                <span className="font-semibold">Free trial</span>:{" "}
+                {trialInfo(profile.created_at).daysLeft} day
+                {trialInfo(profile.created_at).daysLeft === 1 ? "" : "s"} left. Full
+                access to every feature.
+              </p>
+            ) : (
+              <p className="text-sm">
+                <span className="font-semibold">Beta access</span>: your free trial
+                has ended, but everything stays free while AQTech GHub is in beta.
+              </p>
+            )}
           </CardContent>
         </Card>
       )}

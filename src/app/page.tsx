@@ -60,7 +60,7 @@ export default async function Home() {
           ) : (
             <>
               <Link href="/signup" className={buttonVariants()}>
-                Sign up free
+                Start your 14-day free trial
               </Link>
               <Link href="/login" className={buttonVariants({ variant: "outline" })}>
                 Log in
@@ -88,6 +88,9 @@ export default async function Home() {
         </Link>
         <Link href="/about" className="text-primary underline">
           About us
+        </Link>
+        <Link href="/pricing" className="text-primary underline">
+          Plans and free trial
         </Link>
       </div>
     </main>

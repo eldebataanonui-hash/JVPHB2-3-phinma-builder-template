@@ -71,3 +71,7 @@ stays small enough to actually ship by Session 3.
   personal information under the Data Privacy Act. Pitch it as the next
   step. A free, in-stack alternative is Supabase's built-in two-factor
   login (authenticator app codes).
+- **Real subscriptions and billing** (Monthly, Bi-annual, Annual). Needs
+  a payment provider such as PayMongo or Stripe, a server-side secret
+  key, decided prices, terms of service and a refund policy. Today the
+  Plans page is display-only and the trial locks nothing.

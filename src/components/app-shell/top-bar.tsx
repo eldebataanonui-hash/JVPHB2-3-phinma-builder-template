@@ -5,6 +5,7 @@ import { Avatar } from "@/components/avatar";
 import { BackButton } from "@/components/back-button";
 import { Logo } from "@/components/logo";
 import { NotificationBell } from "@/components/notification-bell";
+import { trialInfo } from "@/lib/plans";
 import { createClient } from "@/lib/supabase/server";
 import { logOut } from "@/app/auth/actions";
 
@@ -17,7 +18,7 @@ export async function TopBar() {
   } = await supabase.auth.getUser();
 
   const { data: me } = user
-    ? await supabase.from("profiles").select("display_name, avatar_path").eq("id", user.id).maybeSingle()
+    ? await supabase.from("profiles").select("display_name, avatar_path, created_at").eq("id", user.id).maybeSingle()
     : { data: null };
 
   // Unread notifications for the bell. RLS only counts your own.
@@ -59,6 +60,14 @@ export async function TopBar() {
         <div className="flex shrink-0 items-center gap-2">
           {user ? (
             <>
+              {me && trialInfo(me.created_at).active && (
+                <Link
+                  href="/pricing"
+                  className="hidden items-center rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary hover:bg-primary/20 md:inline-flex"
+                >
+                  Free trial · {trialInfo(me.created_at).daysLeft}d left
+                </Link>
+              )}
               <NotificationBell initialCount={unread ?? 0} />
               <Link href="/profile" className="flex items-center gap-2" aria-label="My profile">
                 <Avatar name={me?.display_name ?? "?"} path={me?.avatar_path} size={32} />
