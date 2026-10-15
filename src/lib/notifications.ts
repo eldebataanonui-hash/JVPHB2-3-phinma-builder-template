@@ -9,6 +9,8 @@ const TEXT: Record<string, (who: string, deal: string, method: string | null) =>
   first_half_sent: (who, deal, method) =>
     `${who} sent the first half for "${deal}". Check ${method ?? "your app"}.`,
   first_half_received: (who, deal) => `${who} confirmed the first half arrived for "${deal}". Lock-In is next.`,
+  credentials_sent: (who, deal) =>
+    `🔒 ${who} sent the account login details for "${deal}" (confidential). Open the Deal Room to view them, then change the password right away.`,
   lock_in_done: (who, deal) => `${who} finished the Lock-In steps for "${deal}". Check you have full control.`,
   full_control_confirmed: (who, deal) => `${who} confirmed full control of "${deal}". The second half is next.`,
   second_half_sent: (who, deal, method) =>

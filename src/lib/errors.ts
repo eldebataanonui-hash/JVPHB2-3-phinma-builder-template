@@ -22,6 +22,8 @@ const ERROR_TEXT: Record<string, string> = {
   not_your_turn: "It's not your turn.",
   step_already_done: "This step was already done. Refresh the page.",
   choose_payment_first: "Choose how you'll pay first.",
+  credentials_first: "Send the account login details to the buyer first.",
+  credentials_invalid: "Please fill in the login and password (up to 200 characters each, note up to 500).",
   // Concerns and chat
   concern_length: "Please describe what happened in 10 to 2000 characters.",
   chat_length: "Messages must be 1 to 1000 characters.",

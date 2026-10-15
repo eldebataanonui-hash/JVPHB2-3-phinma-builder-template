@@ -53,7 +53,9 @@ export async function advanceDeal(formData: FormData) {
         ? "not_your_turn"
         : error.message.includes("payment method")
           ? "choose_payment_first"
-          : "failed";
+          : error.message.includes("login details")
+            ? "credentials_first"
+            : "failed";
     redirect(dealUrl(dealId, `?error=${code}`));
   }
   redirect(dealUrl(dealId));
@@ -110,6 +112,42 @@ export async function reportConcern(formData: FormData) {
 
   if (error) redirect(dealUrl(dealId, "?concern_error=failed", "#concern"));
   redirect(dealUrl(dealId, "", "#concern"));
+}
+
+// Seller sends the account login details. The database encrypts them
+// (Supabase Vault) and checks it's the seller, at the handover step.
+export async function submitCredentials(formData: FormData) {
+  const dealId = String(formData.get("deal_id") ?? "");
+  const login = String(formData.get("login") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+  const note = String(formData.get("note") ?? "").trim();
+
+  if (!login || !password || login.length > 200 || password.length > 200 || note.length > 500) {
+    redirect(dealUrl(dealId, "?cred_error=credentials_invalid"));
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("submit_credentials", {
+    p_deal_id: dealId,
+    p_login: login,
+    p_password: password,
+    p_note: note,
+  });
+
+  if (error) redirect(dealUrl(dealId, "?cred_error=failed"));
+  redirect(dealUrl(dealId));
+}
+
+// Buyer reveals the login details. Returned only to this request, never
+// put in the page by default.
+export async function revealCredentials(
+  dealId: string,
+): Promise<{ ok: true; creds: { login: string; password: string; note: string } } | { ok: false; message: string }> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("read_credentials", { p_deal_id: dealId });
+  const row = data?.[0];
+  if (error || !row) return { ok: false, message: "The login details aren't available right now." };
+  return { ok: true, creds: { login: row.login, password: row.password, note: row.note ?? "" } };
 }
 
 export async function deleteDealPhoto(formData: FormData) {

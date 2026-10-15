@@ -42,7 +42,7 @@ export default async function MessagesPage() {
           <CardTitle>Messages</CardTitle>
           <CardDescription>
             Ask questions before you trade. Deal codes (JOIN-…) are fine to
-            share here. Never pay here, and never share a password or a
+            share here. Never pay here, and never share any password or a
             security code: start a Deal Room for any trade.
           </CardDescription>
         </CardHeader>

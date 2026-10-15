@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { CopyField } from "@/components/copy-field";
+import { CredentialsForm } from "@/components/deal-room/credentials-form";
+import { CredentialsReveal } from "@/components/deal-room/credentials-reveal";
 import { DealPhotos } from "@/components/deal-room/deal-photos";
 import { DealPreview } from "@/components/deal-room/deal-preview";
 import { PaymentPicker } from "@/components/deal-room/payment-picker";
@@ -35,6 +37,7 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   const params = await props.searchParams;
   const error = errorText(params.error);
   const concern_error = errorText(params.concern_error);
+  const cred_error = errorText(params.cred_error);
   const chat_error = errorText(params.chat_error);
   const supabase = await createClient();
 
@@ -92,6 +95,10 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   const { first, second } = splitPrice(deal.price);
   const action = STEP_ACTIONS[deal.step];
   const myTurn = Boolean(action) && (action.actor === "seller") === isSeller;
+  // Login details are sent at the handover step and readable by the
+  // buyer until the deal completes (then they're deleted).
+  const credentialsSent = (events ?? []).some((e) => e.action === "credentials_sent");
+  const credentialSteps = ["awaiting_lock_in", "lock_in_done", "awaiting_second_payment", "second_payment_sent"];
   const otherName = nameOf(isSeller ? deal.buyer_id : deal.seller_id);
   const stageIndex = STAGES.findIndex((s) => s.steps.includes(deal.step));
 
@@ -203,6 +210,18 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
               {!isSeller && deal.step === "awaiting_first_payment" && (
                 <PaymentPicker dealId={deal.id} current={deal.payment_method} />
               )}
+              {isSeller && deal.step === "awaiting_lock_in" && (
+                <CredentialsForm dealId={deal.id} sent={credentialsSent} error={cred_error} />
+              )}
+              {!isSeller && credentialSteps.includes(deal.step) && (
+                credentialsSent ? (
+                  <CredentialsReveal dealId={deal.id} />
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    Waiting for the seller to send the account login details.
+                  </p>
+                )
+              )}
               {error && <p className="text-sm text-destructive">{error}</p>}
               {myTurn && (
                 <form action={advanceDeal}>
@@ -212,7 +231,10 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
                       half. The database enforces this too. */}
                   <Button
                     type="submit"
-                    disabled={deal.step === "awaiting_first_payment" && !deal.payment_method}
+                    disabled={
+                      (deal.step === "awaiting_first_payment" && !deal.payment_method) ||
+                      (deal.step === "awaiting_lock_in" && !credentialsSent)
+                    }
                   >
                     {action.button}
                   </Button>
@@ -239,6 +261,7 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
               buyerName={nameOf(deal.buyer_id)}
               completedAt={deal.completed_at}
               events={events ?? []}
+              credentialsSent={credentialsSent}
               names={Object.fromEntries((people ?? []).map((p) => [p.id, p.display_name]))}
             />
           )}
@@ -275,9 +298,10 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
                 <input type="hidden" name="deal_id" value={deal.id} />
                 <Textarea name="body" required maxLength={1000} rows={2} placeholder="Message" aria-label="Message" />
                 <p className="text-xs text-destructive">
-                  Never send your password or a GCash/bank code. The only
-                  security code ever shared is the Moonton binding code, at the
-                  Lock-In step.
+                  Never send a password or a GCash/bank code in chat. The sold
+                  account&apos;s login goes in the encrypted login box at the
+                  handover step. The only security code shared in chat is the
+                  Moonton binding code, at the Lock-In step.
                 </p>
                 {chat_error && <p className="text-sm text-destructive">{chat_error}</p>}
                 <div className="flex gap-2">

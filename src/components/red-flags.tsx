@@ -6,7 +6,8 @@ const RED_FLAGS = [
   "\"Verification fees\" are a scam. Honest sellers don't charge them.",
   "\"No middleman needed\" is a scam line. Refusing a Deal Room is a warning sign.",
   "A price far below similar listings is a warning sign.",
-  "Never share your password or a GCash/bank code. AQTech GHub and honest traders never ask for them.",
+  "Never share your own passwords or a GCash/bank code. AQTech GHub and honest traders never ask for them.",
+  "A sold account's login is only ever sent through the encrypted login box in the Deal Room, never in chat or Messages. Change that password straight away.",
   "Deal codes (JOIN-…) are safe to share. The only security code ever shared is the Moonton binding code, inside the Deal Room chat, at the Lock-In step.",
   "Screenshots and videos can be faked. Only trust the live ownership code.",
 ];

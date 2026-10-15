@@ -269,6 +269,16 @@ bar shows how many are unread and checks every 15 seconds; when
 something new arrives, the page you're on refreshes itself. Opening a
 deal or conversation marks its notifications read.
 
+## Account login details (ticket 20)
+The team chose to let sellers send the sold account's login and password
+in the Deal Room. At the handover step (after the first half arrives) the
+seller fills in an encrypted login box; it's stored in Supabase Vault,
+only the buyer can reveal it, and it's deleted when the deal completes.
+The seller can't finish the handover step without sending it. The buyer
+is notified (the notification never contains the details) and told to
+change the password and move the bound email at once, because the seller
+still knows the password.
+
 ## Stretch: listing photos (ticket 08)
 Only after everything above works live. The seller may add up to 4
 photos of the listed account to their Deal Room, stored in a private

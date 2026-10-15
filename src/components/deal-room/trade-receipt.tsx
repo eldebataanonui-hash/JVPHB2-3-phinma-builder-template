@@ -20,6 +20,7 @@ export function TradeReceipt({
   completedAt,
   events,
   names,
+  credentialsSent,
 }: {
   joinCode: string;
   title: string;
@@ -32,6 +33,7 @@ export function TradeReceipt({
   completedAt: string | null;
   events: ReceiptEvent[];
   names: Record<string, string>;
+  credentialsSent: boolean;
 }) {
   const rows = [
     { label: "Receipt no.", value: joinCode },
@@ -42,6 +44,9 @@ export function TradeReceipt({
     { label: "Seller", value: sellerName },
     { label: "Buyer", value: buyerName },
     { label: "Completed", value: completedAt ? formatManilaTime(completedAt) : "—" },
+    ...(credentialsSent
+      ? [{ label: "Login details", value: "Sent encrypted, deleted when the deal completed" }]
+      : []),
   ];
 
   return (

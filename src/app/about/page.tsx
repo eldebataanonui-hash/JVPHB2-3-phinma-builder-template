@@ -67,7 +67,7 @@ export default function AboutPage() {
         <h2 className="text-2xl font-bold">What we don&apos;t do</h2>
         <ul className="flex list-disc flex-col gap-1 pl-5 text-sm text-muted-foreground">
           <li>We never hold or move your money, and we can&apos;t reverse payments.</li>
-          <li>We never ask for your password, or for a GCash or bank code.</li>
+          <li>We never ask for your own passwords, or for a GCash or bank code. A sold account&apos;s login is encrypted, shown only to the buyer, and deleted when the deal completes.</li>
           <li>We can&apos;t stop every scam, but we make them much harder and leave a record when they happen.</li>
         </ul>
       </section>
