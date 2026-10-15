@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isAllowedDisplayName } from "@/lib/display-names";
 import { authErrorCode } from "@/lib/errors";
 
 // Server actions: these run on the server when a form is submitted.
@@ -17,6 +18,7 @@ export async function signUp(formData: FormData) {
   if (displayName.length < 1 || displayName.length > 40) {
     redirect("/signup?error=name_length");
   }
+  if (!isAllowedDisplayName(displayName)) redirect("/signup?error=name_reserved");
 
   // Where the confirmation email's link should send the trader back to:
   // this same site, whether that's localhost or the live URL.

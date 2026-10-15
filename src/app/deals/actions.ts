@@ -20,6 +20,7 @@ export async function createDeal(formData: FormData) {
   if (!Number.isInteger(price) || price < 1 || price > 10_000_000) {
     redirect("/deals/new?error=price_invalid");
   }
+  if (containsLink(`${title} ${description}`)) redirect("/deals/new?error=deal_link");
 
   const supabase = await createClient();
   // Only title, description and price are sent. The database fills in

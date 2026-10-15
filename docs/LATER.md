@@ -43,3 +43,8 @@ stays small enough to actually ship by Session 3.
 - **Block or mute a trader** in direct messages.
 - **Report a direct message** to the team (concerns are per Deal Room
   for now).
+- **Seller can reset a stalled deal.** Anyone with the link can take the
+  buyer slot; if they stall, the seller can't remove them and the deal
+  counts as abandoned after 3 days. Let the seller reset a deal before
+  the first payment, and count "abandoned" only against whoever's turn
+  it was. (Found in code review.)

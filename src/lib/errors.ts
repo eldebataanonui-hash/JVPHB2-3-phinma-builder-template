@@ -5,6 +5,8 @@
 const ERROR_TEXT: Record<string, string> = {
   // Sign up and log in
   name_length: "Display name must be 1 to 40 characters.",
+  name_reserved:
+    "Please choose another display name. Names can't include words like \"admin\", \"support\" or \"AQTech\", and need at least one letter or number.",
   invalid_credentials: "Wrong email or password.",
   email_not_confirmed: "Please confirm your email first. Check your inbox for the link.",
   user_already_exists: "An account with this email already exists. Try logging in.",
@@ -15,6 +17,7 @@ const ERROR_TEXT: Record<string, string> = {
   // Deals
   title_length: "Title must be 1 to 80 characters.",
   price_invalid: "Price must be a whole number of pesos.",
+  deal_link: "Links aren't allowed in the title or description.",
   join_failed: "This deal can't be joined. It may already have a buyer, or it's your own deal.",
   not_your_turn: "It's not your turn.",
   step_already_done: "This step was already done. Refresh the page.",
