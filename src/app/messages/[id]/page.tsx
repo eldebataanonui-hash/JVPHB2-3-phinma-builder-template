@@ -29,6 +29,14 @@ export default async function ConversationPage(props: PageProps<"/messages/[id]"
     .maybeSingle();
   if (!other) notFound();
 
+  // Opening the conversation counts as reading its notifications.
+  await supabase
+    .from("notifications")
+    .update({ read_at: new Date().toISOString() })
+    .eq("kind", "direct_message")
+    .eq("actor_id", other.id)
+    .is("read_at", null);
+
   // RLS only returns messages you sent or received; narrow to this pair.
   // other.id came from the database, so it's a real id, not raw input.
   const { data: messages } = await supabase

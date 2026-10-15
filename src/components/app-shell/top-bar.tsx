@@ -4,6 +4,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Avatar } from "@/components/avatar";
 import { BackButton } from "@/components/back-button";
 import { Logo } from "@/components/logo";
+import { NotificationBell } from "@/components/notification-bell";
 import { createClient } from "@/lib/supabase/server";
 import { logOut } from "@/app/auth/actions";
 
@@ -18,6 +19,14 @@ export async function TopBar() {
   const { data: me } = user
     ? await supabase.from("profiles").select("display_name, avatar_path").eq("id", user.id).maybeSingle()
     : { data: null };
+
+  // Unread notifications for the bell. RLS only counts your own.
+  const { count: unread } = user
+    ? await supabase
+        .from("notifications")
+        .select("id", { count: "exact", head: true })
+        .is("read_at", null)
+    : { count: 0 };
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
@@ -50,6 +59,7 @@ export async function TopBar() {
         <div className="flex shrink-0 items-center gap-2">
           {user ? (
             <>
+              <NotificationBell initialCount={unread ?? 0} />
               <Link href="/profile" className="flex items-center gap-2" aria-label="My profile">
                 <Avatar name={me?.display_name ?? "?"} path={me?.avatar_path} size={32} />
                 <span className="hidden max-w-[10rem] truncate text-sm font-medium text-muted-foreground hover:text-foreground lg:inline">

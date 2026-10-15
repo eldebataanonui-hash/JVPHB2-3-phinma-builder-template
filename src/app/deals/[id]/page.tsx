@@ -54,6 +54,13 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
 
   if (!deal) return <DealPreview id={id} error={error} />;
 
+  // Opening the Deal Room counts as reading its notifications.
+  await supabase
+    .from("notifications")
+    .update({ read_at: new Date().toISOString() })
+    .eq("deal_id", deal.id)
+    .is("read_at", null);
+
   const isSeller = user.id === deal.seller_id;
   const ids = [deal.seller_id, deal.buyer_id].filter((x): x is string => Boolean(x));
   const { data: people } = await supabase
@@ -214,7 +221,8 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
               )}
               {!myTurn && deal.step !== "completed" && (
                 <p className="text-xs text-muted-foreground">
-                  Refresh this page to see when {otherName} is done.
+                  This page updates by itself when {otherName} is done, and
+                  you&apos;ll get a notification.
                 </p>
               )}
             </CardContent>

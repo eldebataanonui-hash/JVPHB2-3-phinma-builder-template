@@ -47,3 +47,6 @@ stays small enough to actually ship by Session 3.
   counts as abandoned after 3 days. Let the seller reset a deal before
   the first payment, and count "abandoned" only against whoever's turn
   it was. (Found in code review.)
+- **Phone push notifications or email alerts** for deal steps and
+  messages. In-app notifications (the bell) work now; push needs a
+  service and email hits the free sending limit.
