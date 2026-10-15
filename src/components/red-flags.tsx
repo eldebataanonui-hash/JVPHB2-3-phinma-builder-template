@@ -6,7 +6,8 @@ const RED_FLAGS = [
   "\"Verification fees\" are a scam. Honest sellers don't charge them.",
   "\"No middleman needed\" is a scam line. Refusing a Deal Room is a warning sign.",
   "A price far below similar listings is a warning sign.",
-  "AQTech GHub and honest traders never ask for your password or one-time code.",
+  "Never share your password or a GCash/bank code. AQTech GHub and honest traders never ask for them.",
+  "The only code ever shared is the Moonton binding code, inside the Deal Room, at the Lock-In step.",
   "Screenshots and videos can be faked. Only trust the live ownership code.",
 ];
 

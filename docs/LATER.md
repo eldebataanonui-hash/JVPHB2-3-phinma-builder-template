@@ -19,7 +19,6 @@ stays small enough to actually ship by Session 3.
 - **Phone or SMS verification.** Needs a paid text-messaging service.
 - **Marketplace or listings search.** Deals still start on Facebook for
   now.
-- **In-site chat.**
 - **Star ratings and written reviews.** The MVP only shows a
   completed-deals count.
 - **Cooling-off period and dispute handling** after a deal is complete.

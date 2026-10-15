@@ -176,6 +176,14 @@ website can't skip them.
   deal with a buyer that was not completed within 3 days. Deals still in
   progress are not counted either way.
 
+## Deal Room chat (ticket 09)
+The seller and buyer can message each other inside the Deal Room once a
+buyer has joined. Messages can't be edited or deleted, so they stay on
+the record for the team to review with a concern. Links are blocked.
+Refresh to see new messages. The only code ever shared is the Moonton
+binding code, in the chat, at the Lock-In step; never a password or a
+GCash/bank code.
+
 ## Stretch: listing photos (ticket 08)
 Only after everything above works live. The seller may add up to 4
 photos of the listed account to their Deal Room, stored in a private
@@ -212,7 +220,6 @@ On the live URL:
 - Holding money for users (escrow), or payment processing of any kind
 - Phone or SMS verification
 - A marketplace or listings search
-- In-site chat
 - Star ratings and written reviews
 - A cooling-off period after completion
 - Blocking links inside the Deal Room

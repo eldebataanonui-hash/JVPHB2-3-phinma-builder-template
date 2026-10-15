@@ -2,6 +2,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { RefreshButton } from "@/components/refresh-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,11 +21,11 @@ import {
   formatPesos,
   splitPrice,
 } from "@/lib/deals";
-import { advanceDeal, joinDeal, reportConcern } from "@/app/deals/actions";
+import { advanceDeal, joinDeal, reportConcern, sendMessage } from "@/app/deals/actions";
 
 export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   const { id } = await props.params;
-  const { error, concern_error } = await props.searchParams;
+  const { error, concern_error, chat_error } = await props.searchParams;
   const supabase = await createClient();
 
   const {
@@ -54,6 +55,13 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   const { data: events } = await supabase
     .from("deal_events")
     .select("id, actor_id, action, created_at")
+    .eq("deal_id", deal.id)
+    .order("id");
+
+  // The Deal Room chat. RLS only shows it to the seller and buyer.
+  const { data: messages } = await supabase
+    .from("messages")
+    .select("id, sender_id, body, created_at")
     .eq("deal_id", deal.id)
     .order("id");
 
@@ -177,6 +185,50 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
                   Refresh this page to see when {otherName} is done.
                 </p>
               )}
+            </CardContent>
+          </Card>
+
+          <Card id="chat">
+            <CardHeader>
+              <CardTitle>Chat</CardTitle>
+              <CardDescription>
+                Messages stay on the record and can&apos;t be deleted. Links
+                are blocked. Refresh to see new messages.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              {messages && messages.length > 0 ? (
+                <ul className="flex flex-col gap-2 text-sm">
+                  {messages.map((m) => (
+                    <li
+                      key={m.id}
+                      className={`max-w-[85%] rounded-[var(--radius)] border border-border p-2 ${
+                        m.sender_id === user.id ? "self-end bg-secondary" : "self-start"
+                      }`}
+                    >
+                      <p className="text-xs text-muted-foreground">
+                        {nameOf(m.sender_id)} · {formatManilaTime(m.created_at)}
+                      </p>
+                      <p className="whitespace-pre-wrap break-words">{m.body}</p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-muted-foreground">No messages yet.</p>
+              )}
+              <form action={sendMessage} className="flex flex-col gap-2">
+                <input type="hidden" name="deal_id" value={deal.id} />
+                <Textarea name="body" required maxLength={1000} rows={2} placeholder="Message" aria-label="Message" />
+                <p className="text-xs text-destructive">
+                  Never send your password or a GCash/bank code. The only code
+                  ever shared is the Moonton binding code, at the Lock-In step.
+                </p>
+                {chat_error && <p className="text-sm text-destructive">{chat_error}</p>}
+                <div className="flex gap-2">
+                  <Button type="submit" className="w-fit">Send</Button>
+                  <RefreshButton />
+                </div>
+              </form>
             </CardContent>
           </Card>
 

@@ -56,7 +56,7 @@ export const EVENT_LABELS: Record<string, string> = {
 // Draft Lock-In Checklist from docs/SPEC.md. The team must check these
 // against the game's current settings; MLBB menus change between updates.
 export const LOCK_IN_SELLER = [
-  "Change the account's bound Moonton email to the buyer's email. The buyer confirms they received Moonton's verification code.",
+  "Change the account's bound Moonton email to the buyer's email. If Moonton sends the buyer a binding code, the buyer shares it in this Deal Room's chat. That is the only code ever shared.",
   "Remove every third-party login bound to you (Facebook, Google Play, TikTok, Apple, VK or others).",
 ];
 export const LOCK_IN_BUYER = [

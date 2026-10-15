@@ -43,6 +43,33 @@ export async function advanceDeal(formData: FormData) {
   redirect(`/deals/${dealId}`);
 }
 
+// Same rule as the database check in 010-create-messages.sql, so the
+// trader gets a friendly message instead of a database error.
+const LINK_PATTERN =
+  /(https?:\/\/|www\.|[a-z0-9-]+\.(com|net|org|ph|io|co|me|ly|gg|xyz|app|link|site|info|top|shop)\b)/i;
+
+export async function sendMessage(formData: FormData) {
+  const dealId = String(formData.get("deal_id") ?? "");
+  const body = String(formData.get("body") ?? "").trim();
+
+  let problem = "";
+  if (body.length < 1 || body.length > 1000) problem = "Messages must be 1 to 1000 characters.";
+  else if (LINK_PATTERN.test(body)) problem = "Links aren't allowed in chat. They're how phishing scams work.";
+
+  if (problem) {
+    redirect(`/deals/${dealId}?chat_error=${encodeURIComponent(problem)}#chat`);
+  }
+
+  const supabase = await createClient();
+  // RLS checks you're the seller or buyer, and that a buyer has joined.
+  const { error } = await supabase.from("messages").insert({ deal_id: dealId, body });
+
+  if (error) {
+    redirect(`/deals/${dealId}?chat_error=${encodeURIComponent(error.message)}#chat`);
+  }
+  redirect(`/deals/${dealId}#chat`);
+}
+
 export async function reportConcern(formData: FormData) {
   const dealId = String(formData.get("deal_id") ?? "");
   const message = String(formData.get("message") ?? "").trim();
