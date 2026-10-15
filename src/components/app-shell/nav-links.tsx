@@ -11,6 +11,7 @@ import {
   Search,
   UserRound,
 } from "lucide-react";
+import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 
 // Every function of the app, in one place. The sidebar (desktop) and
@@ -60,6 +61,30 @@ export function SideNav({ loggedIn }: { loggedIn: boolean }) {
         </Link>
       ))}
     </nav>
+  );
+}
+
+// "About us", pinned to the bottom-left corner of the sidebar.
+export function AboutLink() {
+  const pathname = usePathname();
+  const active = pathname === "/about";
+
+  return (
+    <Link
+      href="/about"
+      className={cn(
+        "flex items-center gap-3 rounded-[var(--radius)] border px-3 py-2 transition-colors",
+        active
+          ? "border-primary/40 bg-primary/15"
+          : "border-border hover:bg-secondary",
+      )}
+    >
+      <Logo size="sm" showName={false} />
+      <span className="flex flex-col leading-tight">
+        <span className="text-sm font-semibold">About us</span>
+        <span className="text-xs text-muted-foreground">Who we are and why</span>
+      </span>
+    </Link>
   );
 }
 

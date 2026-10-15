@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Gamepad2, LogOut, Search } from "lucide-react";
+import { LogOut, Search } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Avatar } from "@/components/avatar";
 import { BackButton } from "@/components/back-button";
+import { Logo } from "@/components/logo";
 import { createClient } from "@/lib/supabase/server";
 import { logOut } from "@/app/auth/actions";
 
@@ -23,13 +24,10 @@ export async function TopBar() {
       <div className="flex h-14 items-center gap-2 px-3 sm:gap-4 sm:px-4">
         <div className="flex shrink-0 items-center gap-1">
           <BackButton />
-          <Link href="/" className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Gamepad2 className="h-5 w-5" />
-            </span>
-            <span className="hidden font-[family-name:var(--font-display)] text-lg font-bold tracking-wide sm:inline">
-              AQTech <span className="text-primary">GHub</span>
-            </span>
+          <Link href="/" aria-label="AQTech GHub home">
+            {/* Badge only on phones, badge and name on bigger screens. */}
+            <Logo showName={false} className="sm:hidden" />
+            <Logo className="hidden sm:flex" />
           </Link>
         </div>
 

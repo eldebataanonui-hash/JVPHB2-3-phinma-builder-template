@@ -82,9 +82,14 @@ export default async function Home() {
 
       <RedFlags />
 
-      <Link href="/rules" className="text-sm text-primary underline">
-        Read the Trading Rules
-      </Link>
+      <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+        <Link href="/rules" className="text-primary underline">
+          Read the Trading Rules
+        </Link>
+        <Link href="/about" className="text-primary underline">
+          About us
+        </Link>
+      </div>
     </main>
   );
 }
