@@ -38,17 +38,29 @@ export async function signUp(formData: FormData) {
   redirect("/signup?sent=1");
 }
 
+// Only allow paths on this site, so a crafted login link can't send
+// people to another website after they log in. Instead of checking how
+// the text starts (tricks like "/\t/evil.com" slip past that), resolve
+// it the same way a browser would and keep it only if it stays here.
+function safeNextPath(raw: string): string {
+  if (!raw.startsWith("/")) return "/profile";
+  try {
+    const base = "https://this-site.invalid";
+    const url = new URL(raw, base);
+    if (url.origin !== base) return "/profile";
+    return url.pathname + url.search + url.hash;
+  } catch {
+    return "/profile";
+  }
+}
+
 export async function logIn(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
-  // Where to go after logging in, e.g. back to a Deal Room link. Only
-  // paths on this site are allowed, so a crafted link can't send people
-  // to another website.
-  const nextRaw = String(formData.get("next") ?? "");
-  const isLocalPath =
-    nextRaw.startsWith("/") && !nextRaw.startsWith("//") && !nextRaw.startsWith("/\\");
-  const next = isLocalPath ? nextRaw : "/profile";
+  // Where to go after logging in, e.g. back to a Deal Room link.
+  const next = safeNextPath(String(formData.get("next") ?? ""));
+  const isLocalPath = next !== "/profile";
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
