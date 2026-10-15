@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TraderRecord } from "@/components/trader-record";
 import { createClient } from "@/lib/supabase/server";
 import { STEP_LABELS, formatPesos } from "@/lib/deals";
-import { logOut } from "@/app/auth/actions";
 
 export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   const { id } = await props.params;
@@ -59,43 +58,68 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
       </Card>
 
       {isMe && (
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-3">
-            <CardTitle>My Deal Rooms</CardTitle>
-            <Link href="/deals/new" className={buttonVariants({ size: "sm" })}>
-              New Deal
-            </Link>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-2">
-            {!deals?.length && (
-              <p className="text-sm text-muted-foreground">No deals yet.</p>
-            )}
-            {deals?.map((deal) => (
-              <Link
-                key={deal.id}
-                href={`/deals/${deal.id}`}
-                className="flex flex-col gap-1 rounded-[var(--radius)] border border-border p-3 hover:bg-secondary"
-              >
-                <span className="flex justify-between gap-3 text-sm font-medium">
-                  <span>{deal.title}</span>
-                  <span>{formatPesos(deal.price)}</span>
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {deal.seller_id === user.id ? "Selling" : "Buying"} ·{" "}
-                  {STEP_LABELS[deal.step]}
-                </span>
+        <>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between gap-3">
+              <CardTitle>Selling</CardTitle>
+              <Link href="/deals/new" className={buttonVariants({ size: "sm" })}>
+                New Deal
               </Link>
-            ))}
-          </CardContent>
-        </Card>
-      )}
+            </CardHeader>
+            <CardContent>
+              <DealList
+                deals={deals?.filter((d) => d.seller_id === user.id)}
+                empty="You're not selling anything yet. Tap New Deal to start."
+              />
+            </CardContent>
+          </Card>
 
-      {isMe && (
-        <form action={logOut}>
-          <Button type="submit" variant="outline">Log out</Button>
-        </form>
+          <Card>
+            <CardHeader>
+              <CardTitle>Buying</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <DealList
+                deals={deals?.filter((d) => d.seller_id !== user.id)}
+                empty="You haven't joined any deals yet. Open a seller's Deal Room link to join."
+              />
+            </CardContent>
+          </Card>
+        </>
       )}
     </main>
+  );
+}
+
+function DealList({
+  deals,
+  empty,
+}: {
+  deals?: { id: string; title: string; price: number; step: string }[];
+  empty: string;
+}) {
+  if (!deals?.length) {
+    return <p className="text-sm text-muted-foreground">{empty}</p>;
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      {deals.map((deal) => (
+        <Link
+          key={deal.id}
+          href={`/deals/${deal.id}`}
+          className="flex flex-col gap-1 rounded-[var(--radius)] border border-border p-3 hover:bg-secondary"
+        >
+          <span className="flex justify-between gap-3 text-sm font-medium">
+            <span>{deal.title}</span>
+            <span>{formatPesos(deal.price)}</span>
+          </span>
+          <span className="text-xs text-muted-foreground">
+            {STEP_LABELS[deal.step]}
+          </span>
+        </Link>
+      ))}
+    </div>
   );
 }
 
