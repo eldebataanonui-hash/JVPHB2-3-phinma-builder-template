@@ -87,7 +87,7 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   const dealUrl = `${proto}://${h.get("host")}/deals/${deal.id}`;
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-12">
+    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
       <Card>
         <CardHeader>
           <CardDescription>Deal Room · {STEP_LABELS[deal.step]}</CardDescription>
@@ -322,7 +322,7 @@ async function DealPreview({ id, error }: { id: string; error: string | null }) 
   // Once a buyer joins, the deal is private: no title, price or seller.
   if (preview.has_buyer || !preview.title || !preview.seller_id) {
     return (
-      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-12">
+      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
         <Card>
           <CardHeader>
             <CardTitle>This deal already has a buyer</CardTitle>
@@ -336,7 +336,7 @@ async function DealPreview({ id, error }: { id: string; error: string | null }) 
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-12">
+    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
       <Card>
         <CardHeader>
           <CardDescription>Deal Room preview</CardDescription>

@@ -27,7 +27,7 @@ export default async function MyProfilePage() {
 
   if (error) {
     return (
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-3 px-4 py-12">
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-3 px-4 py-8">
         <h1 className="text-xl font-semibold">Something went wrong</h1>
         <p className="text-sm text-destructive">
           We couldn&apos;t set up your profile. Please try again.

@@ -1,44 +1,30 @@
 @import "tailwindcss";
 
 /* Design tokens. Change these to re-skin the whole app at once —
-   every component below reads from them. */
-:root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --card: #ffffff;
-  --card-foreground: #0a0a0a;
-  --primary: #1a1a1a;
-  --primary-foreground: #fafafa;
-  --secondary: #f4f4f5;
-  --secondary-foreground: #1a1a1a;
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
-  --destructive: #dc2626;
-  --destructive-foreground: #fafafa;
-  --border: #e4e4e7;
-  --input: #e4e4e7;
-  --ring: #0a0a0a;
-  --radius: 0.625rem;
-}
+   every component below reads from them.
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #fafafa;
-    --card: #141414;
-    --card-foreground: #fafafa;
-    --primary: #fafafa;
-    --primary-foreground: #1a1a1a;
-    --secondary: #27272a;
-    --secondary-foreground: #fafafa;
-    --muted: #27272a;
-    --muted-foreground: #a1a1aa;
-    --destructive: #ef4444;
-    --destructive-foreground: #fafafa;
-    --border: #27272a;
-    --input: #3f3f46;
-    --ring: #d4d4d8;
-  }
+   AQTech GHub uses one dark, gaming-style theme: a deep navy-black
+   background, slightly lighter panels, and an electric violet accent
+   for buttons, links and the active item in the sidebar. */
+:root {
+  color-scheme: dark;
+
+  --background: #0b0e17;
+  --foreground: #e6e9f2;
+  --card: #121726;
+  --card-foreground: #e6e9f2;
+  --primary: #7c5cff;
+  --primary-foreground: #ffffff;
+  --secondary: #1b2236;
+  --secondary-foreground: #e6e9f2;
+  --muted: #1b2236;
+  --muted-foreground: #8b93a7;
+  --destructive: #f43f5e;
+  --destructive-foreground: #ffffff;
+  --border: #232b40;
+  --input: #2c3550;
+  --ring: #7c5cff;
+  --radius: 0.75rem;
 }
 
 @theme inline {
@@ -58,7 +44,9 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --radius-base: var(--radius);
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* --font-body and --font-display come from next/font in layout.tsx. */
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-display: var(--font-heading), var(--font-body), ui-sans-serif, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
@@ -66,4 +54,12 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+}
+
+/* Headings and card titles use the esports-style display font. */
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
 }

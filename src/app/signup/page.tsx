@@ -12,7 +12,7 @@ export default async function SignUpPage(props: PageProps<"/signup">) {
   const error = errorText(errorCode);
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 px-4 py-12">
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 px-4 py-8">
       <Card>
         <CardHeader>
           <CardTitle>Create your trader account</CardTitle>

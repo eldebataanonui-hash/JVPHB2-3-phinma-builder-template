@@ -18,9 +18,9 @@ export function BackButton() {
   }
 
   return (
-    <Button type="button" variant="ghost" size="sm" onClick={goBack}>
+    <Button type="button" variant="ghost" size="sm" onClick={goBack} aria-label="Back" className="px-2">
       <ArrowLeft className="h-4 w-4" />
-      Back
+      <span className="hidden lg:inline">Back</span>
     </Button>
   );
 }

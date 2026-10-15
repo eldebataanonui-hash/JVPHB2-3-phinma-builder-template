@@ -47,7 +47,7 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   });
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-12">
+    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">{profile.display_name}</CardTitle>
@@ -171,7 +171,7 @@ function DealList({
 // Shows a database problem on the page, so the team can see what failed.
 function ProblemNotice({ message }: { message: string }) {
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-3 px-4 py-12">
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-3 px-4 py-8">
       <h1 className="text-xl font-semibold">Something went wrong</h1>
       <p className="text-sm text-destructive">{message}</p>
     </main>
