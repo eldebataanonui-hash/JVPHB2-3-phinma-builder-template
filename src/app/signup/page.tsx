@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/password-input";
 import { signUp } from "@/app/auth/actions";
 
 export default async function SignUpPage(props: PageProps<"/signup">) {
@@ -36,7 +37,7 @@ export default async function SignUpPage(props: PageProps<"/signup">) {
               </div>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" name="password" type="password" required minLength={6} />
+                <PasswordInput id="password" name="password" required minLength={6} />
               </div>
               <Button type="submit">Sign up</Button>
               <p className="text-sm text-muted-foreground">

@@ -10,6 +10,7 @@ export default async function MyProfilePage() {
 
   if (!user) redirect("/login");
 
+
   // Safety net: the database trigger normally creates the profile when
   // the email is confirmed. If it's missing (e.g. the account was
   // confirmed before the trigger existed), create it now. You can only
