@@ -6,16 +6,16 @@ Security on, so the live site can safely talk to the database.
 
 **Blocked by:** 01
 
-**Status:** todo
+**Status:** done
 
-- [ ] The Supabase URL and publishable (anon) key are set on the driver
+- [x] The Supabase URL and publishable (anon) key are set on the driver
       laptop and in Vercel, and Vercel has redeployed
-- [ ] No service_role or secret key appears anywhere in the project, and
+- [x] No service_role or secret key appears anywhere in the project, and
       the local environment file is not committed
-- [ ] The `profiles` table exists with the columns in the spec
-- [ ] Row Level Security is on for `profiles`, with the policies from the
+- [x] The `profiles` table exists with the columns in the spec
+- [x] Row Level Security is on for `profiles`, with the policies from the
       spec: any logged-in trader may read; only you may create or update
       your own row; nobody may delete
-- [ ] The database change is saved as a numbered file in the repo's SQL
+- [x] The database change is saved as a numbered file in the repo's SQL
       folder, so the database can be rebuilt from the repo
-- [ ] Works on the live URL: the site queries `profiles` without an error
+- [x] Works on the live URL: the site queries `profiles` without an error
