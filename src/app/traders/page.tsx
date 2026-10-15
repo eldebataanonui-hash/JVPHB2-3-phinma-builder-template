@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { MessageCircle } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Avatar } from "@/components/avatar";
 import { RecordText } from "@/components/trader-record";
 import { formatLastActive, formatManilaDate } from "@/lib/deals";
 import { createClient } from "@/lib/supabase/server";
@@ -11,6 +12,7 @@ type Trader = {
   id: string;
   display_name: string;
   bio: string;
+  avatar_path: string | null;
   created_at: string;
   completed: number;
   abandoned: number;
@@ -37,7 +39,7 @@ export default async function FindTradersPage(props: PageProps<"/traders">) {
     const pattern = `%${query.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
     const { data: found } = await supabase
       .from("profiles")
-      .select("id, display_name, bio, created_at")
+      .select("id, display_name, bio, avatar_path, created_at")
       .ilike("display_name", pattern)
       .neq("id", user.id)
       .order("created_at")
@@ -110,9 +112,7 @@ function TraderCard({ trader }: { trader: Trader }) {
   return (
     <div className="flex flex-col gap-3 rounded-[var(--radius)] border border-border bg-card p-4">
       <div className="flex items-center gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 font-[family-name:var(--font-display)] text-lg font-bold text-primary">
-          {trader.display_name.slice(0, 1).toUpperCase()}
-        </span>
+        <Avatar name={trader.display_name} path={trader.avatar_path} size={44} />
         <div className="min-w-0">
           <p className="truncate font-semibold">{trader.display_name}</p>
           <p className="text-xs text-muted-foreground">

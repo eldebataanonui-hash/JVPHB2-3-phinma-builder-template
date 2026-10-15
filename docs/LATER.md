@@ -38,8 +38,7 @@ stays small enough to actually ship by Session 3.
 
 ## From the profile and messages work (2026-10-15)
 
-- **Profile pictures.** Need private photo storage with upload limits;
-  build together with listing photos (ticket 08).
+- **Reporting a profile picture** to the team, and removing it.
 - **Block or mute a trader** in direct messages.
 - **Report a direct message** to the team (concerns are per Deal Room
   for now).

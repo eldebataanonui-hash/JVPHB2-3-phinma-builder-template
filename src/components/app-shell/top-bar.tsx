@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Gamepad2, LogOut, Search } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { Avatar } from "@/components/avatar";
 import { BackButton } from "@/components/back-button";
 import { createClient } from "@/lib/supabase/server";
 import { logOut } from "@/app/auth/actions";
@@ -14,7 +15,7 @@ export async function TopBar() {
   } = await supabase.auth.getUser();
 
   const { data: me } = user
-    ? await supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle()
+    ? await supabase.from("profiles").select("display_name, avatar_path").eq("id", user.id).maybeSingle()
     : { data: null };
 
   return (
@@ -51,11 +52,11 @@ export async function TopBar() {
         <div className="flex shrink-0 items-center gap-2">
           {user ? (
             <>
-              <Link
-                href="/profile"
-                className="hidden max-w-[10rem] truncate text-sm font-medium text-muted-foreground hover:text-foreground lg:inline"
-              >
-                {me?.display_name ?? "My profile"}
+              <Link href="/profile" className="flex items-center gap-2" aria-label="My profile">
+                <Avatar name={me?.display_name ?? "?"} path={me?.avatar_path} size={32} />
+                <span className="hidden max-w-[10rem] truncate text-sm font-medium text-muted-foreground hover:text-foreground lg:inline">
+                  {me?.display_name ?? "My profile"}
+                </span>
               </Link>
               <form action={logOut}>
                 <Button type="submit" variant="outline" size="sm" aria-label="Log out">

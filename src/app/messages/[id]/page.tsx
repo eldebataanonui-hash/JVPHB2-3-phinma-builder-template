@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { Avatar } from "@/components/avatar";
 import { RefreshButton } from "@/components/refresh-button";
 import { formatManilaTime } from "@/lib/deals";
 import { errorText } from "@/lib/errors";
@@ -23,7 +24,7 @@ export default async function ConversationPage(props: PageProps<"/messages/[id]"
 
   const { data: other } = await supabase
     .from("profiles")
-    .select("id, display_name")
+    .select("id, display_name, avatar_path")
     .eq("id", otherId)
     .maybeSingle();
   if (!other) notFound();
@@ -41,7 +42,8 @@ export default async function ConversationPage(props: PageProps<"/messages/[id]"
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
       <Card>
         <CardHeader>
-          <CardTitle>
+          <CardTitle className="flex items-center gap-3">
+            <Avatar name={other.display_name} path={other.avatar_path} size={36} />
             <Link href={`/profile/${other.id}`} className="underline">
               {other.display_name}
             </Link>

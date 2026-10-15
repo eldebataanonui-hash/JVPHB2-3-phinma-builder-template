@@ -3,6 +3,8 @@ import { notFound, redirect } from "next/navigation";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { Avatar } from "@/components/avatar";
+import { AvatarUpload } from "@/components/avatar-upload";
 import { TraderRecord } from "@/components/trader-record";
 import { errorText } from "@/lib/errors";
 import { createClient } from "@/lib/supabase/server";
@@ -23,7 +25,7 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   // RLS allows any logged-in trader to read profiles.
   const { data: profile, error: loadError } = await supabase
     .from("profiles")
-    .select("display_name, created_at, bio")
+    .select("display_name, created_at, bio, avatar_path")
     .eq("id", id)
     .maybeSingle();
   if (loadError) return <ProblemNotice message="Could not load this profile. Please try again." />;
@@ -49,8 +51,12 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
       <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">{profile.display_name}</CardTitle>
+        <CardHeader className="flex flex-row items-center gap-4">
+          <Avatar name={profile.display_name} path={profile.avatar_path} size={72} />
+          <div className="flex min-w-0 flex-col gap-2">
+            <CardTitle className="truncate text-2xl">{profile.display_name}</CardTitle>
+            {isMe && <AvatarUpload userId={id} hasPicture={Boolean(profile.avatar_path)} />}
+          </div>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           {/* A profile only exists once the email is confirmed (see 003 SQL). */}

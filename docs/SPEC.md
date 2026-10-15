@@ -198,6 +198,13 @@ people can read them, they can't be edited or deleted, and links are
 blocked. Every conversation warns: never pay or share codes here; start
 a Deal Room for any trade.
 
+## Profile pictures (ticket 13)
+Traders can add a JPG, PNG or WebP picture up to 2 MB from their own
+Profile. It is stored in a public "avatars" bucket (anyone with the link
+can view it, like avatars on most sites); traders can only upload to and
+delete from their own folder. It shows on the Profile, Find traders,
+Messages and the top bar.
+
 ## Stretch: listing photos (ticket 08)
 Only after everything above works live. The seller may add up to 4
 photos of the listed account to their Deal Room, stored in a private
