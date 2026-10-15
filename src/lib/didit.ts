@@ -52,18 +52,51 @@ export async function getVerificationDecision(sessionId: string) {
   return data.status ? data : null;
 }
 
-// Checks a webhook really came from Didit: the HMAC-SHA256 of the raw
-// body with our webhook secret must match X-Signature, and it must be
-// less than 5 minutes old.
-export function webhookIsGenuine(rawBody: string, signature: string | null, timestamp: string | null) {
-  const secret = process.env.DIDIT_WEBHOOK_SECRET;
-  if (!secret || !signature || !timestamp) return false;
+// Sorts object keys at every level, the way Didit builds its "V2"
+// signature (compact JSON with sorted keys). Whole-number floats are
+// already plain numbers in JavaScript, matching Didit's own Node sample.
+function sortKeys(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(sortKeys);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.keys(value as Record<string, unknown>)
+        .sort()
+        .map((k) => [k, sortKeys((value as Record<string, unknown>)[k])]),
+    );
+  }
+  return value;
+}
 
-  const age = Math.abs(Math.floor(Date.now() / 1000) - Number(timestamp));
+function sameHex(expected: string, given: string | null) {
+  if (!given) return false;
+  const a = Buffer.from(expected, "utf8");
+  const b = Buffer.from(given, "utf8");
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
+// Checks a webhook really came from Didit, and is less than 5 minutes
+// old. Didit's recommended check is X-Signature-V2: an HMAC-SHA256 (with
+// our webhook secret) of the body as sorted, compact JSON. As a fallback
+// we also accept X-Signature over the exact raw bytes.
+export function webhookIsGenuine(
+  rawBody: string,
+  headers: { v2: string | null; raw: string | null; timestamp: string | null },
+) {
+  const secret = process.env.DIDIT_WEBHOOK_SECRET;
+  if (!secret || !headers.timestamp) return false;
+
+  const age = Math.abs(Math.floor(Date.now() / 1000) - Number(headers.timestamp));
   if (!Number.isFinite(age) || age > 300) return false;
 
-  const expected = createHmac("sha256", secret).update(rawBody, "utf8").digest("hex");
-  const a = Buffer.from(expected, "utf8");
-  const b = Buffer.from(signature, "utf8");
-  return a.length === b.length && timingSafeEqual(a, b);
+  let canonical: string;
+  try {
+    canonical = JSON.stringify(sortKeys(JSON.parse(rawBody)));
+  } catch {
+    return false;
+  }
+  const v2 = createHmac("sha256", secret).update(canonical, "utf8").digest("hex");
+  if (sameHex(v2, headers.v2)) return true;
+
+  const raw = createHmac("sha256", secret).update(rawBody, "utf8").digest("hex");
+  return sameHex(raw, headers.raw);
 }

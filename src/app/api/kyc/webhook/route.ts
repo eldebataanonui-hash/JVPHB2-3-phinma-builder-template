@@ -6,7 +6,12 @@ import { createClient } from "@/lib/supabase/server";
 // signature first; anything not genuinely from Didit is refused.
 export async function POST(request: NextRequest) {
   const raw = await request.text();
-  if (!webhookIsGenuine(raw, request.headers.get("x-signature"), request.headers.get("x-timestamp"))) {
+  const genuine = webhookIsGenuine(raw, {
+    v2: request.headers.get("x-signature-v2"),
+    raw: request.headers.get("x-signature"),
+    timestamp: request.headers.get("x-timestamp"),
+  });
+  if (!genuine) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
 
