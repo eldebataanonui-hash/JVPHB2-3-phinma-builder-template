@@ -4,11 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { errorText } from "@/lib/errors";
 import { createClient } from "@/lib/supabase/server";
 import { createDeal } from "@/app/deals/actions";
 
 export default async function NewDealPage(props: PageProps<"/deals/new">) {
-  const { error } = await props.searchParams;
+  const error = errorText((await props.searchParams).error);
 
   const supabase = await createClient();
   const {

@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { CopyLink } from "@/components/copy-link";
 import { RedFlags } from "@/components/red-flags";
 import { TraderRecord } from "@/components/trader-record";
+import { errorText } from "@/lib/errors";
 import { createClient } from "@/lib/supabase/server";
 import {
   EVENT_LABELS,
@@ -25,7 +26,10 @@ import { advanceDeal, joinDeal, reportConcern, sendMessage } from "@/app/deals/a
 
 export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   const { id } = await props.params;
-  const { error, concern_error, chat_error } = await props.searchParams;
+  const params = await props.searchParams;
+  const error = errorText(params.error);
+  const concern_error = errorText(params.concern_error);
+  const chat_error = errorText(params.chat_error);
   const supabase = await createClient();
 
   const {
@@ -309,11 +313,27 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
 
 // What a trader who isn't in the deal sees: a safe preview and a Join
 // button. The preview function never returns the ownership code.
-async function DealPreview({ id, error }: { id: string; error?: string | string[] }) {
+async function DealPreview({ id, error }: { id: string; error: string | null }) {
   const supabase = await createClient();
   const { data } = await supabase.rpc("deal_preview", { p_deal_id: id });
   const preview = data?.[0];
   if (!preview) notFound();
+
+  // Once a buyer joins, the deal is private: no title, price or seller.
+  if (preview.has_buyer || !preview.title || !preview.seller_id) {
+    return (
+      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-12">
+        <Card>
+          <CardHeader>
+            <CardTitle>This deal already has a buyer</CardTitle>
+            <CardDescription>
+              Deal Rooms are private once a buyer joins.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-12">
@@ -338,16 +358,10 @@ async function DealPreview({ id, error }: { id: string; error?: string | string[
             <TraderRecord traderId={preview.seller_id} />
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
-          {preview.has_buyer ? (
-            <p className="text-sm text-muted-foreground">
-              This deal already has a buyer.
-            </p>
-          ) : (
-            <form action={joinDeal}>
-              <input type="hidden" name="deal_id" value={preview.id} />
-              <Button type="submit">Join as buyer</Button>
-            </form>
-          )}
+          <form action={joinDeal}>
+            <input type="hidden" name="deal_id" value={preview.id} />
+            <Button type="submit">Join as buyer</Button>
+          </form>
         </CardContent>
       </Card>
 

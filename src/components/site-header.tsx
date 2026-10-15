@@ -13,14 +13,16 @@ export async function SiteHeader() {
 
   return (
     <header className="border-b border-border">
-      <div className="mx-auto flex w-full max-w-2xl items-center justify-between gap-2 px-4 py-3">
+      {/* flex-wrap: on narrow phones the links drop to a second row
+          instead of pushing the page sideways. */}
+      <div className="mx-auto flex w-full max-w-2xl flex-wrap items-center justify-between gap-x-2 gap-y-1 px-4 py-3">
         <div className="flex items-center gap-1">
           <BackButton />
           <Link href="/" className="px-2 font-semibold">
             AQTech GHub
           </Link>
         </div>
-        <nav className="flex items-center gap-2">
+        <nav className="flex flex-wrap items-center gap-1 sm:gap-2">
           {user ? (
             <>
               <Link href="/traders" className={buttonVariants({ variant: "ghost", size: "sm" })}>

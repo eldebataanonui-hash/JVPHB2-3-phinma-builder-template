@@ -2,12 +2,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { errorText } from "@/lib/errors";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/password-input";
 import { signUp } from "@/app/auth/actions";
 
 export default async function SignUpPage(props: PageProps<"/signup">) {
-  const { error, sent } = await props.searchParams;
+  const { error: errorCode, sent } = await props.searchParams;
+  const error = errorText(errorCode);
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 px-4 py-12">

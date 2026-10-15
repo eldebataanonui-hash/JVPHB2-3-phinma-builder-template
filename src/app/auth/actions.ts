@@ -3,13 +3,11 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { authErrorCode } from "@/lib/errors";
 
 // Server actions: these run on the server when a form is submitted.
-// Errors are sent back to the page in the URL, e.g. /login?error=...
-
-function withError(path: string, message: string): never {
-  redirect(`${path}?error=${encodeURIComponent(message)}`);
-}
+// Errors go back to the page as short codes, e.g. /login?error=...
+// (see src/lib/errors.ts), never as text.
 
 export async function signUp(formData: FormData) {
   const displayName = String(formData.get("display_name") ?? "").trim();
@@ -17,7 +15,7 @@ export async function signUp(formData: FormData) {
   const password = String(formData.get("password") ?? "");
 
   if (displayName.length < 1 || displayName.length > 40) {
-    withError("/signup", "Display name must be 1 to 40 characters.");
+    redirect("/signup?error=name_length");
   }
 
   // Where the confirmation email's link should send the trader back to:
@@ -34,7 +32,7 @@ export async function signUp(formData: FormData) {
     },
   });
 
-  if (error) withError("/signup", error.message);
+  if (error) redirect(`/signup?error=${authErrorCode(error.code, "failed")}`);
   redirect("/signup?sent=1");
 }
 
@@ -66,11 +64,9 @@ export async function logIn(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    const message =
-      error.code === "email_not_confirmed"
-        ? "Please confirm your email first. Check your inbox for the link."
-        : error.message;
-    const params = new URLSearchParams({ error: message });
+    const params = new URLSearchParams({
+      error: authErrorCode(error.code, "invalid_credentials"),
+    });
     if (isLocalPath) params.set("next", next);
     redirect(`/login?${params}`);
   }

@@ -12,9 +12,7 @@ export async function GET(request: NextRequest) {
   const linkError = searchParams.get("error_description");
 
   if (linkError) {
-    return NextResponse.redirect(
-      `${origin}/login?error=${encodeURIComponent(linkError)}`,
-    );
+    return NextResponse.redirect(`${origin}/login?error=link_invalid`);
   }
 
   if (code) {

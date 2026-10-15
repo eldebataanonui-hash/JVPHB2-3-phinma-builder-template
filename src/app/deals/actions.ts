@@ -3,16 +3,21 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
+// Errors go back to the page as short codes (see src/lib/errors.ts),
+// never as text, so nobody can put their own words on our pages.
+
+function dealUrl(dealId: string, query = "", hash = "") {
+  return `/deals/${encodeURIComponent(dealId)}${query}${hash}`;
+}
+
 export async function createDeal(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
   const price = Number(formData.get("price"));
 
-  if (title.length < 1 || title.length > 80) {
-    redirect(`/deals/new?error=${encodeURIComponent("Title must be 1 to 80 characters.")}`);
-  }
+  if (title.length < 1 || title.length > 80) redirect("/deals/new?error=title_length");
   if (!Number.isInteger(price) || price < 1 || price > 10_000_000) {
-    redirect(`/deals/new?error=${encodeURIComponent("Price must be a whole number of pesos.")}`);
+    redirect("/deals/new?error=price_invalid");
   }
 
   const supabase = await createClient();
@@ -24,8 +29,8 @@ export async function createDeal(formData: FormData) {
     .select("id")
     .single();
 
-  if (error) redirect(`/deals/new?error=${encodeURIComponent(error.message)}`);
-  redirect(`/deals/${data.id}`);
+  if (error) redirect("/deals/new?error=failed");
+  redirect(dealUrl(data.id));
 }
 
 export async function advanceDeal(formData: FormData) {
@@ -39,35 +44,42 @@ export async function advanceDeal(formData: FormData) {
     p_from_step: fromStep,
   });
 
-  if (error) redirect(`/deals/${dealId}?error=${encodeURIComponent(error.message)}`);
-  redirect(`/deals/${dealId}`);
+  if (error) {
+    const code = error.message.includes("already done")
+      ? "step_already_done"
+      : error.message.includes("not your turn")
+        ? "not_your_turn"
+        : "failed";
+    redirect(dealUrl(dealId, `?error=${code}`));
+  }
+  redirect(dealUrl(dealId));
 }
 
-// Same rule as the database check in 010-create-messages.sql, so the
-// trader gets a friendly message instead of a database error.
+// Same rule as the database check in 012-review-fixes.sql, so the
+// trader gets a friendly message instead of a database error. Email
+// addresses are removed first: the Lock-In step needs the buyer to send
+// theirs, and "gmail.com" would otherwise look like a link.
+const EMAIL_PATTERN = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi;
 const LINK_PATTERN =
-  /(https?:\/\/|www\.|[a-z0-9-]+\.(com|net|org|ph|io|co|me|ly|gg|xyz|app|link|site|info|top|shop)\b)/i;
+  /(https?:\/\/|www\.|[a-z0-9-]+\.(com|net|org|ph|io|co|me|ly|gg|xyz|app|link|site|info|top|shop|ru|to|tk|gd|at|cc|us|uk|in|biz|online|store|live|click)\b)/i;
 
 export async function sendMessage(formData: FormData) {
   const dealId = String(formData.get("deal_id") ?? "");
   const body = String(formData.get("body") ?? "").trim();
 
-  let problem = "";
-  if (body.length < 1 || body.length > 1000) problem = "Messages must be 1 to 1000 characters.";
-  else if (LINK_PATTERN.test(body)) problem = "Links aren't allowed in chat. They're how phishing scams work.";
-
-  if (problem) {
-    redirect(`/deals/${dealId}?chat_error=${encodeURIComponent(problem)}#chat`);
+  if (body.length < 1 || body.length > 1000) {
+    redirect(dealUrl(dealId, "?chat_error=chat_length", "#chat"));
+  }
+  if (LINK_PATTERN.test(body.replace(EMAIL_PATTERN, ""))) {
+    redirect(dealUrl(dealId, "?chat_error=chat_link", "#chat"));
   }
 
   const supabase = await createClient();
   // RLS checks you're the seller or buyer, and that a buyer has joined.
   const { error } = await supabase.from("messages").insert({ deal_id: dealId, body });
 
-  if (error) {
-    redirect(`/deals/${dealId}?chat_error=${encodeURIComponent(error.message)}#chat`);
-  }
-  redirect(`/deals/${dealId}#chat`);
+  if (error) redirect(dealUrl(dealId, "?chat_error=failed", "#chat"));
+  redirect(dealUrl(dealId, "", "#chat"));
 }
 
 export async function reportConcern(formData: FormData) {
@@ -75,9 +87,7 @@ export async function reportConcern(formData: FormData) {
   const message = String(formData.get("message") ?? "").trim();
 
   if (message.length < 10 || message.length > 2000) {
-    redirect(
-      `/deals/${dealId}?concern_error=${encodeURIComponent("Please describe what happened in 10 to 2000 characters.")}#concern`,
-    );
+    redirect(dealUrl(dealId, "?concern_error=concern_length", "#concern"));
   }
 
   const supabase = await createClient();
@@ -86,10 +96,8 @@ export async function reportConcern(formData: FormData) {
     .from("concerns")
     .insert({ deal_id: dealId, message });
 
-  if (error) {
-    redirect(`/deals/${dealId}?concern_error=${encodeURIComponent(error.message)}#concern`);
-  }
-  redirect(`/deals/${dealId}#concern`);
+  if (error) redirect(dealUrl(dealId, "?concern_error=failed", "#concern"));
+  redirect(dealUrl(dealId, "", "#concern"));
 }
 
 export async function joinDeal(formData: FormData) {
@@ -98,6 +106,6 @@ export async function joinDeal(formData: FormData) {
   const supabase = await createClient();
   const { error } = await supabase.rpc("join_deal", { p_deal_id: dealId });
 
-  if (error) redirect(`/deals/${dealId}?error=${encodeURIComponent(error.message)}`);
-  redirect(`/deals/${dealId}`);
+  if (error) redirect(dealUrl(dealId, "?error=join_failed"));
+  redirect(dealUrl(dealId));
 }
