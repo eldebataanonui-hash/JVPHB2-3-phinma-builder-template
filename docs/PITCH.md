@@ -1,112 +1,119 @@
-# AQTech GHub — Session 1 Pitch
+# AQTech GHub — Pitch
 
-Three minutes, about 400 words. Read it aloud at least twice before
-presenting. If more than one of you is presenting, write your names next
-to the beats you will speak.
+Three minutes, about 400 words. Two presenters work well: one speaks,
+one drives the live demo (seller on a laptop, buyer on a phone). Write
+your names next to the beats. Read it aloud twice before presenting.
 
 ## The script
 
-### 1. The person (~45s) — Speaker: ______
+### 1. The person (~35s) — Speaker: ______
 
 This is Clark. He plays Mobile Legends, and he wanted a high-rank account
-with rare skins. In a Facebook group called MLBB Account Trading PH, he
-found exactly what he wanted. Seventeen hundred pesos. Cheaper than
-everyone else.
+with rare skins. In a Facebook group he found exactly what he wanted:
+seventeen hundred pesos, cheaper than everyone else.
 
-The seller had screenshots. A video of logging in. Comments saying
-"legit, all good." The seller said, "No middleman needed. Send GCash
-first, I'll send the login right after."
+The seller had screenshots, a login video, and comments saying "legit."
+"No middleman needed. Send GCash first."
 
-Clark paid. The seller said, "Give me two minutes." Then the seller
-blocked him and deleted the post.
+Clark paid. The seller blocked him and deleted the post. Facebook and
+GCash couldn't help. In one week of asking around our class, we found
+three more people who nearly lost money the same way.
 
-### 2. Today (~30s) — Speaker: ______
+### 2. Our fix (~25s) — Speaker: ______
 
-Facebook said it was a private transaction. GCash said they can't
-reverse the payment. Clark lost all of it.
+AQTech GHub is a Deal Room where buyer and seller finish a trade step by
+step, so nobody trusts a stranger with everything. Every step is
+confirmed by the right person, in order, and recorded with the time.
+Nobody can edit that record.
 
-This isn't rare. In one week of asking around our class, we found three
-more people who almost got scammed the same way. Today, buyers trust
-screenshots and comments, and those can be faked. Or they pay a
-middleman, who can be a scammer too. When it goes wrong, there's no proof
-and no refund.
+### 3. The live demo (~90s) — Speaker: ______ · Driver: ______
 
-### 3. Our fix (~45s) — Speaker: ______
+Our seller creates a deal and sends the buyer a deal code in Messages.
 
-We're building AQTech GHub. It's a Deal Room where a buyer and a seller
-finish a trade step by step, so nobody has to trust a stranger with
-everything.
+The buyer enters it and sees the seller's Trust check before joining:
+how many trades they actually finished, how old the account is, and
+warnings for anything risky. Fake comments can't touch it.
 
-First, the seller proves they own the account, live. Our site gives them
-a code to put in their in-game name. A video can't fake that. Then the
-buyer pays half. The seller follows our checklist to move every login to
-the buyer, so they can't take the account back later. The buyer checks
-they're in control, then pays the other half.
+The seller proves they own the account right now: they put our live code
+in their in-game name. A video can't fake that.
 
-Every step is confirmed and timestamped. And a seller's record only
-counts finished deals. Fake comments can't touch it.
+The buyer picks GCash and pays only half. The seller sends the login in
+an encrypted box only the buyer can open. The buyer moves the account's
+email to their own and changes the password, so the seller can't take it
+back.
 
-### 4. The demo moment (~30s) — Speaker: ______
+The buyer pays the second half. Both of them get "Deal completed," and a
+receipt with every step and its time.
 
-In Session 3, you'll watch it live. One of our teammates will sell a real
-Mobile Legends account to a classmate, from the ownership code to the
-final payment, right here, in under three minutes.
+### 4. How we'll know, and what's next (~30s) — Speaker: ______
 
-### 5. How we'll know (~30s) — Speaker: ______
+Our test buyer wasn't on our team. If they finished the trade without
+our help, it works.
 
-Our buyer won't be one of us. It will be a real Mobile Legends player
-from outside our team. If they can finish the trade without us helping, it works. If
-they get stuck, we'll show you where, and what we changed.
+We never hold anyone's money. Next: freemium plans. Every trader gets
+fourteen days free, then paid plans add perks like priority placement,
+while the safety steps stay free for everyone, because safety shouldn't
+be paywalled.
 
-Clark lost seventeen hundred pesos because he had no way to check. We're
-building the way to check.
+Clark lost seventeen hundred pesos because he had no way to check. We
+built the way to check.
 
-## The three hardest questions
+## Demo checklist (do this the day before)
 
-### 1. "If the seller vanishes after the first half, the buyer still loses money. So does this actually stop the scam?"
+- [ ] Run the test-data clean-up so demo profiles show a clean record
+- [ ] Two accounts logged in: seller on the laptop, buyer on the phone
+- [ ] Seller has a profile picture, a description and a social link
+- [ ] An MLBB account where the seller can change the in-game name
+- [ ] A dummy login (never a real password) for the encrypted login step
+- [ ] Notification bells visible on both screens
+- [ ] Rehearse twice; the demo beat must fit in 90 seconds
 
-This attacks our weakest point, so answer it directly; don't dodge.
+## The hardest questions
 
-> "Not completely, and we won't pretend it does. Our site never holds
-> the money, so we can't force anyone to pay. What we change is how much
-> you risk. Clark would have lost eight hundred fifty instead of
-> seventeen hundred. And that seller would now have an unfinished deal on
-> their record, which warns the next buyer. Holding the money safely
-> needs a licensed partner, and that's on our roadmap."
+### 1. "If the seller vanishes after the first half, the buyer still loses money."
 
-### 2. "A scammer will just refuse to use your site. Why would they ever agree?"
+> "Yes, half, and we won't pretend otherwise. We never hold the money,
+> so we can't force payment. What we change is how much you risk, and
+> that seller now has an unfinished deal on their record, warning the
+> next buyer. Holding money safely needs a licensed partner; that's on
+> our roadmap."
 
-> "They won't, and that's the point. Today, 'no middleman needed' is a
-> line scammers use. With AQTech GHub, refusing to use a free, fair Deal
-> Room becomes the red flag. We're built for the buyer: Clark can say
-> 'AQTech GHub or no deal,' and an honest seller loses nothing by saying
-> yes. A seller's record of finished deals also gives honest sellers a
-> reason to want it."
+### 2. "Isn't sending a password risky?"
 
-### 3. "Moonton doesn't allow selling accounts. Aren't you helping people break the rules?"
+> "We'd prefer no passwords: the Lock-In Checklist moves the account's
+> email to the buyer. If a seller does send a login, it's encrypted, only
+> the buyer can open it, it's deleted the moment the trade completes,
+> and the buyer must change it before confirming full control."
 
-> "Account trading already happens every day, openly, in Facebook
-> groups, Discord and Telegram, and people like Clark get scammed in it.
-> We don't create the market. We make the one that exists safer for the
-> people already in it."
+### 3. "Can't someone fake their record with a second account?"
 
-## Strengthen the evidence before you present
+> "They could, by trading with themselves. That's much harder than
+> posting fake comments: each fake deal needs a confirmed email and
+> every step of a real trade. Only counting deals between unrelated
+> accounts is on our list."
 
-The problem is real: Clark's story is specific and the three near-scams
-show it isn't a one-off. Two gaps a facilitator may notice:
+### 4. "Moonton doesn't allow selling accounts."
 
-- **Ask Clark's permission** to tell his story with his name, or change
-  the name. If he agrees, a screenshot of the deleted-post or blocked
-  chat (with personal details covered) is powerful proof.
-- **Count it.** Spend 15 minutes in one MLBB trading group and count how
-  many posts or comments warn about scammers. "We found 20 scam warnings
-  in one group in one week" is stronger than "this isn't rare."
-- **Outside buyer: confirmed** (an MLBB player from outside the team).
-  Make sure they can attend Session 3.
+> "Account trading already happens every day in Facebook groups,
+> Discord and Telegram, and people like Clark get scammed in it. We
+> don't create the market; we make the one that exists safer."
 
-## If asked: "Can't someone fake their record with a second account?"
+### 5. "Do you verify IDs?"
 
-> "They could, by trading with themselves. It's much harder than posting
-> fake comments: each fake deal takes a confirmed email and every step of
-> a real trade. Making the record harder to fake, like only counting
-> deals between unrelated accounts, is on our list for after the demo."
+> "Optionally. Traders can verify an ID and a live selfie through Didit,
+> an identity verification provider, for an 'ID verified' badge. We never
+> see or store the ID or the face scan, only the result. It's in demo
+> mode for now."
+
+### 6. "Why would a scammer ever agree to use your site?"
+
+> "They won't, and that's the point. Refusing a free, fair Deal Room
+> becomes the red flag. The buyer can say 'AQTech GHub or no deal,' and an
+> honest seller loses nothing by saying yes."
+
+## Before you present
+
+- **Ask Clark's permission** to use his name, or change it.
+- **Count it:** spend 15 minutes in one MLBB trading group and count scam
+  warnings. "We found 20 in one week" beats "this isn't rare."
+- **Check the Lock-In wording** against the real MLBB settings.
