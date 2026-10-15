@@ -3,6 +3,8 @@ import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { CopyLink } from "@/components/copy-link";
 import { RedFlags } from "@/components/red-flags";
 import { TraderRecord } from "@/components/trader-record";
@@ -18,11 +20,11 @@ import {
   formatPesos,
   splitPrice,
 } from "@/lib/deals";
-import { advanceDeal, joinDeal } from "@/app/deals/actions";
+import { advanceDeal, joinDeal, reportConcern } from "@/app/deals/actions";
 
 export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   const { id } = await props.params;
-  const { error } = await props.searchParams;
+  const { error, concern_error } = await props.searchParams;
   const supabase = await createClient();
 
   const {
@@ -52,6 +54,13 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   const { data: events } = await supabase
     .from("deal_events")
     .select("id, actor_id, action, created_at")
+    .eq("deal_id", deal.id)
+    .order("id");
+
+  // Concerns you filed about this deal. RLS only shows your own.
+  const { data: concerns } = await supabase
+    .from("concerns")
+    .select("id, message, status, created_at")
     .eq("deal_id", deal.id)
     .order("id");
 
@@ -200,6 +209,46 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
           </Card>
         </>
       )}
+
+      <Card id="concern">
+        <CardHeader>
+          <CardTitle>Report a concern</CardTitle>
+          <CardDescription>
+            Something wrong? Our team reviews it with this deal&apos;s record
+            and responds within 48 hours. See the{" "}
+            <Link href="/rules" className="underline">
+              Trading Rules
+            </Link>
+            .
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          {concerns && concerns.length > 0 && (
+            <ul className="flex flex-col gap-2 text-sm">
+              {concerns.map((c) => (
+                <li key={c.id} className="rounded-[var(--radius)] border border-border p-3">
+                  <p className="text-xs text-muted-foreground">
+                    {formatManilaTime(c.created_at)} ·{" "}
+                    {c.status === "resolved" ? "Resolved" : "Sent to our team"}
+                  </p>
+                  <p className="whitespace-pre-wrap">{c.message}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+          <form action={reportConcern} className="flex flex-col gap-2">
+            <input type="hidden" name="deal_id" value={deal.id} />
+            <Label htmlFor="message">What happened?</Label>
+            <Textarea id="message" name="message" required minLength={10} maxLength={2000} rows={3} />
+            {concern_error && (
+              <p className="text-sm text-destructive">{concern_error}</p>
+            )}
+            <Button type="submit" variant="outline" className="w-fit">
+              Send to our team
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
 
       <RedFlags />
     </main>

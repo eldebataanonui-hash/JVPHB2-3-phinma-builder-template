@@ -43,6 +43,28 @@ export async function advanceDeal(formData: FormData) {
   redirect(`/deals/${dealId}`);
 }
 
+export async function reportConcern(formData: FormData) {
+  const dealId = String(formData.get("deal_id") ?? "");
+  const message = String(formData.get("message") ?? "").trim();
+
+  if (message.length < 10 || message.length > 2000) {
+    redirect(
+      `/deals/${dealId}?concern_error=${encodeURIComponent("Please describe what happened in 10 to 2000 characters.")}#concern`,
+    );
+  }
+
+  const supabase = await createClient();
+  // RLS checks you're the seller or buyer of this deal.
+  const { error } = await supabase
+    .from("concerns")
+    .insert({ deal_id: dealId, message });
+
+  if (error) {
+    redirect(`/deals/${dealId}?concern_error=${encodeURIComponent(error.message)}#concern`);
+  }
+  redirect(`/deals/${dealId}#concern`);
+}
+
 export async function joinDeal(formData: FormData) {
   const dealId = String(formData.get("deal_id") ?? "");
 

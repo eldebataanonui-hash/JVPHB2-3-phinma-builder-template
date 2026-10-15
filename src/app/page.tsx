@@ -39,6 +39,10 @@ export default async function Home() {
       </div>
 
       <RedFlags />
+
+      <Link href="/rules" className="text-sm underline">
+        Read the Trading Rules
+      </Link>
     </main>
   );
 }
