@@ -300,8 +300,9 @@ function SocialLinks({
         })}
       </div>
       <p className="text-xs text-muted-foreground">
-        Tap to open their account. Use these to check this trader is real, and
-        keep chats about payment, and all payments, inside a Deal Room.
+        Not verified: anyone can type a username. Open the account and check
+        it mentions AQTech GHub or matches this trader before you trust it.
+        Keep chats about payment, and all payments, inside a Deal Room.
       </p>
     </div>
   );

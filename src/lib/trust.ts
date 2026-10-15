@@ -53,8 +53,13 @@ export function trustCheck(f: TraderFacts): TrustItem[] {
     items.push({ ok: false, text: `${f.abandoned} abandoned deal${f.abandoned === 1 ? "" : "s"}` });
   }
 
-  if (f.socialsLinked.length) items.push({ ok: true, text: `${f.socialsLinked.join(" and ")} linked` });
-  else items.push({ ok: null, text: "No social media linked" });
+  // Social usernames are typed in by the trader and not checked, so they
+  // never earn a green tick: anyone could list a trusted seller's account.
+  if (f.socialsLinked.length) {
+    items.push({ ok: null, text: `Social media listed: ${f.socialsLinked.join(", ")} (not verified)` });
+  } else {
+    items.push({ ok: null, text: "No social media listed" });
+  }
 
   if (f.lastActive && daysSince(f.lastActive) <= 7) items.push({ ok: true, text: "Traded in the last 7 days" });
   else if (!f.lastActive) items.push({ ok: null, text: "Hasn't traded yet" });

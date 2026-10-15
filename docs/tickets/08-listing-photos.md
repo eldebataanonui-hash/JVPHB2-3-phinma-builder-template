@@ -9,7 +9,7 @@ Only build this after tickets 06 and 07 are done and working live.
 
 **Blocked by:** 06, 07
 
-**Status:** done
+**Status:** todo
 
 - [x] Only the seller can add photos, and only to their own deal
 - [x] Up to 4 images per deal, images only, about 2 MB each at most
@@ -23,4 +23,4 @@ Only build this after tickets 06 and 07 are done and working live.
       "Photos show what's on offer. They don't prove ownership. The live
       code does."
 - [x] Every storage policy is saved as a numbered SQL file
-- [x] Works on the live URL
+- [ ] Works on the live URL (reopened: preview photos fixed in 025, needs a live check)
