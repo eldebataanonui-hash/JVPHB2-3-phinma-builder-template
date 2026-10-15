@@ -6,16 +6,16 @@ are, so other traders know they are a reachable person.
 
 **Blocked by:** 02
 
-**Status:** todo
+**Status:** done
 
-- [ ] Sign up asks for email, password and display name
-- [ ] Email confirmation is on: a trader can't log in until they click
+- [x] Sign up asks for email, password and display name
+- [x] Email confirmation is on: a trader can't log in until they click
       the link in their email
-- [ ] A `profiles` row is created for every new trader
-- [ ] Log in and log out work, and the trader stays logged in on refresh
-- [ ] The Profile page shows display name, join date and an "Email
+- [x] A `profiles` row is created for every new trader
+- [x] Log in and log out work, and the trader stays logged in on refresh
+- [x] The Profile page shows display name, join date and an "Email
       confirmed" badge
-- [ ] A logged-out visitor can't open a Profile page
-- [ ] The demo accounts (seller and outside buyer) are created and
+- [x] A logged-out visitor can't open a Profile page
+- [x] The demo accounts (seller and outside buyer) are created and
       confirmed now, not on demo day
-- [ ] Works on the live URL
+- [x] Works on the live URL
