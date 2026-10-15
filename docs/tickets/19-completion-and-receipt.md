@@ -7,17 +7,17 @@ profiles.
 
 **Blocked by:** 05, 16
 
-**Status:** todo
+**Status:** done
 
-- [ ] A database trigger notifies both seller and buyer when a deal
+- [x] A database trigger notifies both seller and buyer when a deal
       becomes completed; the old last-step notice is skipped so nobody
       gets two
-- [ ] Completed Deal Rooms show a trade receipt: receipt number (deal
+- [x] Completed Deal Rooms show a trade receipt: receipt number (deal
       code), account, price, both halves, payment method, both traders,
       completion time and every step's time
-- [ ] Print / Save PDF prints only the receipt, readable on paper
-- [ ] Your own profile splits Selling into for sale / in progress and
+- [x] Print / Save PDF prints only the receipt, readable on paper
+- [x] Your own profile splits Selling into for sale / in progress and
       Sold, and Buying into in progress and Bought
-- [ ] Email receipts are parked in LATER (they need a new email service)
-- [ ] The database change is saved as a numbered SQL file
-- [ ] Works on the live URL
+- [x] Email receipts are parked in LATER (they need a new email service)
+- [x] The database change is saved as a numbered SQL file
+- [x] Works on the live URL
