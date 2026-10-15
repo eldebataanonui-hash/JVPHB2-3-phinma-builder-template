@@ -7,16 +7,16 @@ Join a deal and lands on the preview.
 
 **Blocked by:** 04, 11
 
-**Status:** todo
+**Status:** done
 
-- [ ] Every deal, old and new, has a unique deal code made by the
+- [x] Every deal, old and new, has a unique deal code made by the
       database; traders can't set it
-- [ ] The find-by-code function returns only the deal's id, only to
+- [x] The find-by-code function returns only the deal's id, only to
       logged-in traders
-- [ ] The seller's Deal Room shows "Send this code to your buyer" with a
+- [x] The seller's Deal Room shows "Send this code to your buyer" with a
       Copy button, and the link as a secondary option
-- [ ] A Join a deal page, linked from the sidebar, Home and every
+- [x] A Join a deal page, linked from the sidebar, Home and every
       Messages conversation; a wrong code shows a clear message
-- [ ] The deal code is clearly different from the ownership code
-- [ ] The database change is saved as a numbered SQL file
-- [ ] Works on the live URL
+- [x] The deal code is clearly different from the ownership code
+- [x] The database change is saved as a numbered SQL file
+- [x] Works on the live URL
