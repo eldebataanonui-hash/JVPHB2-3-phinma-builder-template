@@ -14,11 +14,12 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   if (!user) redirect("/login");
 
   // RLS allows any logged-in trader to read profiles.
-  const { data: profile } = await supabase
+  const { data: profile, error } = await supabase
     .from("profiles")
     .select("display_name, created_at")
     .eq("id", id)
     .maybeSingle();
+  if (error) return <ProblemNotice message={`Could not load profile: ${error.message}`} />;
   if (!profile) notFound();
 
   const isMe = user.id === id;
@@ -49,6 +50,16 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
           <Button type="submit" variant="outline">Log out</Button>
         </form>
       )}
+    </main>
+  );
+}
+
+// Shows a database problem on the page, so the team can see what failed.
+function ProblemNotice({ message }: { message: string }) {
+  return (
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-3 px-4 py-12">
+      <h1 className="text-xl font-semibold">Something went wrong</h1>
+      <p className="text-sm text-destructive">{message}</p>
     </main>
   );
 }
