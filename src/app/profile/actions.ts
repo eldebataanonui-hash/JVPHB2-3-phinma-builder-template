@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { containsLink } from "@/lib/links";
+import { SOCIALS, cleanUsername, type SocialKey } from "@/lib/socials";
 import { createClient } from "@/lib/supabase/server";
 
 export async function updateBio(formData: FormData) {
@@ -25,6 +26,28 @@ export async function updateBio(formData: FormData) {
 
   if (error) redirect(`${back}?error=failed`);
   redirect(`${back}?saved=1`);
+}
+
+// Save your optional social media usernames. Only usernames are stored;
+// the links are built by the app, always to the real sites.
+export async function updateSocials(formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const back = `/profile/${user.id}`;
+  const changes: Partial<Record<SocialKey, string | null>> = {};
+  for (const { key } of SOCIALS) {
+    const cleaned = cleanUsername(String(formData.get(key) ?? ""));
+    if (cleaned === false) redirect(`${back}?social_error=social_invalid#socials`);
+    changes[key] = cleaned;
+  }
+
+  const { error } = await supabase.from("profiles").update(changes).eq("id", user.id);
+  if (error) redirect(`${back}?social_error=failed#socials`);
+  redirect(`${back}?socials_saved=1#socials`);
 }
 
 // Point your profile at a picture you just uploaded, then delete the

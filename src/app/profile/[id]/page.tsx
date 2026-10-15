@@ -2,19 +2,24 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar } from "@/components/avatar";
 import { AvatarUpload } from "@/components/avatar-upload";
 import { TraderRecord } from "@/components/trader-record";
 import { errorText } from "@/lib/errors";
 import { createClient } from "@/lib/supabase/server";
-import { updateBio } from "@/app/profile/actions";
+import { updateBio, updateSocials } from "@/app/profile/actions";
+import { SOCIALS } from "@/lib/socials";
+import { AtSign, ExternalLink } from "lucide-react";
 import { STEP_LABELS, formatPesos } from "@/lib/deals";
 
 export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   const { id } = await props.params;
-  const { error: errorCode, saved } = await props.searchParams;
+  const { error: errorCode, saved, social_error, socials_saved } = await props.searchParams;
   const error = errorText(errorCode);
+  const socialError = errorText(social_error);
   const supabase = await createClient();
 
   const {
@@ -25,7 +30,7 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   // RLS allows any logged-in trader to read profiles.
   const { data: profile, error: loadError } = await supabase
     .from("profiles")
-    .select("display_name, created_at, bio, avatar_path")
+    .select("display_name, created_at, bio, avatar_path, social_facebook, social_instagram, social_tiktok, social_x, social_youtube, social_discord")
     .eq("id", id)
     .maybeSingle();
   if (loadError) return <ProblemNotice message="Could not load this profile. Please try again." />;
@@ -72,6 +77,7 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
               <p className="text-sm text-muted-foreground">No description yet.</p>
             )
           )}
+          <SocialLinks profile={profile} />
           {!isMe && (
             <Link href={`/messages/${id}`} className={`${buttonVariants()} w-fit`}>
               Message
@@ -102,6 +108,44 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
               {saved && <p className="text-sm">Saved.</p>}
               <Button type="submit" variant="outline" className="w-fit">
                 Save description
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      )}
+
+      {isMe && (
+        <Card id="socials">
+          <CardHeader>
+            <CardTitle>Social media (optional)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form action={updateSocials} className="flex flex-col gap-3">
+              <p className="text-sm text-muted-foreground">
+                Add your usernames so buyers and sellers can check you&apos;re
+                real. Just the username, like <span className="font-mono">desay.ml</span>,
+                not a web address. Leave any blank.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {SOCIALS.map((s) => (
+                  <div key={s.key} className="flex flex-col gap-1">
+                    <Label htmlFor={s.key}>{s.label}</Label>
+                    <Input
+                      id={s.key}
+                      name={s.key}
+                      defaultValue={profile[s.key] ?? ""}
+                      maxLength={200}
+                      placeholder="username"
+                      autoCapitalize="none"
+                      autoComplete="off"
+                    />
+                  </div>
+                ))}
+              </div>
+              {socialError && <p className="text-sm text-destructive">{socialError}</p>}
+              {socials_saved && <p className="text-sm">Saved.</p>}
+              <Button type="submit" variant="outline" className="w-fit">
+                Save social media
               </Button>
             </form>
           </CardContent>
@@ -181,5 +225,52 @@ function ProblemNotice({ message }: { message: string }) {
       <h1 className="text-xl font-semibold">Something went wrong</h1>
       <p className="text-sm text-destructive">{message}</p>
     </main>
+  );
+}
+
+// A trader's social media. Links are built from usernames by
+// src/lib/socials.ts, always to the real site, never typed in by users.
+function SocialLinks({
+  profile,
+}: {
+  profile: Partial<Record<(typeof SOCIALS)[number]["key"], string | null>>;
+}) {
+  const filled = SOCIALS.filter((s) => profile[s.key]);
+  if (!filled.length) return null;
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-wrap gap-2">
+        {filled.map((s) => {
+          const username = profile[s.key] as string;
+          const chip =
+            "inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-xs";
+          return s.url ? (
+            <a
+              key={s.key}
+              href={s.url(username)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${chip} hover:border-primary/50`}
+            >
+              <AtSign className="h-3.5 w-3.5 text-primary" />
+              <span className="font-medium">{s.label}</span>
+              <span className="text-muted-foreground">{username}</span>
+              <ExternalLink className="h-3 w-3 text-muted-foreground" aria-label="opens in a new tab" />
+            </a>
+          ) : (
+            <span key={s.key} className={chip}>
+              <AtSign className="h-3.5 w-3.5 text-primary" />
+              <span className="font-medium">{s.label}</span>
+              <span className="text-muted-foreground">{username}</span>
+            </span>
+          );
+        })}
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Use these to check this trader is real. Keep chats about payment, and
+        all payments, inside a Deal Room.
+      </p>
+    </div>
   );
 }

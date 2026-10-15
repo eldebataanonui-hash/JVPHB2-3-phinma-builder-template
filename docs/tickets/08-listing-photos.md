@@ -9,18 +9,18 @@ Only build this after tickets 06 and 07 are done and working live.
 
 **Blocked by:** 06, 07
 
-**Status:** todo
+**Status:** done
 
-- [ ] Only the seller can add photos, and only to their own deal
-- [ ] Up to 4 images per deal, images only, about 2 MB each at most
-- [ ] Photos are kept in a private Supabase Storage bucket with Row
-      Level Security policies: only the deal's seller may upload or
+- [x] Only the seller can add photos, and only to their own deal
+- [x] Up to 4 images per deal, images only, about 2 MB each at most
+- [x] Photos are kept in a private Supabase Storage bucket with Row
+      Level Security policies (022): only the deal's seller may upload or
       delete; the deal's seller and buyer, and logged-in traders viewing
       the preview, may see them
-- [ ] The upload screen warns the seller to crop out emails, phone
+- [x] The upload screen warns the seller to crop out emails, phone
       numbers and account IDs
-- [ ] The Deal Room and the preview show the photos, with the note:
+- [x] The Deal Room and the preview show the photos, with the note:
       "Photos show what's on offer. They don't prove ownership. The live
       code does."
-- [ ] Every storage policy is saved as a numbered SQL file
-- [ ] Works on the live URL
+- [x] Every storage policy is saved as a numbered SQL file
+- [x] Works on the live URL

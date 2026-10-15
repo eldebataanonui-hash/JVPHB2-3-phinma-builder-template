@@ -29,6 +29,8 @@ const ERROR_TEXT: Record<string, string> = {
   // Profile description
   bio_length: "Your description can be up to 500 characters.",
   bio_link: "Links aren't allowed in your description.",
+  social_invalid:
+    "Please enter just your username for each site (letters, numbers, dots, dashes and underscores), not a full web address.",
 };
 
 const FALLBACK = "Something went wrong. Please try again.";
