@@ -9,5 +9,19 @@ export default async function MyProfilePage() {
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
+
+  // Safety net: the database trigger normally creates the profile when
+  // the email is confirmed. If it's missing (e.g. the account was
+  // confirmed before the trigger existed), create it now. You can only
+  // log in with a confirmed email, so this keeps "has a profile = email
+  // confirmed" true. Does nothing if the profile already exists.
+  const name = String(user.user_metadata?.display_name ?? "").trim();
+  await supabase
+    .from("profiles")
+    .upsert(
+      { id: user.id, display_name: (name || "Trader").slice(0, 40) },
+      { onConflict: "id", ignoreDuplicates: true },
+    );
+
   redirect(`/profile/${user.id}`);
 }
