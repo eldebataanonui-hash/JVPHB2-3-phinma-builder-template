@@ -176,6 +176,12 @@ website can't skip them.
   deal with a buyer that was not completed within 3 days. Deals still in
   progress are not counted either way.
 
+## Stretch: listing photos (ticket 08)
+Only after everything above works live. The seller may add up to 4
+photos of the listed account to their Deal Room, stored in a private
+Supabase Storage bucket. Sellers only. Photos are a showcase, not
+verification: the live ownership code is the proof of control.
+
 ## Login
 Yes. Supabase Auth with email and password, and email confirmation
 turned on. Every trade action needs a logged-in trader, because the
