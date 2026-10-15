@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { TraderRecord } from "@/components/trader-record";
 import { createClient } from "@/lib/supabase/server";
 import { STEP_LABELS, formatPesos } from "@/lib/deals";
 import { logOut } from "@/app/auth/actions";
@@ -53,6 +54,7 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
             ✓ Email confirmed
           </span>
           <p className="text-sm text-muted-foreground">Joined {joined}</p>
+          <TraderRecord traderId={id} />
         </CardContent>
       </Card>
 

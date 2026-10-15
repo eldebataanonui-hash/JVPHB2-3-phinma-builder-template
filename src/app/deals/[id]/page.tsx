@@ -4,6 +4,8 @@ import { notFound, redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CopyLink } from "@/components/copy-link";
+import { RedFlags } from "@/components/red-flags";
+import { TraderRecord } from "@/components/trader-record";
 import { createClient } from "@/lib/supabase/server";
 import {
   EVENT_LABELS,
@@ -81,6 +83,10 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
               <Link href={`/profile/${deal.seller_id}`} className="underline">
                 {nameOf(deal.seller_id)}
               </Link>
+            </dd>
+            <dt className="text-muted-foreground">Seller&apos;s record</dt>
+            <dd>
+              <TraderRecord traderId={deal.seller_id} />
             </dd>
             <dt className="text-muted-foreground">Buyer</dt>
             <dd>
@@ -194,6 +200,8 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
           </Card>
         </>
       )}
+
+      <RedFlags />
     </main>
   );
 }
@@ -224,6 +232,10 @@ async function DealPreview({ id, error }: { id: string; error?: string | string[
               {preview.seller_name}
             </Link>
           </p>
+          <div className="flex gap-1 text-sm">
+            <span className="text-muted-foreground">Seller&apos;s record:</span>
+            <TraderRecord traderId={preview.seller_id} />
+          </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
           {preview.has_buyer ? (
             <p className="text-sm text-muted-foreground">
@@ -237,6 +249,8 @@ async function DealPreview({ id, error }: { id: string; error?: string | string[
           )}
         </CardContent>
       </Card>
+
+      <RedFlags />
     </main>
   );
 }

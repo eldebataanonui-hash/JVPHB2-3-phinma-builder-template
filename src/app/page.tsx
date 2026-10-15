@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { RedFlags } from "@/components/red-flags";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function Home() {
@@ -36,6 +37,8 @@ export default async function Home() {
           </>
         )}
       </div>
+
+      <RedFlags />
     </main>
   );
 }
