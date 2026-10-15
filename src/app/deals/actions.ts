@@ -28,6 +28,21 @@ export async function createDeal(formData: FormData) {
   redirect(`/deals/${data.id}`);
 }
 
+export async function advanceDeal(formData: FormData) {
+  const dealId = String(formData.get("deal_id") ?? "");
+  const fromStep = String(formData.get("from_step") ?? "");
+
+  const supabase = await createClient();
+  // The database checks it's your turn and the right step.
+  const { error } = await supabase.rpc("advance_deal", {
+    p_deal_id: dealId,
+    p_from_step: fromStep,
+  });
+
+  if (error) redirect(`/deals/${dealId}?error=${encodeURIComponent(error.message)}`);
+  redirect(`/deals/${dealId}`);
+}
+
 export async function joinDeal(formData: FormData) {
   const dealId = String(formData.get("deal_id") ?? "");
 

@@ -5,8 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CopyLink } from "@/components/copy-link";
 import { createClient } from "@/lib/supabase/server";
-import { STEP_LABELS, formatPesos } from "@/lib/deals";
-import { joinDeal } from "@/app/deals/actions";
+import {
+  EVENT_LABELS,
+  LOCK_IN_BUYER,
+  LOCK_IN_SELLER,
+  STAGES,
+  STEP_ACTIONS,
+  STEP_LABELS,
+  formatManilaTime,
+  formatPesos,
+  splitPrice,
+} from "@/lib/deals";
+import { advanceDeal, joinDeal } from "@/app/deals/actions";
 
 export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   const { id } = await props.params;
@@ -21,7 +31,7 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   // RLS only returns the deal if you are its seller or buyer.
   const { data: deal } = await supabase
     .from("deals")
-    .select("id, title, description, price, step, seller_id, buyer_id")
+    .select("id, title, description, price, step, seller_id, buyer_id, ownership_code, created_at")
     .eq("id", id)
     .maybeSingle();
 
@@ -35,6 +45,19 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
     .in("id", ids);
   const nameOf = (pid: string | null) =>
     people?.find((p) => p.id === pid)?.display_name ?? "—";
+
+  // The timestamped record. RLS only shows it to the seller and buyer.
+  const { data: events } = await supabase
+    .from("deal_events")
+    .select("id, actor_id, action, created_at")
+    .eq("deal_id", deal.id)
+    .order("id");
+
+  const { first, second } = splitPrice(deal.price);
+  const action = STEP_ACTIONS[deal.step];
+  const myTurn = Boolean(action) && (action.actor === "seller") === isSeller;
+  const otherName = nameOf(isSeller ? deal.buyer_id : deal.seller_id);
+  const stageIndex = STAGES.findIndex((s) => s.steps.includes(deal.step));
 
   const h = await headers();
   const proto = h.get("x-forwarded-proto") ?? "http";
@@ -86,6 +109,91 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
           </CardContent>
         </Card>
       )}
+
+      {deal.buyer_id && (
+        <>
+          <ol className="grid grid-cols-3 gap-2 text-xs sm:grid-cols-6">
+            {STAGES.map((stage, i) => (
+              <li
+                key={stage.label}
+                className={`rounded-[var(--radius)] border p-2 text-center ${
+                  i === stageIndex
+                    ? "border-primary font-semibold"
+                    : i < stageIndex
+                      ? "border-border text-muted-foreground"
+                      : "border-border text-muted-foreground opacity-50"
+                }`}
+              >
+                {i < stageIndex ? "✓ " : ""}
+                {stage.label}
+              </li>
+            ))}
+          </ol>
+
+          <Card className={myTurn ? "border-primary" : undefined}>
+            <CardHeader>
+              <CardTitle>
+                {deal.step === "completed"
+                  ? "Deal completed"
+                  : myTurn
+                    ? "Your turn"
+                    : `Waiting for ${otherName}`}
+              </CardTitle>
+              <CardDescription>{STEP_LABELS[deal.step]}</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <StepDetails
+                step={deal.step}
+                isSeller={isSeller}
+                code={deal.ownership_code}
+                first={first}
+                second={second}
+              />
+              {error && <p className="text-sm text-destructive">{error}</p>}
+              {myTurn && (
+                <form action={advanceDeal}>
+                  <input type="hidden" name="deal_id" value={deal.id} />
+                  <input type="hidden" name="from_step" value={deal.step} />
+                  <Button type="submit">{action.button}</Button>
+                </form>
+              )}
+              {!myTurn && deal.step !== "completed" && (
+                <p className="text-xs text-muted-foreground">
+                  Refresh this page to see when {otherName} is done.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Record</CardTitle>
+              <CardDescription>
+                Every confirmation, with who and when. Nobody can edit or
+                delete it.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="flex flex-col gap-2 text-sm">
+                <li>
+                  <span className="text-muted-foreground">
+                    {formatManilaTime(deal.created_at)} ·{" "}
+                  </span>
+                  {nameOf(deal.seller_id)} created the Deal Room
+                </li>
+                {events?.map((event) => (
+                  <li key={event.id}>
+                    <span className="text-muted-foreground">
+                      {formatManilaTime(event.created_at)} ·{" "}
+                    </span>
+                    {nameOf(event.actor_id)} {EVENT_LABELS[event.action]}
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </>
+      )}
     </main>
   );
 }
@@ -130,5 +238,139 @@ async function DealPreview({ id, error }: { id: string; error?: string | string[
         </CardContent>
       </Card>
     </main>
+  );
+}
+
+// The instructions for the current step, worded for whoever is looking.
+function StepDetails({
+  step,
+  isSeller,
+  code,
+  first,
+  second,
+}: {
+  step: string;
+  isSeller: boolean;
+  code: string;
+  first: number;
+  second: number;
+}) {
+  const codeBox = (
+    <p className="w-fit rounded-[var(--radius)] border border-border px-4 py-2 font-mono text-2xl font-semibold tracking-widest">
+      {code}
+    </p>
+  );
+
+  switch (step) {
+    case "awaiting_code":
+      return isSeller ? (
+        <div className="flex flex-col gap-2 text-sm">
+          <p>Put this code in the account&apos;s MLBB in-game name or profile signature:</p>
+          {codeBox}
+          <p className="text-muted-foreground">
+            This proves you control the account right now. Screenshots and
+            videos can&apos;t do that.
+          </p>
+        </div>
+      ) : (
+        <p className="text-sm">The seller is putting a code in the account&apos;s in-game name.</p>
+      );
+    case "code_placed":
+      return isSeller ? (
+        <p className="text-sm">The buyer is checking the code in the game.</p>
+      ) : (
+        <div className="flex flex-col gap-2 text-sm">
+          <p>Look up the account in MLBB. Its in-game name or signature should show exactly:</p>
+          {codeBox}
+          <p className="font-medium text-destructive">
+            If it doesn&apos;t match, don&apos;t pay. Don&apos;t accept screenshots instead.
+          </p>
+        </div>
+      );
+    case "awaiting_first_payment":
+      return (
+        <p className="text-sm">
+          {isSeller ? "The buyer sends" : "Send"} the first half:{" "}
+          <span className="font-semibold">{formatPesos(first)}</span>.
+          {!isSeller && " Never send the full price now."}
+        </p>
+      );
+    case "first_payment_sent":
+      return (
+        <p className="text-sm">
+          {isSeller
+            ? "Open your GCash or bank app and check that "
+            : "The seller is checking that "}
+          <span className="font-semibold">{formatPesos(first)}</span> arrived.
+          {isSeller && " Don't trust a screenshot of a receipt."}
+        </p>
+      );
+    case "awaiting_lock_in":
+    case "lock_in_done":
+      return (
+        <div className="flex flex-col gap-3 text-sm">
+          <Checklist
+            title="Seller does"
+            items={LOCK_IN_SELLER}
+            active={isSeller && step === "awaiting_lock_in"}
+          />
+          <Checklist
+            title="Buyer does"
+            items={LOCK_IN_BUYER}
+            active={!isSeller && step === "lock_in_done"}
+          />
+          {!isSeller && step === "lock_in_done" && (
+            <p className="font-medium">
+              Only confirm once every step is done and nothing on the account
+              belongs to the seller.
+            </p>
+          )}
+        </div>
+      );
+    case "awaiting_second_payment":
+      return (
+        <p className="text-sm">
+          {isSeller ? "The buyer sends" : "Send"} the second half:{" "}
+          <span className="font-semibold">{formatPesos(second)}</span>.
+        </p>
+      );
+    case "second_payment_sent":
+      return (
+        <p className="text-sm">
+          {isSeller
+            ? "Open your GCash or bank app and check that "
+            : "The seller is checking that "}
+          <span className="font-semibold">{formatPesos(second)}</span> arrived.
+        </p>
+      );
+    case "completed":
+      return (
+        <p className="text-sm">
+          The account has been handed over and both halves were confirmed.
+        </p>
+      );
+    default:
+      return null;
+  }
+}
+
+function Checklist({
+  title,
+  items,
+  active,
+}: {
+  title: string;
+  items: string[];
+  active: boolean;
+}) {
+  return (
+    <div className={active ? "" : "text-muted-foreground"}>
+      <p className="font-medium">{title}:</p>
+      <ol className="ml-5 list-decimal">
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ol>
+    </div>
   );
 }
