@@ -44,7 +44,7 @@ the buyer, so they can't take the account back later. The buyer checks
 they're in control, then pays the other half.
 
 Every step is confirmed and timestamped. And a seller's record only
-counts real, finished deals. Fake comments can't touch it.
+counts finished deals. Fake comments can't touch it.
 
 ### 4. The demo moment (~30s) — Speaker: ______
 
@@ -103,3 +103,10 @@ show it isn't a one-off. Two gaps a facilitator may notice:
   in one group in one week" is stronger than "this isn't rare."
 - **Outside buyer: confirmed** (an MLBB player from outside the team).
   Make sure they can attend Session 3.
+
+## If asked: "Can't someone fake their record with a second account?"
+
+> "They could, by trading with themselves. It's much harder than posting
+> fake comments: each fake deal takes a confirmed email and every step of
+> a real trade. Making the record harder to fake, like only counting
+> deals between unrelated accounts, is on our list for after the demo."

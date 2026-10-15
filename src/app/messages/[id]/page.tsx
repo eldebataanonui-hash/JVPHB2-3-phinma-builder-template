@@ -57,7 +57,8 @@ export default async function ConversationPage(props: PageProps<"/messages/[id]"
             </Link>
           </CardTitle>
           <CardDescription className="font-medium text-destructive">
-            Never pay or share codes here. Start a Deal Room for any trade.
+            Never pay or share a password or security code here. Deal codes
+            (JOIN-…) are fine. Start a Deal Room for any trade.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
@@ -88,8 +89,8 @@ export default async function ConversationPage(props: PageProps<"/messages/[id]"
             <input type="hidden" name="recipient_id" value={other.id} />
             <Textarea name="body" required maxLength={1000} rows={2} placeholder="Message" aria-label="Message" />
             <p className="text-xs text-muted-foreground">
-              Messages can&apos;t be deleted. Links are blocked. Refresh to see
-              replies. Got a deal code (JOIN-…)?{" "}
+              Messages can&apos;t be deleted. Links are blocked. Replies
+              appear by themselves. Got a deal code (JOIN-…)?{" "}
               <Link href="/deals/join" className="text-primary underline">
                 Join the deal here
               </Link>

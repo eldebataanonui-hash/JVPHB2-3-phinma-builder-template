@@ -22,8 +22,6 @@ stays small enough to actually ship by Session 3.
 - **Star ratings and written reviews.** The MVP only shows a
   completed-deals count.
 - **Cooling-off period and dispute handling** after a deal is complete.
-- **Blocking links inside the Deal Room.** The MVP shows warnings
-  instead.
 
 ## From /to-spec (2026-10-15)
 
@@ -31,7 +29,6 @@ stays small enough to actually ship by Session 3.
   reported concerns in the Supabase dashboard.
 - **Automatic below-market price warning.** Needs price data; for now it
   is a written red-flag tip.
-- **Notifications when it's your turn.** For now, refresh the page.
 - **Cancelling or editing a deal** after it's created.
 - **Saving each Lock-In Checklist item separately.** The MVP confirms the
   checklist once as a whole.
@@ -42,7 +39,7 @@ stays small enough to actually ship by Session 3.
 - **Block or mute a trader** in direct messages.
 - **Report a direct message** to the team (concerns are per Deal Room
   for now).
-- **Seller can reset a stalled deal.** Anyone with the link can take the
+- **Seller can reset a stalled deal.** Anyone with the code or link can take the
   buyer slot; if they stall, the seller can't remove them and the deal
   counts as abandoned after 3 days. Let the seller reset a deal before
   the first payment, and count "abandoned" only against whoever's turn
@@ -50,3 +47,16 @@ stays small enough to actually ship by Session 3.
 - **Phone push notifications or email alerts** for deal steps and
   messages. In-app notifications (the bell) work now; push needs a
   service and email hits the free sending limit.
+
+## From the second code review (2026-10-15)
+
+- **Harder-to-fake records.** One person with two accounts can complete
+  fake deals with themselves. Only count deals between unrelated
+  accounts, or weight records by account age.
+- **Block or report a trader in Messages.** Messages are rate-limited
+  but there's no way to block someone.
+- **Smarter reserved-name check.** "Supp0rt" or "A d m i n" still get
+  through.
+- **Longer deal codes** (10 to 12 characters) if the site grows.
+- **Mark notifications read with a button press**, not when a page loads
+  (a prefetch can mark things read that nobody saw).

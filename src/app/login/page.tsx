@@ -34,7 +34,13 @@ export default async function LogInPage(props: PageProps<"/login">) {
             </div>
             <Button type="submit">Log in</Button>
             <p className="text-sm text-muted-foreground">
-              New here? <Link href="/signup" className="underline">Create an account</Link>
+              New here?{" "}
+              <Link
+                href={typeof next === "string" ? `/signup?next=${encodeURIComponent(next)}` : "/signup"}
+                className="underline"
+              >
+                Create an account
+              </Link>
             </p>
           </form>
         </CardContent>

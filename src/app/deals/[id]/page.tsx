@@ -1,37 +1,33 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { RefreshButton } from "@/components/refresh-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { CopyLink } from "@/components/copy-link";
+import { CopyField } from "@/components/copy-field";
+import { DealPreview } from "@/components/deal-room/deal-preview";
+import { PaymentPicker } from "@/components/deal-room/payment-picker";
+import { StepDetails } from "@/components/deal-room/step-details";
 import { RedFlags } from "@/components/red-flags";
+import { RefreshButton } from "@/components/refresh-button";
 import { TraderRecord } from "@/components/trader-record";
-import { errorText } from "@/lib/errors";
-import { createClient } from "@/lib/supabase/server";
 import {
   EVENT_LABELS,
-  LOCK_IN_BUYER,
-  LOCK_IN_SELLER,
   STAGES,
   STEP_ACTIONS,
   STEP_LABELS,
   formatManilaTime,
-  PAYMENT_METHODS,
   formatPesos,
   paymentLabel,
   splitPrice,
 } from "@/lib/deals";
-import {
-  advanceDeal,
-  choosePaymentMethod,
-  joinDeal,
-  reportConcern,
-  sendMessage,
-} from "@/app/deals/actions";
+import { errorText } from "@/lib/errors";
+import { createClient } from "@/lib/supabase/server";
+import { advanceDeal, reportConcern, sendMessage } from "@/app/deals/actions";
 
+// The Deal Room. The preview (for traders not in the deal), the step
+// instructions and the payment picker live in src/components/deal-room/.
 export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   const { id } = await props.params;
   const params = await props.searchParams;
@@ -148,13 +144,13 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            <CopyLink url={deal.join_code} large />
+            <CopyField value={deal.join_code} large />
             <details className="text-sm text-muted-foreground">
               <summary className="cursor-pointer">
                 Sharing outside AQTech GHub? Use the link instead
               </summary>
               <div className="mt-2">
-                <CopyLink url={dealUrl} />
+                <CopyField value={dealUrl} />
               </div>
             </details>
           </CardContent>
@@ -233,7 +229,7 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
               <CardTitle>Chat</CardTitle>
               <CardDescription>
                 Messages stay on the record and can&apos;t be deleted. Links
-                are blocked. Refresh to see new messages.
+                are blocked. New messages appear by themselves.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
@@ -260,8 +256,9 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
                 <input type="hidden" name="deal_id" value={deal.id} />
                 <Textarea name="body" required maxLength={1000} rows={2} placeholder="Message" aria-label="Message" />
                 <p className="text-xs text-destructive">
-                  Never send your password or a GCash/bank code. The only code
-                  ever shared is the Moonton binding code, at the Lock-In step.
+                  Never send your password or a GCash/bank code. The only
+                  security code ever shared is the Moonton binding code, at the
+                  Lock-In step.
                 </p>
                 {chat_error && <p className="text-sm text-destructive">{chat_error}</p>}
                 <div className="flex gap-2">
@@ -344,250 +341,5 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
 
       <RedFlags />
     </main>
-  );
-}
-
-// What a trader who isn't in the deal sees: a safe preview and a Join
-// button. The preview function never returns the ownership code.
-async function DealPreview({ id, error }: { id: string; error: string | null }) {
-  const supabase = await createClient();
-  const { data } = await supabase.rpc("deal_preview", { p_deal_id: id });
-  const preview = data?.[0];
-  if (!preview) notFound();
-
-  // Once a buyer joins, the deal is private: no title, price or seller.
-  if (preview.has_buyer || !preview.title || !preview.seller_id) {
-    return (
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>This deal already has a buyer</CardTitle>
-            <CardDescription>
-              Deal Rooms are private once a buyer joins.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      </main>
-    );
-  }
-
-  return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
-      <Card>
-        <CardHeader>
-          <CardDescription>Deal Room preview</CardDescription>
-          <CardTitle className="text-2xl">{preview.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
-          <p className="text-xl font-semibold">{formatPesos(preview.price)}</p>
-          {preview.description && (
-            <p className="whitespace-pre-wrap text-sm">{preview.description}</p>
-          )}
-          <p className="text-sm">
-            <span className="text-muted-foreground">Seller: </span>
-            <Link href={`/profile/${preview.seller_id}`} className="underline">
-              {preview.seller_name}
-            </Link>
-          </p>
-          <div className="flex gap-1 text-sm">
-            <span className="text-muted-foreground">Seller&apos;s record:</span>
-            <TraderRecord traderId={preview.seller_id} />
-          </div>
-          {error && <p className="text-sm text-destructive">{error}</p>}
-          <form action={joinDeal}>
-            <input type="hidden" name="deal_id" value={preview.id} />
-            <Button type="submit">Join as buyer</Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      <RedFlags />
-    </main>
-  );
-}
-
-// The instructions for the current step, worded for whoever is looking.
-function StepDetails({
-  step,
-  isSeller,
-  code,
-  first,
-  second,
-  method,
-}: {
-  step: string;
-  isSeller: boolean;
-  code: string;
-  first: number;
-  second: number;
-  method: string | null;
-}) {
-  const app = method ?? "your e-wallet or bank";
-  const codeBox = (
-    <p className="w-fit rounded-[var(--radius)] border border-border px-4 py-2 font-mono text-2xl font-semibold tracking-widest">
-      {code}
-    </p>
-  );
-
-  switch (step) {
-    case "awaiting_code":
-      return isSeller ? (
-        <div className="flex flex-col gap-2 text-sm">
-          <p>Put this code in the account&apos;s MLBB in-game name or profile signature:</p>
-          {codeBox}
-          <p className="text-muted-foreground">
-            This proves you control the account right now. Screenshots and
-            videos can&apos;t do that.
-          </p>
-        </div>
-      ) : (
-        <p className="text-sm">The seller is putting a code in the account&apos;s in-game name.</p>
-      );
-    case "code_placed":
-      return isSeller ? (
-        <p className="text-sm">The buyer is checking the code in the game.</p>
-      ) : (
-        <div className="flex flex-col gap-2 text-sm">
-          <p>Look up the account in MLBB. Its in-game name or signature should show exactly:</p>
-          {codeBox}
-          <p className="font-medium text-destructive">
-            If it doesn&apos;t match, don&apos;t pay. Don&apos;t accept screenshots instead.
-          </p>
-        </div>
-      );
-    case "awaiting_first_payment":
-      return isSeller ? (
-        <p className="text-sm">
-          The buyer sends the first half:{" "}
-          <span className="font-semibold">{formatPesos(first)}</span>
-          {method ? (
-            <>
-              {" "}by <span className="font-semibold">{method}</span>.
-            </>
-          ) : (
-            ". They're choosing how to pay."
-          )}{" "}
-          Share your account number in the chat below.
-        </p>
-      ) : (
-        <p className="text-sm">
-          Choose how you&apos;ll pay, then send the first half:{" "}
-          <span className="font-semibold">{formatPesos(first)}</span>. Never
-          send the full price now. Ask the seller for their account number in
-          the chat below.
-        </p>
-      );
-    case "first_payment_sent":
-      return (
-        <p className="text-sm">
-          {isSeller
-            ? `Open ${app} and check that `
-            : `The seller is checking ${app} for `}
-          <span className="font-semibold">{formatPesos(first)}</span>
-          {isSeller ? " arrived." : "."}
-          {isSeller && " Don't trust a screenshot of a receipt."}
-        </p>
-      );
-    case "awaiting_lock_in":
-    case "lock_in_done":
-      return (
-        <div className="flex flex-col gap-3 text-sm">
-          <Checklist
-            title="Seller does"
-            items={LOCK_IN_SELLER}
-            active={isSeller && step === "awaiting_lock_in"}
-          />
-          <Checklist
-            title="Buyer does"
-            items={LOCK_IN_BUYER}
-            active={!isSeller && step === "lock_in_done"}
-          />
-          {!isSeller && step === "lock_in_done" && (
-            <p className="font-medium">
-              Only confirm once every step is done and nothing on the account
-              belongs to the seller.
-            </p>
-          )}
-        </div>
-      );
-    case "awaiting_second_payment":
-      return (
-        <p className="text-sm">
-          {isSeller ? "The buyer sends" : "Send"} the second half:{" "}
-          <span className="font-semibold">{formatPesos(second)}</span> by{" "}
-          {app}.
-        </p>
-      );
-    case "second_payment_sent":
-      return (
-        <p className="text-sm">
-          {isSeller
-            ? `Open ${app} and check that `
-            : `The seller is checking ${app} for `}
-          <span className="font-semibold">{formatPesos(second)}</span>
-          {isSeller ? " arrived." : "."}
-        </p>
-      );
-    case "completed":
-      return (
-        <p className="text-sm">
-          The account has been handed over and both halves were confirmed.
-        </p>
-      );
-    default:
-      return null;
-  }
-}
-
-function Checklist({
-  title,
-  items,
-  active,
-}: {
-  title: string;
-  items: string[];
-  active: boolean;
-}) {
-  return (
-    <div className={active ? "" : "text-muted-foreground"}>
-      <p className="font-medium">{title}:</p>
-      <ol className="ml-5 list-decimal">
-        {items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ol>
-    </div>
-  );
-}
-
-// The buyer picks how they'll pay. AQTech GHub never moves the money;
-// this tells the seller which app to check, and goes in the record.
-function PaymentPicker({ dealId, current }: { dealId: string; current: string | null }) {
-  return (
-    <form action={choosePaymentMethod} className="flex flex-col gap-3">
-      <input type="hidden" name="deal_id" value={dealId} />
-      <fieldset className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-        <legend className="mb-2 text-sm font-medium">How will you pay?</legend>
-        {PAYMENT_METHODS.map((m) => (
-          <label
-            key={m.id}
-            className="flex cursor-pointer items-center gap-2 rounded-[var(--radius)] border border-border bg-secondary px-3 py-2 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary/15"
-          >
-            <input
-              type="radio"
-              name="method"
-              value={m.id}
-              defaultChecked={current === m.id}
-              required
-              className="accent-[var(--primary)]"
-            />
-            {m.label}
-          </label>
-        ))}
-      </fieldset>
-      <Button type="submit" variant="outline" className="w-fit">
-        {current ? "Change payment method" : "Use this payment method"}
-      </Button>
-    </form>
   );
 }

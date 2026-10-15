@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isAllowedDisplayName } from "@/lib/display-names";
 import { authErrorCode } from "@/lib/errors";
+import { safeNextPath } from "@/lib/safe-path";
 
 // Server actions: these run on the server when a form is submitted.
 // Errors go back to the page as short codes, e.g. /login?error=...
@@ -15,10 +16,15 @@ export async function signUp(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
+  // Where to go once the email is confirmed, e.g. Join a deal for a new
+  // buyer who arrived with a deal code.
+  const next = safeNextPath(String(formData.get("next") ?? ""));
+  const keepNext = next !== "/profile" ? `&next=${encodeURIComponent(next)}` : "";
+
   if (displayName.length < 1 || displayName.length > 40) {
-    redirect("/signup?error=name_length");
+    redirect(`/signup?error=name_length${keepNext}`);
   }
-  if (!isAllowedDisplayName(displayName)) redirect("/signup?error=name_reserved");
+  if (!isAllowedDisplayName(displayName)) redirect(`/signup?error=name_reserved${keepNext}`);
 
   // Where the confirmation email's link should send the trader back to:
   // this same site, whether that's localhost or the live URL.
@@ -30,35 +36,19 @@ export async function signUp(formData: FormData) {
     password,
     options: {
       data: { display_name: displayName },
-      emailRedirectTo: `${origin}/auth/callback`,
+      emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
     },
   });
 
-  if (error) redirect(`/signup?error=${authErrorCode(error.code, "failed")}`);
-  redirect("/signup?sent=1");
-}
-
-// Only allow paths on this site, so a crafted login link can't send
-// people to another website after they log in. Instead of checking how
-// the text starts (tricks like "/\t/evil.com" slip past that), resolve
-// it the same way a browser would and keep it only if it stays here.
-function safeNextPath(raw: string): string {
-  if (!raw.startsWith("/")) return "/profile";
-  try {
-    const base = "https://this-site.invalid";
-    const url = new URL(raw, base);
-    if (url.origin !== base) return "/profile";
-    return url.pathname + url.search + url.hash;
-  } catch {
-    return "/profile";
-  }
+  if (error) redirect(`/signup?error=${authErrorCode(error.code, "failed")}${keepNext}`);
+  redirect(`/signup?sent=1${keepNext}`);
 }
 
 export async function logIn(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
-  // Where to go after logging in, e.g. back to a Deal Room link.
+  // Where to go after logging in, e.g. back to a Deal Room or Join a deal.
   const next = safeNextPath(String(formData.get("next") ?? ""));
   const isLocalPath = next !== "/profile";
 

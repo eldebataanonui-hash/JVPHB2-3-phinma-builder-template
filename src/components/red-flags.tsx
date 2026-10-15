@@ -7,7 +7,7 @@ const RED_FLAGS = [
   "\"No middleman needed\" is a scam line. Refusing a Deal Room is a warning sign.",
   "A price far below similar listings is a warning sign.",
   "Never share your password or a GCash/bank code. AQTech GHub and honest traders never ask for them.",
-  "The only code ever shared is the Moonton binding code, inside the Deal Room, at the Lock-In step.",
+  "Deal codes (JOIN-…) are safe to share. The only security code ever shared is the Moonton binding code, inside the Deal Room chat, at the Lock-In step.",
   "Screenshots and videos can be faked. Only trust the live ownership code.",
 ];
 

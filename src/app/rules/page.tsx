@@ -17,8 +17,8 @@ const SECTIONS = [
     points: [
       "Confirming a step that didn't really happen, such as \"I've sent the first half\" when you haven't.",
       "Taking the account back after the buyer confirmed full control.",
-      "Asking for payment, fees or codes outside the Deal Room.",
-      "Asking anyone for their password or a GCash/bank code. The only code ever shared is the Moonton binding code, in the Deal Room chat, at the Lock-In step.",
+      "Asking for payment, fees or security codes outside the Deal Room. (Sharing a deal code, JOIN-…, is fine.)",
+      "Asking anyone for their password or a GCash/bank code. The only security code ever shared is the Moonton binding code, in the Deal Room chat, at the Lock-In step.",
       "Sending links in the Deal Room chat, or moving the deal to another app to send them.",
       "Leaving a deal unfinished for more than 3 days. It counts as abandoned on your record.",
     ],

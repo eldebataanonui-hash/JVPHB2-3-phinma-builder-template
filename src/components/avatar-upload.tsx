@@ -42,7 +42,11 @@ export function AvatarUpload({ userId, hasPicture }: { userId: string; hasPictur
 
     const result = await setAvatar(path);
     setBusy(false);
-    if (!result.ok) return setMessage("Couldn't save your picture. Please try again.");
+    if (!result.ok) {
+      // Don't leave an unused file behind in storage.
+      await createClient().storage.from("avatars").remove([path]);
+      return setMessage("Couldn't save your picture. Please try again.");
+    }
     router.refresh();
   }
 
@@ -81,7 +85,11 @@ export function AvatarUpload({ userId, hasPicture }: { userId: string; hasPictur
         JPG, PNG or WebP, up to 2 MB. Never upload your ID or your account&apos;s
         login screens.
       </p>
-      {message && <p className="text-sm text-destructive">{message}</p>}
+      {message && (
+        <p role="alert" className="text-sm text-destructive">
+          {message}
+        </p>
+      )}
     </div>
   );
 }

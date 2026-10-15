@@ -64,7 +64,8 @@ MVP features:
    middleman needed", prices well below similar listings, and any
    request for a password or one-time code.
 6. A **timestamped record** of every step, and a **completed-deals
-   count** on each user's profile that dummy accounts cannot inflate.
+   count** on each user's profile, built from finished deals rather than
+   comments (harder to fake, though not impossible with a second account).
 
 Why a website and not a shared document: it locks steps in order,
 records which person confirmed each step and when, and builds a deal

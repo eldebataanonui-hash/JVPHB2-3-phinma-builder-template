@@ -6,7 +6,7 @@ import { Logo } from "@/components/logo";
 // About us: who we are, why AQTech GHub exists and how it keeps trades
 // safe. Public, so anyone can read it before signing up.
 const HOW = [
-  { icon: BadgeCheck, title: "Verified traders", body: "Every trader confirms their email, and their profile shows a deal record built only from finished trades." },
+  { icon: BadgeCheck, title: "Confirmed traders", body: "Every trader confirms their email, and their profile shows a deal record built from finished trades, not comments." },
   { icon: KeyRound, title: "Live ownership code", body: "The seller proves they control the account right now. Screenshots and videos can't fake that." },
   { icon: Split, title: "Pay in two halves", body: "Half before the handover, half after the buyer has full control. Never the full price first." },
   { icon: ShieldCheck, title: "Lock-In Checklist", body: "Every login moves to the buyer, so the seller can't take the account back." },

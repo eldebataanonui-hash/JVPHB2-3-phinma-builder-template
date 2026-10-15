@@ -24,7 +24,7 @@ export default async function NewDealPage(props: PageProps<"/deals/new">) {
           <CardTitle>New Deal</CardTitle>
           <CardDescription>
             Describe the MLBB account you&apos;re selling. You&apos;ll get a
-            link to send to your buyer.
+            deal code (JOIN-…) to send to your buyer.
           </CardDescription>
         </CardHeader>
         <CardContent>

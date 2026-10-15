@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar } from "@/components/avatar";
-import { formatManilaTime } from "@/lib/deals";
+import { formatManilaTime, paymentLabel } from "@/lib/deals";
 import { notificationHref, notificationText } from "@/lib/notifications";
 import { createClient } from "@/lib/supabase/server";
 import { markAllRead, openNotification } from "@/app/notifications/actions";
@@ -30,11 +30,13 @@ export default async function NotificationsPage() {
       ? supabase.from("profiles").select("id, display_name, avatar_path").in("id", actorIds)
       : Promise.resolve({ data: [] }),
     dealIds.length
-      ? supabase.from("deals").select("id, title").in("id", dealIds)
+      ? supabase.from("deals").select("id, title, payment_method").in("id", dealIds)
       : Promise.resolve({ data: [] }),
   ]);
   const person = (id: string) => people?.find((p) => p.id === id);
-  const dealTitle = (id: string | null) => deals?.find((d) => d.id === id)?.title ?? "a deal";
+  const dealOf = (id: string | null) => deals?.find((d) => d.id === id);
+  const dealTitle = (id: string | null) => dealOf(id)?.title ?? "a deal";
+  const dealMethod = (id: string | null) => paymentLabel(dealOf(id)?.payment_method ?? null);
   const unread = list.filter((n) => !n.read_at).length;
 
   return (
@@ -71,13 +73,15 @@ export default async function NotificationsPage() {
                 >
                   <Avatar name={who} path={person(n.actor_id)?.avatar_path} size={36} />
                   <span className="flex min-w-0 flex-1 flex-col gap-1">
-                    <span className="text-sm">{notificationText(n.kind, who, dealTitle(n.deal_id))}</span>
+                    <span className="text-sm">{notificationText(n.kind, who, dealTitle(n.deal_id), dealMethod(n.deal_id))}</span>
                     <span className="text-xs text-muted-foreground">
                       {formatManilaTime(n.created_at)}
                     </span>
                   </span>
                   {!n.read_at && (
-                    <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-primary" aria-label="Unread" />
+                    <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-primary">
+                      <span className="sr-only">Unread</span>
+                    </span>
                   )}
                 </button>
               </form>

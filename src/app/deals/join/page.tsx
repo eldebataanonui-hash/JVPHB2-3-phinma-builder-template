@@ -14,7 +14,12 @@ export default async function JoinDealPage(props: PageProps<"/deals/join">) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login?next=/deals/join");
+  if (!user) {
+    // Keep the code, so after logging in (or signing up) they land
+    // straight on the deal.
+    const back = typed ? `/deals/join?code=${encodeURIComponent(typed)}` : "/deals/join";
+    redirect(`/login?next=${encodeURIComponent(back)}`);
+  }
 
   let notFound = false;
   if (typed) {

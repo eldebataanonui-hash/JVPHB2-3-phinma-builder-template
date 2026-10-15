@@ -14,7 +14,7 @@ export const STEP_LABELS: Record<string, string> = {
 };
 
 // Who acts at each step, and what their button says. This mirrors the
-// table in supabase/sql/007-create-deal-events.sql, where the database
+// table in advance_deal (latest version: supabase/sql/017), where the database
 // enforces it. This copy only decides what the page shows.
 export const STEP_ACTIONS: Record<
   string,
@@ -73,7 +73,7 @@ export const EVENT_LABELS: Record<string, string> = {
 // Draft Lock-In Checklist from docs/SPEC.md. The team must check these
 // against the game's current settings; MLBB menus change between updates.
 export const LOCK_IN_SELLER = [
-  "Change the account's bound Moonton email to the buyer's email. If Moonton sends the buyer a binding code, the buyer shares it in this Deal Room's chat. That is the only code ever shared.",
+  "Change the account's bound Moonton email to the buyer's email. If Moonton sends the buyer a binding code, the buyer shares it in this Deal Room's chat. That is the only security code ever shared.",
   "Remove every third-party login bound to you (Facebook, Google Play, TikTok, Apple, VK or others).",
 ];
 export const LOCK_IN_BUYER = [

@@ -132,7 +132,7 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
             <CardContent>
               <DealList
                 deals={deals?.filter((d) => d.seller_id !== user.id)}
-                empty="You haven't joined any deals yet. Open a seller's Deal Room link to join."
+                empty="You haven't joined any deals yet. Enter a seller's deal code on Join a deal."
               />
             </CardContent>
           </Card>

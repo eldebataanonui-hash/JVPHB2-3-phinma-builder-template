@@ -41,8 +41,9 @@ export default async function MessagesPage() {
         <CardHeader>
           <CardTitle>Messages</CardTitle>
           <CardDescription>
-            Ask questions before you trade. Never pay or share codes here:
-            start a Deal Room for any trade.
+            Ask questions before you trade. Deal codes (JOIN-…) are fine to
+            share here. Never pay here, and never share a password or a
+            security code: start a Deal Room for any trade.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">

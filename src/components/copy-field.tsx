@@ -6,11 +6,11 @@ import { Input } from "@/components/ui/input";
 
 // Shows a value (a deal code or a link) with a Copy button, so the
 // seller can paste it to the buyer.
-export function CopyLink({ url, large = false }: { url: string; large?: boolean }) {
+export function CopyField({ value, large = false }: { value: string; large?: boolean }) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
-    await navigator.clipboard.writeText(url);
+    await navigator.clipboard.writeText(value);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -19,7 +19,7 @@ export function CopyLink({ url, large = false }: { url: string; large?: boolean 
     <div className="flex gap-2">
       <Input
         readOnly
-        value={url}
+        value={value}
         onFocus={(e) => e.currentTarget.select()}
         className={large ? "h-12 font-mono text-lg font-semibold tracking-widest" : undefined}
       />

@@ -19,7 +19,7 @@ export function NotificationBell({ initialCount }: { initialCount: number }) {
   const [serverCount, setServerCount] = useState(initialCount);
   const last = useRef(initialCount);
 
-  // A fresh count from the server (after any navigation) replaces ours.
+  // A fresh count from the server (after a refresh) replaces ours.
   // React's recommended way to follow a changing prop: compare during
   // render instead of in an effect.
   if (initialCount !== serverCount) {

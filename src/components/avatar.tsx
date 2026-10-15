@@ -27,7 +27,9 @@ export function Avatar({
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={avatarUrl(path)}
-        alt={`${name}'s profile picture`}
+        // The name is always shown next to the picture, so screen readers
+        // don't need it twice.
+        alt=""
         style={style}
         className={cn("shrink-0 rounded-full object-cover ring-1 ring-border", className)}
       />
