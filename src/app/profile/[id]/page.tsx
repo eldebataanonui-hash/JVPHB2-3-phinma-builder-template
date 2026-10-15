@@ -7,7 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar } from "@/components/avatar";
 import { AvatarUpload } from "@/components/avatar-upload";
+import { SellingNow } from "@/components/profile/selling-now";
+import { TraderInsights, TrustBadge } from "@/components/profile/trader-insights";
 import { TraderRecord } from "@/components/trader-record";
+import type { TraderFacts } from "@/lib/trust";
 import { errorText } from "@/lib/errors";
 import { createClient } from "@/lib/supabase/server";
 import { updateBio, updateSocials } from "@/app/profile/actions";
@@ -46,6 +49,18 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
         .select("id, title, price, step, seller_id")
         .order("created_at", { ascending: false })
     : { data: null };
+  // The trader's record, for the trust badge, Trust check and stats.
+  const { data: statsRows } = await supabase.rpc("trader_stats", { p_trader_id: id });
+  const stats = statsRows?.[0];
+  const facts: TraderFacts = {
+    joinedAt: profile.created_at,
+    completedAsSeller: stats?.completed_as_seller ?? 0,
+    completedAsBuyer: stats?.completed_as_buyer ?? 0,
+    abandoned: stats?.abandoned ?? 0,
+    lastActive: stats?.last_active ?? null,
+    socialsLinked: SOCIALS.filter((s) => profile[s.key]).map((s) => s.label),
+  };
+
   const joined = new Date(profile.created_at).toLocaleDateString("en-PH", {
     year: "numeric",
     month: "long",
@@ -54,12 +69,13 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   });
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
+    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
       <Card>
         <CardHeader className="flex flex-row items-center gap-4">
           <Avatar name={profile.display_name} path={profile.avatar_path} size={72} />
           <div className="flex min-w-0 flex-col gap-2">
             <CardTitle className="truncate text-2xl">{profile.display_name}</CardTitle>
+            <TrustBadge facts={facts} />
             {isMe && <AvatarUpload userId={id} hasPicture={Boolean(profile.avatar_path)} />}
           </div>
         </CardHeader>
@@ -85,6 +101,10 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
           )}
         </CardContent>
       </Card>
+
+      <TraderInsights facts={facts} />
+
+      {!isMe && <SellingNow sellerId={id} sellerName={profile.display_name} />}
 
       {isMe && (
         <Card>

@@ -33,7 +33,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <TopBar />
         <div className="flex flex-1">
           <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-56 shrink-0 flex-col border-r border-border md:flex">
-            <SideNav loggedIn={loggedIn} />
+            <SideNav loggedIn={loggedIn} myId={user?.id} />
             {/* mt-auto pushes About us to the bottom-left corner. */}
             <div className="mt-auto p-3">
               <AboutLink />
@@ -42,7 +42,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           {/* pb-20 on phones leaves room for the bottom tab bar. */}
           <div className="flex min-w-0 flex-1 flex-col pb-20 md:pb-0">{children}</div>
         </div>
-        <MobileNav loggedIn={loggedIn} />
+        <MobileNav loggedIn={loggedIn} myId={user?.id} />
       </body>
     </html>
   );
