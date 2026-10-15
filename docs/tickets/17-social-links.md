@@ -1,7 +1,7 @@
 # 17 — Social media on profiles
 
-**What to build:** Traders can add optional Facebook, Instagram, TikTok,
-X, YouTube and Discord usernames on their Profile. Anyone viewing the
+**What to build:** Traders can add optional Facebook, TikTok, Instagram,
+X and Discord usernames on their Profile. Anyone viewing the
 Profile sees them as links, so they can check the trader is a real,
 established person.
 
@@ -16,6 +16,7 @@ established person.
 - [ ] The app builds every link itself, always to the real site; Discord
       shows as text
 - [ ] Pasting a full profile link or "@name" keeps just the username
+- [ ] Your own Profile shows a Test link under each saved account
 - [ ] Profiles show the links with a note to keep payment talk and
       payments inside a Deal Room
 - [ ] The database change is saved as a numbered SQL file

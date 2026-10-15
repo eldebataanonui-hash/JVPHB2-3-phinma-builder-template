@@ -122,9 +122,10 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
           <CardContent>
             <form action={updateSocials} className="flex flex-col gap-3">
               <p className="text-sm text-muted-foreground">
-                Add your usernames so buyers and sellers can check you&apos;re
-                real. Just the username, like <span className="font-mono">desay.ml</span>,
-                not a web address. Leave any blank.
+                Add your accounts so buyers and sellers can check you&apos;re
+                real. Paste your profile link from the app (we keep just the
+                username), then tap Test link to make sure it opens your
+                account. Leave any blank.
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {SOCIALS.map((s) => (
@@ -135,10 +136,20 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
                       name={s.key}
                       defaultValue={profile[s.key] ?? ""}
                       maxLength={200}
-                      placeholder="username"
+                      placeholder={s.key === "social_discord" ? "username" : "username or profile link"}
                       autoCapitalize="none"
                       autoComplete="off"
                     />
+                    {s.url && profile[s.key] && (
+                      <a
+                        href={s.url(profile[s.key] as string)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-fit text-xs text-primary underline"
+                      >
+                        Test link: does it open your {s.label}?
+                      </a>
+                    )}
                   </div>
                 ))}
               </div>
@@ -243,33 +254,34 @@ function SocialLinks({
       <div className="flex flex-wrap gap-2">
         {filled.map((s) => {
           const username = profile[s.key] as string;
-          const chip =
-            "inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-xs";
+          const look =
+            "inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm";
           return s.url ? (
             <a
               key={s.key}
               href={s.url(username)}
               target="_blank"
               rel="noopener noreferrer"
-              className={`${chip} hover:border-primary/50`}
+              className={`${look} transition-colors hover:border-primary hover:bg-primary/15`}
             >
-              <AtSign className="h-3.5 w-3.5 text-primary" />
-              <span className="font-medium">{s.label}</span>
+              <AtSign className="h-4 w-4 text-primary" />
+              <span className="font-semibold">{s.label}</span>
               <span className="text-muted-foreground">{username}</span>
-              <ExternalLink className="h-3 w-3 text-muted-foreground" aria-label="opens in a new tab" />
+              <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+              <span className="sr-only">(opens in a new tab)</span>
             </a>
           ) : (
-            <span key={s.key} className={chip}>
-              <AtSign className="h-3.5 w-3.5 text-primary" />
-              <span className="font-medium">{s.label}</span>
+            <span key={s.key} className={look}>
+              <AtSign className="h-4 w-4 text-primary" />
+              <span className="font-semibold">{s.label}</span>
               <span className="text-muted-foreground">{username}</span>
             </span>
           );
         })}
       </div>
       <p className="text-xs text-muted-foreground">
-        Use these to check this trader is real. Keep chats about payment, and
-        all payments, inside a Deal Room.
+        Tap to open their account. Use these to check this trader is real, and
+        keep chats about payment, and all payments, inside a Deal Room.
       </p>
     </div>
   );
