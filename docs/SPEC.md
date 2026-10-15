@@ -184,6 +184,12 @@ Refresh to see new messages. The only code ever shared is the Moonton
 binding code, in the chat, at the Lock-In step; never a password or a
 GCash/bank code.
 
+## Find traders (ticket 10)
+Logged-in traders can search other traders by display name and open
+their Profile. Names aren't unique, so results show the join date and
+deal record. This searches traders, not listings: there is still no
+marketplace.
+
 ## Stretch: listing photos (ticket 08)
 Only after everything above works live. The seller may add up to 4
 photos of the listed account to their Deal Room, stored in a private

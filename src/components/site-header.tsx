@@ -23,6 +23,9 @@ export async function SiteHeader() {
         <nav className="flex items-center gap-2">
           {user ? (
             <>
+              <Link href="/traders" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+                Find traders
+              </Link>
               <Link href="/profile" className={buttonVariants({ variant: "ghost", size: "sm" })}>
                 My deals
               </Link>
