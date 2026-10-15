@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   BookOpen,
   Home,
+  KeyRound,
   MessageCircle,
   PlusCircle,
   Search,
@@ -18,6 +19,7 @@ const LOGGED_IN = [
   { href: "/", label: "Home", icon: Home },
   { href: "/profile", label: "My profile", icon: UserRound },
   { href: "/deals/new", label: "New Deal", icon: PlusCircle },
+  { href: "/deals/join", label: "Join a deal", icon: KeyRound },
   { href: "/messages", label: "Messages", icon: MessageCircle },
   { href: "/traders", label: "Find traders", icon: Search },
   { href: "/rules", label: "Trading Rules", icon: BookOpen },
@@ -64,10 +66,12 @@ export function SideNav({ loggedIn }: { loggedIn: boolean }) {
 // Bottom tab bar, shown on phones instead of the sidebar.
 export function MobileNav({ loggedIn }: { loggedIn: boolean }) {
   const pathname = usePathname();
-  // Trading Rules is in the sidebar but left off the phone bar to keep
-  // the tabs big enough to tap; it's linked from Home and every Deal Room.
+  // Trading Rules and Join a deal are in the sidebar but left off the
+  // phone bar to keep the tabs big enough to tap. Join a deal is on Home
+  // and in every Messages conversation; the Rules are on Home and in
+  // every Deal Room.
   const items = (loggedIn ? LOGGED_IN : LOGGED_OUT).filter(
-    (item) => !loggedIn || item.href !== "/rules",
+    (item) => !loggedIn || (item.href !== "/rules" && item.href !== "/deals/join"),
   );
 
   return (

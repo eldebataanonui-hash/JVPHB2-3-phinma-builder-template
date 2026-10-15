@@ -4,9 +4,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-// Shows a link with a Copy button, so the seller can paste it to the
-// buyer in Messenger.
-export function CopyLink({ url }: { url: string }) {
+// Shows a value (a deal code or a link) with a Copy button, so the
+// seller can paste it to the buyer.
+export function CopyLink({ url, large = false }: { url: string; large?: boolean }) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -17,8 +17,13 @@ export function CopyLink({ url }: { url: string }) {
 
   return (
     <div className="flex gap-2">
-      <Input readOnly value={url} onFocus={(e) => e.currentTarget.select()} />
-      <Button type="button" variant="outline" onClick={copy}>
+      <Input
+        readOnly
+        value={url}
+        onFocus={(e) => e.currentTarget.select()}
+        className={large ? "h-12 font-mono text-lg font-semibold tracking-widest" : undefined}
+      />
+      <Button type="button" variant="outline" onClick={copy} className={large ? "h-12" : undefined}>
         {copied ? "Copied" : "Copy"}
       </Button>
     </div>

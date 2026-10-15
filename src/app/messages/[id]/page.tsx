@@ -81,7 +81,11 @@ export default async function ConversationPage(props: PageProps<"/messages/[id]"
             <Textarea name="body" required maxLength={1000} rows={2} placeholder="Message" aria-label="Message" />
             <p className="text-xs text-muted-foreground">
               Messages can&apos;t be deleted. Links are blocked. Refresh to see
-              replies.
+              replies. Got a deal code (JOIN-…)?{" "}
+              <Link href="/deals/join" className="text-primary underline">
+                Join the deal here
+              </Link>
+              .
             </p>
             {error && <p className="text-sm text-destructive">{error}</p>}
             <div className="flex gap-2">

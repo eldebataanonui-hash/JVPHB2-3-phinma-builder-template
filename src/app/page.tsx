@@ -50,6 +50,9 @@ export default async function Home() {
               <Link href="/deals/new" className={buttonVariants()}>
                 Start a deal
               </Link>
+              <Link href="/deals/join" className={buttonVariants({ variant: "outline" })}>
+                Join with a code
+              </Link>
               <Link href="/traders" className={buttonVariants({ variant: "outline" })}>
                 Find traders
               </Link>

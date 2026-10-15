@@ -48,7 +48,7 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   // RLS only returns the deal if you are its seller or buyer.
   const { data: deal } = await supabase
     .from("deals")
-    .select("id, title, description, price, step, seller_id, buyer_id, ownership_code, payment_method, created_at")
+    .select("id, title, description, price, step, seller_id, buyer_id, ownership_code, payment_method, join_code, created_at")
     .eq("id", id)
     .maybeSingle();
 
@@ -134,13 +134,22 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
       {isSeller && !deal.buyer_id && (
         <Card>
           <CardHeader>
-            <CardTitle>Send this link to your buyer</CardTitle>
+            <CardTitle>Send this code to your buyer</CardTitle>
             <CardDescription>
-              They&apos;ll need to log in, then tap Join as buyer.
+              Paste it in Messages. Your buyer enters it on Join a deal, then
+              taps Join as buyer.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <CopyLink url={dealUrl} />
+          <CardContent className="flex flex-col gap-4">
+            <CopyLink url={deal.join_code} large />
+            <details className="text-sm text-muted-foreground">
+              <summary className="cursor-pointer">
+                Sharing outside AQTech GHub? Use the link instead
+              </summary>
+              <div className="mt-2">
+                <CopyLink url={dealUrl} />
+              </div>
+            </details>
           </CardContent>
         </Card>
       )}
