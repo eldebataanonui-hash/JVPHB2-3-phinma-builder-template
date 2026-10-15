@@ -6,19 +6,19 @@ trading. Payments and codes still belong in a Deal Room.
 
 **Blocked by:** 03
 
-**Status:** todo
+**Status:** done
 
-- [ ] `profiles` gains a `bio` column (up to 500 characters, no links).
+- [x] `profiles` gains a `bio` column (up to 500 characters, no links).
       Traders can update only their own bio, never the join date or
       anything else
-- [ ] Your own Profile has an Edit description box; others' Profiles show
+- [x] Your own Profile has an Edit description box; others' Profiles show
       the description and a Message button
-- [ ] The `direct_messages` table exists with Row Level Security on and
+- [x] The `direct_messages` table exists with Row Level Security on and
       its policies: only the sender and recipient may read; you may only
       send as yourself; nobody may edit or delete; links are rejected
-- [ ] Messages page lists your conversations, newest first
-- [ ] A conversation page shows the messages with Send and Refresh, and
+- [x] Messages page lists your conversations, newest first
+- [x] A conversation page shows the messages with Send and Refresh, and
       the warning "Never pay or share codes here. Start a Deal Room for
       any trade."
-- [ ] The database change is saved as a numbered SQL file
-- [ ] Works on the live URL
+- [x] The database change is saved as a numbered SQL file
+- [x] Works on the live URL

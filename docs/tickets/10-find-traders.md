@@ -7,12 +7,12 @@ apart.
 
 **Blocked by:** 06
 
-**Status:** todo
+**Status:** done
 
-- [ ] A Find traders page, linked from the header when logged in
-- [ ] Searching 2 or more characters lists up to 20 matching traders
-- [ ] Each result shows display name, join date and deal record, and
+- [x] A Find traders page, linked from the header when logged in
+- [x] Searching 2 or more characters lists up to 20 matching traders
+- [x] Each result shows display name, join date and deal record, and
       opens that trader's Profile
-- [ ] The page warns that names aren't unique
-- [ ] Logged-out visitors are sent to log in
-- [ ] Works on the live URL
+- [x] The page warns that names aren't unique
+- [x] Logged-out visitors are sent to log in
+- [x] Works on the live URL
