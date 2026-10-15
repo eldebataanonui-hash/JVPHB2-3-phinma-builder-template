@@ -25,7 +25,9 @@ type Trader = {
 // deal record to tell copycats apart.
 export default async function FindTradersPage(props: PageProps<"/traders">) {
   const { q } = await props.searchParams;
-  const query = typeof q === "string" ? q.trim() : "";
+  // Capped here, not just in the input box: anyone can put any text in
+  // the address bar.
+  const query = typeof q === "string" ? q.trim().slice(0, 40) : "";
 
   const supabase = await createClient();
   const {
@@ -84,7 +86,9 @@ export default async function FindTradersPage(props: PageProps<"/traders">) {
 
       <section className="flex flex-col gap-3">
         <h2 className="text-xl font-bold">
-          {query.length >= 2 ? `Results for "${query}"` : "Suggested traders"}
+          {/* Never repeat the search text as a heading: a crafted link could
+              make it look like an official notice. It stays in the box. */}
+          {query.length >= 2 ? "Search results" : "Suggested traders"}
         </h2>
         {query.length < 2 && (
           <p className="-mt-2 text-sm text-muted-foreground">

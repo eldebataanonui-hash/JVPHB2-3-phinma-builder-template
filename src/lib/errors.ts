@@ -6,7 +6,7 @@ const ERROR_TEXT: Record<string, string> = {
   // Sign up and log in
   name_length: "Display name must be 1 to 40 characters.",
   name_reserved:
-    "Please choose another display name. Names can't include words like \"admin\", \"support\" or \"AQTech\", and need at least one letter or number.",
+    "Please choose another display name. Names can't include \"AQTech\" or \"GHub\", can't be just \"Admin\", \"Support\" or similar, and need at least one letter or number.",
   invalid_credentials: "Wrong email or password.",
   email_not_confirmed: "Please confirm your email first. Check your inbox for the link.",
   user_already_exists: "An account with this email already exists. Try logging in.",

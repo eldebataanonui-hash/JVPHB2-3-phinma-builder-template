@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 // (JOIN-XXXXXXXX) and lands on that Deal Room's preview.
 export default async function JoinDealPage(props: PageProps<"/deals/join">) {
   const { code } = await props.searchParams;
-  const typed = typeof code === "string" ? code.trim().toUpperCase() : "";
+  const typed = typeof code === "string" ? code.trim().toUpperCase().slice(0, 20) : "";
 
   const supabase = await createClient();
   const {
