@@ -6,16 +6,16 @@ are taken and nothing is locked yet.
 
 **Blocked by:** 03
 
-**Status:** todo
+**Status:** done
 
-- [ ] Plans page with three plans; prices "to be announced"; buttons
+- [x] Plans page with three plans; prices "to be announced"; buttons
       "Coming soon"; Annual marked "Best value"
-- [ ] "Included today" lists real features; "Planned for paid plans"
+- [x] "Included today" lists real features; "Planned for paid plans"
       is clearly marked planned
-- [ ] Trial counted from the sign-up date (14 days); shown in the top
+- [x] Trial counted from the sign-up date (14 days); shown in the top
       bar, on your profile and on the Plans page
-- [ ] After the trial: nothing is locked; it says everything stays free
+- [x] After the trial: nothing is locked; it says everything stays free
       during beta
-- [ ] Plans linked from the sidebar and Home
-- [ ] Real billing parked in LATER (needs a payment provider)
-- [ ] Works on the live URL
+- [x] Plans linked from the sidebar and Home
+- [x] Real billing parked in LATER (needs a payment provider)
+- [x] Works on the live URL
