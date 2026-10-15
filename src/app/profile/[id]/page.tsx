@@ -1,13 +1,18 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import { TraderRecord } from "@/components/trader-record";
+import { errorText } from "@/lib/errors";
 import { createClient } from "@/lib/supabase/server";
+import { updateBio } from "@/app/profile/actions";
 import { STEP_LABELS, formatPesos } from "@/lib/deals";
 
 export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   const { id } = await props.params;
+  const { error: errorCode, saved } = await props.searchParams;
+  const error = errorText(errorCode);
   const supabase = await createClient();
 
   const {
@@ -16,12 +21,12 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   if (!user) redirect(`/login?next=/profile/${id}`);
 
   // RLS allows any logged-in trader to read profiles.
-  const { data: profile, error } = await supabase
+  const { data: profile, error: loadError } = await supabase
     .from("profiles")
-    .select("display_name, created_at")
+    .select("display_name, created_at, bio")
     .eq("id", id)
     .maybeSingle();
-  if (error) return <ProblemNotice message={`Could not load profile: ${error.message}`} />;
+  if (loadError) return <ProblemNotice message="Could not load this profile. Please try again." />;
   if (!profile) notFound();
 
   const isMe = user.id === id;
@@ -54,8 +59,48 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
           </span>
           <p className="text-sm text-muted-foreground">Joined {joined}</p>
           <TraderRecord traderId={id} />
+          {profile.bio ? (
+            <p className="whitespace-pre-wrap text-sm">{profile.bio}</p>
+          ) : (
+            !isMe && (
+              <p className="text-sm text-muted-foreground">No description yet.</p>
+            )
+          )}
+          {!isMe && (
+            <Link href={`/messages/${id}`} className={`${buttonVariants()} w-fit`}>
+              Message
+            </Link>
+          )}
         </CardContent>
       </Card>
+
+      {isMe && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Your description</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form action={updateBio} className="flex flex-col gap-2">
+              <Textarea
+                name="bio"
+                defaultValue={profile.bio}
+                maxLength={500}
+                rows={3}
+                placeholder="e.g. MLBB seller since 2022. Mythic accounts, fast replies."
+                aria-label="Your description"
+              />
+              <p className="text-xs text-muted-foreground">
+                Up to 500 characters. Links aren&apos;t allowed.
+              </p>
+              {error && <p className="text-sm text-destructive">{error}</p>}
+              {saved && <p className="text-sm">Saved.</p>}
+              <Button type="submit" variant="outline" className="w-fit">
+                Save description
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      )}
 
       {isMe && (
         <>

@@ -35,3 +35,11 @@ stays small enough to actually ship by Session 3.
 - **Cancelling or editing a deal** after it's created.
 - **Saving each Lock-In Checklist item separately.** The MVP confirms the
   checklist once as a whole.
+
+## From the profile and messages work (2026-10-15)
+
+- **Profile pictures.** Need private photo storage with upload limits;
+  build together with listing photos (ticket 08).
+- **Block or mute a trader** in direct messages.
+- **Report a direct message** to the team (concerns are per Deal Room
+  for now).

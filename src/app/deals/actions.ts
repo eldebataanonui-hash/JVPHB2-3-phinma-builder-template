@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { containsLink } from "@/lib/links";
 import { createClient } from "@/lib/supabase/server";
 
 // Errors go back to the page as short codes (see src/lib/errors.ts),
@@ -55,14 +56,6 @@ export async function advanceDeal(formData: FormData) {
   redirect(dealUrl(dealId));
 }
 
-// Same rule as the database check in 012-review-fixes.sql, so the
-// trader gets a friendly message instead of a database error. Email
-// addresses are removed first: the Lock-In step needs the buyer to send
-// theirs, and "gmail.com" would otherwise look like a link.
-const EMAIL_PATTERN = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi;
-const LINK_PATTERN =
-  /(https?:\/\/|www\.|[a-z0-9-]+\.(com|net|org|ph|io|co|me|ly|gg|xyz|app|link|site|info|top|shop|ru|to|tk|gd|at|cc|us|uk|in|biz|online|store|live|click)\b)/i;
-
 export async function sendMessage(formData: FormData) {
   const dealId = String(formData.get("deal_id") ?? "");
   const body = String(formData.get("body") ?? "").trim();
@@ -70,7 +63,7 @@ export async function sendMessage(formData: FormData) {
   if (body.length < 1 || body.length > 1000) {
     redirect(dealUrl(dealId, "?chat_error=chat_length", "#chat"));
   }
-  if (LINK_PATTERN.test(body.replace(EMAIL_PATTERN, ""))) {
+  if (containsLink(body)) {
     redirect(dealUrl(dealId, "?chat_error=chat_link", "#chat"));
   }
 

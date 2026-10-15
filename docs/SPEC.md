@@ -190,6 +190,14 @@ their Profile. Names aren't unique, so results show the join date and
 deal record. This searches traders, not listings: there is still no
 marketplace.
 
+## Profile description and direct messages (ticket 11)
+Each trader can write a short description (up to 500 characters, no
+links) on their own Profile. Other traders see it, with a Message
+button. Direct messages are for questions before a trade: only the two
+people can read them, they can't be edited or deleted, and links are
+blocked. Every conversation warns: never pay or share codes here; start
+a Deal Room for any trade.
+
 ## Stretch: listing photos (ticket 08)
 Only after everything above works live. The seller may add up to 4
 photos of the listed account to their Deal Room, stored in a private

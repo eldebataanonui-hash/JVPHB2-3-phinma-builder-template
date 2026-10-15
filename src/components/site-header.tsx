@@ -28,8 +28,11 @@ export async function SiteHeader() {
               <Link href="/traders" className={buttonVariants({ variant: "ghost", size: "sm" })}>
                 Find traders
               </Link>
+              <Link href="/messages" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+                Messages
+              </Link>
               <Link href="/profile" className={buttonVariants({ variant: "ghost", size: "sm" })}>
-                My deals
+                My profile
               </Link>
               <form action={logOut}>
                 <Button type="submit" variant="outline" size="sm">
