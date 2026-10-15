@@ -66,3 +66,23 @@ h3 {
   font-family: var(--font-display);
   letter-spacing: 0.01em;
 }
+
+/* Printing a trade receipt: print only the receipt, dark text on white
+   paper (the dark theme's light text would be unreadable on paper). */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #receipt,
+  #receipt * {
+    visibility: visible;
+    color: #000 !important;
+    background: transparent !important;
+    border-color: #ccc !important;
+  }
+  #receipt {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+  }
+}

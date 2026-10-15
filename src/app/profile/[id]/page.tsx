@@ -194,8 +194,12 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
             </CardHeader>
             <CardContent>
               <DealList
-                deals={deals?.filter((d) => d.seller_id === user.id)}
-                empty="You're not selling anything yet. Tap New Deal to start."
+                deals={deals?.filter((d) => d.seller_id === user.id && d.step !== "completed")}
+                empty="Nothing for sale right now. Tap New Deal to start."
+              />
+              <DealList
+                heading="Sold"
+                deals={deals?.filter((d) => d.seller_id === user.id && d.step === "completed")}
               />
             </CardContent>
           </Card>
@@ -206,8 +210,12 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
             </CardHeader>
             <CardContent>
               <DealList
-                deals={deals?.filter((d) => d.seller_id !== user.id)}
-                empty="You haven't joined any deals yet. Enter a seller's deal code on Join a deal."
+                deals={deals?.filter((d) => d.seller_id !== user.id && d.step !== "completed")}
+                empty="No trades in progress. Enter a seller's deal code on Join a deal."
+              />
+              <DealList
+                heading="Bought"
+                deals={deals?.filter((d) => d.seller_id !== user.id && d.step === "completed")}
               />
             </CardContent>
           </Card>
@@ -217,19 +225,28 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   );
 }
 
+// A list of your deals. With a heading (Sold, Bought), it's hidden when
+// empty; without one, it shows the empty message.
 function DealList({
   deals,
   empty,
+  heading,
 }: {
   deals?: { id: string; title: string; price: number; step: string }[];
-  empty: string;
+  empty?: string;
+  heading?: string;
 }) {
   if (!deals?.length) {
-    return <p className="text-sm text-muted-foreground">{empty}</p>;
+    return empty ? <p className="text-sm text-muted-foreground">{empty}</p> : null;
   }
 
   return (
     <div className="flex flex-col gap-2">
+      {heading && (
+        <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          {heading} ({deals.length})
+        </p>
+      )}
       {deals.map((deal) => (
         <Link
           key={deal.id}
@@ -241,7 +258,7 @@ function DealList({
             <span>{formatPesos(deal.price)}</span>
           </span>
           <span className="text-xs text-muted-foreground">
-            {STEP_LABELS[deal.step]}
+            {deal.step === "completed" ? "✓ Completed · receipt available" : STEP_LABELS[deal.step]}
           </span>
         </Link>
       ))}

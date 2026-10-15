@@ -60,3 +60,8 @@ stays small enough to actually ship by Session 3.
 - **Longer deal codes** (10 to 12 characters) if the site grows.
 - **Mark notifications read with a button press**, not when a page loads
   (a prefetch can mark things read that nobody saw).
+- **Email receipts and alerts** (e.g. "Deal completed" to Gmail). Needs
+  an email service (Brevo or Resend) with a server-side API key and
+  sender verification; Supabase's built-in email only sends sign-up
+  emails to team members. For now: in-app notifications and the
+  printable trade receipt.

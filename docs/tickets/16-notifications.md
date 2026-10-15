@@ -7,17 +7,17 @@ updates by itself when something new arrives.
 
 **Blocked by:** 05, 09, 11
 
-**Status:** todo
+**Status:** done
 
-- [ ] The `notifications` table exists with Row Level Security on: you
+- [x] The `notifications` table exists with Row Level Security on: you
       can only read your own, and only mark them read; rows are only
       created by database triggers
-- [ ] Triggers notify the other trader for every deal step and Deal Room
+- [x] Triggers notify the other trader for every deal step and Deal Room
       chat message, and the recipient for every direct message
-- [ ] A bell with an unread count in the top bar, checking every 15
+- [x] A bell with an unread count in the top bar, checking every 15
       seconds; when the count goes up, the current page refreshes
-- [ ] A Notifications page, newest first; tapping one marks it read and
+- [x] A Notifications page, newest first; tapping one marks it read and
       opens the deal or conversation; Mark all as read
-- [ ] Opening a Deal Room or conversation marks its notifications read
-- [ ] The database change is saved as a numbered SQL file
-- [ ] Works on the live URL
+- [x] Opening a Deal Room or conversation marks its notifications read
+- [x] The database change is saved as a numbered SQL file
+- [x] Works on the live URL

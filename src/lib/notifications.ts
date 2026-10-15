@@ -13,7 +13,8 @@ const TEXT: Record<string, (who: string, deal: string, method: string | null) =>
   full_control_confirmed: (who, deal) => `${who} confirmed full control of "${deal}". The second half is next.`,
   second_half_sent: (who, deal, method) =>
     `${who} sent the second half for "${deal}". Check ${method ?? "your app"}.`,
-  second_half_received: (_who, deal) => `Deal completed: "${deal}". 🎉`,
+  second_half_received: (who, deal) => `${who} confirmed the second half arrived for "${deal}".`,
+  deal_completed: (_who, deal) => `Deal completed: "${deal}". 🎉 Your trade receipt is ready.`,
   deal_message: (who, deal) => `${who} sent a message in "${deal}".`,
   direct_message: (who) => `${who} sent you a message.`,
 };
@@ -25,5 +26,6 @@ export function notificationText(kind: string, who: string, deal: string, method
 export function notificationHref(n: { kind: string; deal_id: string | null; actor_id: string }) {
   if (n.kind === "direct_message") return `/messages/${n.actor_id}`;
   if (n.kind === "deal_message") return `/deals/${n.deal_id}#chat`;
+  if (n.kind === "deal_completed") return `/deals/${n.deal_id}#receipt`;
   return `/deals/${n.deal_id}`;
 }

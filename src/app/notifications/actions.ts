@@ -17,7 +17,7 @@ export async function openNotification(formData: FormData) {
     .is("read_at", null);
 
   // Only ever go to a page on this site.
-  redirect(/^\/(deals|messages)\/[0-9a-f-]+(#chat)?$/i.test(href) ? href : "/notifications");
+  redirect(/^\/(deals|messages)\/[0-9a-f-]+(#chat|#receipt)?$/i.test(href) ? href : "/notifications");
 }
 
 export async function markAllRead() {

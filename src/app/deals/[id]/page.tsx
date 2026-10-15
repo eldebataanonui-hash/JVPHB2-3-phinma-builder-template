@@ -10,6 +10,7 @@ import { DealPhotos } from "@/components/deal-room/deal-photos";
 import { DealPreview } from "@/components/deal-room/deal-preview";
 import { PaymentPicker } from "@/components/deal-room/payment-picker";
 import { StepDetails } from "@/components/deal-room/step-details";
+import { TradeReceipt } from "@/components/deal-room/trade-receipt";
 import { RedFlags } from "@/components/red-flags";
 import { RefreshButton } from "@/components/refresh-button";
 import { TraderRecord } from "@/components/trader-record";
@@ -45,7 +46,7 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   // RLS only returns the deal if you are its seller or buyer.
   const { data: deal } = await supabase
     .from("deals")
-    .select("id, title, description, price, step, seller_id, buyer_id, ownership_code, payment_method, join_code, created_at")
+    .select("id, title, description, price, step, seller_id, buyer_id, ownership_code, payment_method, join_code, created_at, completed_at")
     .eq("id", id)
     .maybeSingle();
 
@@ -225,6 +226,22 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
               )}
             </CardContent>
           </Card>
+
+          {deal.step === "completed" && (
+            <TradeReceipt
+              joinCode={deal.join_code}
+              title={deal.title}
+              price={deal.price}
+              first={first}
+              second={second}
+              method={paymentLabel(deal.payment_method)}
+              sellerName={nameOf(deal.seller_id)}
+              buyerName={nameOf(deal.buyer_id)}
+              completedAt={deal.completed_at}
+              events={events ?? []}
+              names={Object.fromEntries((people ?? []).map((p) => [p.id, p.display_name]))}
+            />
+          )}
 
           <Card id="chat">
             <CardHeader>

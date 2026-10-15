@@ -7,17 +7,17 @@ established person.
 
 **Blocked by:** 11
 
-**Status:** todo
+**Status:** done
 
-- [ ] Six optional username columns on `profiles`; the database only
+- [x] Six optional username columns on `profiles`; the database only
       accepts plain usernames (no slashes or colons)
-- [ ] Traders can update only their own social usernames (plus bio and
+- [x] Traders can update only their own social usernames (plus bio and
       picture), nothing else
-- [ ] The app builds every link itself, always to the real site; Discord
+- [x] The app builds every link itself, always to the real site; Discord
       shows as text
-- [ ] Pasting a full profile link or "@name" keeps just the username
-- [ ] Your own Profile shows a Test link under each saved account
-- [ ] Profiles show the links with a note to keep payment talk and
+- [x] Pasting a full profile link or "@name" keeps just the username
+- [x] Your own Profile shows a Test link under each saved account
+- [x] Profiles show the links with a note to keep payment talk and
       payments inside a Deal Room
-- [ ] The database change is saved as a numbered SQL file
-- [ ] Works on the live URL
+- [x] The database change is saved as a numbered SQL file
+- [x] Works on the live URL
