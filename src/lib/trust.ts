@@ -10,6 +10,7 @@ export type TraderFacts = {
   abandoned: number;
   lastActive: string | null;
   socialsLinked: string[];
+  idVerified: boolean;
 };
 
 export type TrustItem = { ok: boolean | null; text: string };
@@ -36,6 +37,12 @@ export function trustCheck(f: TraderFacts): TrustItem[] {
   const completed = f.completedAsSeller + f.completedAsBuyer;
   const age = daysSince(f.joinedAt);
   const items: TrustItem[] = [{ ok: true, text: "Email confirmed" }];
+  // Optional ID check through Didit (sandbox demo for now).
+  items.push(
+    f.idVerified
+      ? { ok: true, text: "ID verified (demo, via Didit)" }
+      : { ok: null, text: "ID not verified (optional)" },
+  );
 
   if (age < 7) items.push({ ok: false, text: `New account: joined ${age === 0 ? "today" : `${age} day${age === 1 ? "" : "s"} ago`}` });
   else items.push({ ok: true, text: `Member for ${age} days` });

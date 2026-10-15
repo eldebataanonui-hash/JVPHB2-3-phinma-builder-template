@@ -13,14 +13,16 @@ import { TraderRecord } from "@/components/trader-record";
 import type { TraderFacts } from "@/lib/trust";
 import { errorText } from "@/lib/errors";
 import { createClient } from "@/lib/supabase/server";
-import { updateBio, updateSocials } from "@/app/profile/actions";
+import { startIdVerification, updateBio, updateSocials } from "@/app/profile/actions";
+import { BadgeCheck } from "lucide-react";
 import { SOCIALS } from "@/lib/socials";
 import { AtSign, ExternalLink } from "lucide-react";
 import { STEP_LABELS, formatPesos } from "@/lib/deals";
 
 export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   const { id } = await props.params;
-  const { error: errorCode, saved, social_error, socials_saved } = await props.searchParams;
+  const { error: errorCode, saved, social_error, socials_saved, kyc_error } = await props.searchParams;
+  const kycError = errorText(kyc_error);
   const error = errorText(errorCode);
   const socialError = errorText(social_error);
   const supabase = await createClient();
@@ -33,7 +35,7 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   // RLS allows any logged-in trader to read profiles.
   const { data: profile, error: loadError } = await supabase
     .from("profiles")
-    .select("display_name, created_at, bio, avatar_path, social_facebook, social_instagram, social_tiktok, social_x, social_youtube, social_discord")
+    .select("display_name, created_at, bio, avatar_path, social_facebook, social_instagram, social_tiktok, social_x, social_youtube, social_discord, id_verified_at")
     .eq("id", id)
     .maybeSingle();
   if (loadError) return <ProblemNotice message="Could not load this profile. Please try again." />;
@@ -59,7 +61,13 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
     abandoned: stats?.abandoned ?? 0,
     lastActive: stats?.last_active ?? null,
     socialsLinked: SOCIALS.filter((s) => profile[s.key]).map((s) => s.label),
+    idVerified: Boolean(profile.id_verified_at),
   };
+
+  // Your own verification status (kyc_checks is readable only by you).
+  const { data: kyc } = isMe
+    ? await supabase.from("kyc_checks").select("status, updated_at").eq("user_id", id).maybeSingle()
+    : { data: null };
 
   const joined = new Date(profile.created_at).toLocaleDateString("en-PH", {
     year: "numeric",
@@ -75,7 +83,15 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
           <Avatar name={profile.display_name} path={profile.avatar_path} size={72} />
           <div className="flex min-w-0 flex-col gap-2">
             <CardTitle className="truncate text-2xl">{profile.display_name}</CardTitle>
-            <TrustBadge facts={facts} />
+            <div className="flex flex-wrap gap-2">
+              <TrustBadge facts={facts} />
+              {profile.id_verified_at && (
+                <span className="inline-flex w-fit items-center gap-1 rounded-full border border-emerald-500/50 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
+                  <BadgeCheck className="h-3.5 w-3.5" />
+                  ID verified (demo)
+                </span>
+              )}
+            </div>
             {isMe && <AvatarUpload userId={id} hasPicture={Boolean(profile.avatar_path)} />}
           </div>
         </CardHeader>
@@ -130,6 +146,44 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
                 Save description
               </Button>
             </form>
+          </CardContent>
+        </Card>
+      )}
+
+      {isMe && (
+        <Card id="verify">
+          <CardHeader>
+            <CardTitle>ID verification (optional, demo)</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3">
+            {profile.id_verified_at ? (
+              <p className="text-sm">
+                ✓ Your ID is verified. Buyers and sellers see the &quot;ID verified
+                (demo)&quot; badge on your profile.
+              </p>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground">
+                  Verify your ID and a live selfie with Didit to earn the
+                  &quot;ID verified (demo)&quot; badge. Didit handles your ID
+                  photo and selfie; AQTech GHub never sees or stores them, only
+                  the result. This is a sandbox demo: use Didit&apos;s test
+                  data, not your real ID.
+                </p>
+                {kyc && (
+                  <p className="text-sm">
+                    Last check: <span className="font-semibold">{kyc.status}</span>
+                  </p>
+                )}
+                {kycError && <p className="text-sm text-destructive">{kycError}</p>}
+                <form action={startIdVerification}>
+                  <Button type="submit" variant="outline" className="w-fit">
+                    <BadgeCheck className="h-4 w-4" />
+                    {kyc ? "Try again" : "Verify my ID"}
+                  </Button>
+                </form>
+              </>
+            )}
           </CardContent>
         </Card>
       )}

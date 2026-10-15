@@ -31,6 +31,7 @@ const ERROR_TEXT: Record<string, string> = {
   // Profile description
   bio_length: "Your description can be up to 500 characters.",
   bio_link: "Links aren't allowed in your description.",
+  kyc_not_set_up: "ID verification isn't switched on yet. Your team needs to add the Didit keys.",
   social_invalid:
     "Please enter just your username for each site (letters, numbers, dots, dashes and underscores), not a full web address.",
 };

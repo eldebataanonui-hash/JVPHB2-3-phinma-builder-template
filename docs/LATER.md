@@ -65,7 +65,7 @@ stays small enough to actually ship by Session 3.
   sender verification; Supabase's built-in email only sends sign-up
   emails to team members. For now: in-app notifications and the
   printable trade receipt.
-- **Government ID and face (biometric) verification** through a licensed
+- **(Now built as an optional sandbox demo, ticket 21.) Real** government ID and face (biometric) verification through a licensed
   KYC provider. Discussed again on 2026-10-15 and kept parked: it needs
   a paid outside service and makes the team responsible for sensitive
   personal information under the Data Privacy Act. Pitch it as the next

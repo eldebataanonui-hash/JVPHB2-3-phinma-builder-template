@@ -1,6 +1,8 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { createVerificationSession, diditConfigured } from "@/lib/didit";
 import { containsLink } from "@/lib/links";
 import { SOCIALS, cleanUsername, type SocialKey } from "@/lib/socials";
 import { createClient } from "@/lib/supabase/server";
@@ -48,6 +50,25 @@ export async function updateSocials(formData: FormData) {
   const { error } = await supabase.from("profiles").update(changes).eq("id", user.id);
   if (error) redirect(`${back}?social_error=failed#socials`);
   redirect(`${back}?socials_saved=1#socials`);
+}
+
+// Start an ID verification (demo) with Didit and send the trader to
+// Didit's secure page. Didit, not AQTech GHub, handles the ID photo and
+// the selfie.
+export async function startIdVerification() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const back = `/profile/${user.id}`;
+  if (!diditConfigured()) redirect(`${back}?kyc_error=kyc_not_set_up#verify`);
+
+  const origin = (await headers()).get("origin");
+  const session = await createVerificationSession(user.id, `${origin}/verify/callback`);
+  if (!session) redirect(`${back}?kyc_error=failed#verify`);
+  redirect(session.url);
 }
 
 // Point your profile at a picture you just uploaded, then delete the
