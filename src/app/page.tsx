@@ -1,26 +1,12 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 
-// Ask the database on every visit, not once at build time, so the
-// connection status below is always current.
-export const dynamic = "force-dynamic";
-
-// Ticket 02: prove the live site can talk to Supabase. A logged-out
-// visitor gets zero rows back (RLS hides them), but no error.
-async function checkDatabase(): Promise<string | null> {
-  try {
-    const supabase = await createClient();
-    const { error } = await supabase
-      .from("profiles")
-      .select("id", { count: "exact", head: true });
-    return error ? error.message : null;
-  } catch (e) {
-    return e instanceof Error ? e.message : "Unknown error";
-  }
-}
-
 export default async function Home() {
-  const dbError = await checkDatabase();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-8 px-4 py-12 sm:py-20">
@@ -34,18 +20,22 @@ export default async function Home() {
         </p>
       </header>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Database connection</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {dbError ? (
-            <p className="text-sm text-destructive">Not connected: {dbError}</p>
-          ) : (
-            <p className="text-sm text-muted-foreground">Connected to Supabase.</p>
-          )}
-        </CardContent>
-      </Card>
+      <div className="flex flex-wrap gap-3">
+        {user ? (
+          <Link href="/profile" className={buttonVariants()}>
+            Go to my profile
+          </Link>
+        ) : (
+          <>
+            <Link href="/signup" className={buttonVariants()}>
+              Sign up
+            </Link>
+            <Link href="/login" className={buttonVariants({ variant: "outline" })}>
+              Log in
+            </Link>
+          </>
+        )}
+      </div>
     </main>
   );
 }
