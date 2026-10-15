@@ -42,18 +42,27 @@ export async function logIn(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
+  // Where to go after logging in, e.g. back to a Deal Room link. Only
+  // paths on this site are allowed, so a crafted link can't send people
+  // to another website.
+  const nextRaw = String(formData.get("next") ?? "");
+  const isLocalPath =
+    nextRaw.startsWith("/") && !nextRaw.startsWith("//") && !nextRaw.startsWith("/\\");
+  const next = isLocalPath ? nextRaw : "/profile";
+
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    withError(
-      "/login",
+    const message =
       error.code === "email_not_confirmed"
         ? "Please confirm your email first. Check your inbox for the link."
-        : error.message,
-    );
+        : error.message;
+    const params = new URLSearchParams({ error: message });
+    if (isLocalPath) params.set("next", next);
+    redirect(`/login?${params}`);
   }
-  redirect("/profile");
+  redirect(next);
 }
 
 export async function logOut() {

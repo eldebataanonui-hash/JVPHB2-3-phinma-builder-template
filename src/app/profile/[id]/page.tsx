@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
+import { STEP_LABELS, formatPesos } from "@/lib/deals";
 import { logOut } from "@/app/auth/actions";
 
 export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
@@ -11,7 +13,7 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect(`/login?next=/profile/${id}`);
 
   // RLS allows any logged-in trader to read profiles.
   const { data: profile, error } = await supabase
@@ -23,6 +25,15 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   if (!profile) notFound();
 
   const isMe = user.id === id;
+
+  // RLS only returns deals you are the seller or buyer in, so on your
+  // own profile this is simply "my deals".
+  const { data: deals } = isMe
+    ? await supabase
+        .from("deals")
+        .select("id, title, price, step, seller_id")
+        .order("created_at", { ascending: false })
+    : { data: null };
   const joined = new Date(profile.created_at).toLocaleDateString("en-PH", {
     year: "numeric",
     month: "long",
@@ -44,6 +55,38 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
           <p className="text-sm text-muted-foreground">Joined {joined}</p>
         </CardContent>
       </Card>
+
+      {isMe && (
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between gap-3">
+            <CardTitle>My Deal Rooms</CardTitle>
+            <Link href="/deals/new" className={buttonVariants({ size: "sm" })}>
+              New Deal
+            </Link>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-2">
+            {!deals?.length && (
+              <p className="text-sm text-muted-foreground">No deals yet.</p>
+            )}
+            {deals?.map((deal) => (
+              <Link
+                key={deal.id}
+                href={`/deals/${deal.id}`}
+                className="flex flex-col gap-1 rounded-[var(--radius)] border border-border p-3 hover:bg-secondary"
+              >
+                <span className="flex justify-between gap-3 text-sm font-medium">
+                  <span>{deal.title}</span>
+                  <span>{formatPesos(deal.price)}</span>
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {deal.seller_id === user.id ? "Selling" : "Buying"} ·{" "}
+                  {STEP_LABELS[deal.step]}
+                </span>
+              </Link>
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
       {isMe && (
         <form action={logOut}>

@@ -7,7 +7,7 @@ import { PasswordInput } from "@/components/password-input";
 import { logIn } from "@/app/auth/actions";
 
 export default async function LogInPage(props: PageProps<"/login">) {
-  const { error, confirmed } = await props.searchParams;
+  const { error, confirmed, next } = await props.searchParams;
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 px-4 py-12">
@@ -21,6 +21,7 @@ export default async function LogInPage(props: PageProps<"/login">) {
               <p className="text-sm">Your email is confirmed. Log in to continue.</p>
             )}
             {error && <p className="text-sm text-destructive">{error}</p>}
+            {typeof next === "string" && <input type="hidden" name="next" value={next} />}
             <div className="flex flex-col gap-2">
               <Label htmlFor="email">Email</Label>
               <Input id="email" name="email" type="email" required />
