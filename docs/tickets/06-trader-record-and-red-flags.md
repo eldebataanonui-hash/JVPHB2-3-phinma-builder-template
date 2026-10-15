@@ -6,14 +6,14 @@ scam lines.
 
 **Blocked by:** 05
 
-**Status:** todo
+**Status:** done
 
-- [ ] The trader record function returns completed and abandoned deals,
+- [x] The trader record function returns completed and abandoned deals,
       as seller or buyer, following the definitions in the spec
-- [ ] Each Profile shows the record as "N of M deals completed"
-- [ ] The Deal Room (including the preview before joining) shows the
+- [x] Each Profile shows the record as "N of M deals completed"
+- [x] The Deal Room (including the preview before joining) shows the
       seller's record, and each trader's name links to their Profile
-- [ ] The red-flag tips from the spec show on Home and in every Deal Room
-- [ ] Every database change is saved as a numbered SQL file
-- [ ] Works on the live URL: after the trade in ticket 05, both Profiles
+- [x] The red-flag tips from the spec show on Home and in every Deal Room
+- [x] Every database change is saved as a numbered SQL file
+- [x] Works on the live URL: after the trade in ticket 05, both Profiles
       show the completed deal
