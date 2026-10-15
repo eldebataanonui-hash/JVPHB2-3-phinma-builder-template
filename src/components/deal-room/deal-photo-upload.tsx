@@ -38,7 +38,9 @@ export function DealPhotoUpload({ dealId, remaining }: { dealId: string; remaini
         .from("deal-photos")
         .upload(path, file, { contentType: file.type });
       if (error) {
-        setMessage("Some photos couldn't be uploaded. Please try again.");
+        // Show Supabase's own reason (it comes from Supabase, not from the
+        // address bar, so it's safe) so the team can see what went wrong.
+        setMessage(`Some photos couldn't be uploaded: ${error.message}`);
         break;
       }
     }
