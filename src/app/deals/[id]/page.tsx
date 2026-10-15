@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { CopyField } from "@/components/copy-field";
+import { DealPhotos } from "@/components/deal-room/deal-photos";
 import { DealPreview } from "@/components/deal-room/deal-preview";
 import { PaymentPicker } from "@/components/deal-room/payment-picker";
 import { StepDetails } from "@/components/deal-room/step-details";
@@ -109,6 +110,7 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
           {deal.description && (
             <p className="whitespace-pre-wrap text-sm">{deal.description}</p>
           )}
+          <DealPhotos dealId={deal.id} isSeller={isSeller} />
           <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
             <dt className="text-muted-foreground">Seller</dt>
             <dd>

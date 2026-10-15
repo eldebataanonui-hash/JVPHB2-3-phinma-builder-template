@@ -112,6 +112,19 @@ export async function reportConcern(formData: FormData) {
   redirect(dealUrl(dealId, "", "#concern"));
 }
 
+export async function deleteDealPhoto(formData: FormData) {
+  const dealId = String(formData.get("deal_id") ?? "");
+  const name = String(formData.get("name") ?? "");
+
+  // Only a plain file name inside this deal's folder.
+  if (!/^[0-9]+\.(jpg|png|webp)$/.test(name)) redirect(dealUrl(dealId));
+
+  const supabase = await createClient();
+  // The storage rules only let the deal's seller delete.
+  await supabase.storage.from("deal-photos").remove([`${dealId}/${name}`]);
+  redirect(dealUrl(dealId));
+}
+
 export async function joinDeal(formData: FormData) {
   const dealId = String(formData.get("deal_id") ?? "");
 

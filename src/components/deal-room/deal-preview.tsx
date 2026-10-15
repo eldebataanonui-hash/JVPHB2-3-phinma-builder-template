@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RedFlags } from "@/components/red-flags";
 import { TraderRecord } from "@/components/trader-record";
+import { DealPhotos } from "@/components/deal-room/deal-photos";
 import { formatPesos } from "@/lib/deals";
 import { createClient } from "@/lib/supabase/server";
 import { joinDeal } from "@/app/deals/actions";
@@ -44,6 +45,7 @@ export async function DealPreview({ id, error }: { id: string; error: string | n
           {preview.description && (
             <p className="whitespace-pre-wrap text-sm">{preview.description}</p>
           )}
+          <DealPhotos dealId={preview.id} isSeller={false} />
           <p className="text-sm">
             <span className="text-muted-foreground">Seller: </span>
             <Link href={`/profile/${preview.seller_id}`} className="underline">
