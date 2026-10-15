@@ -4,26 +4,30 @@
    every component below reads from them.
 
    AQTech GHub uses one dark, gaming-style theme: a deep navy-black
-   background, slightly lighter panels, and an electric violet accent
-   for buttons, links and the active item in the sidebar. */
+   background, slightly lighter panels, and a soft magenta accent for
+   buttons, links and the active item in the sidebar. Buttons use dark
+   text on the magenta so they stay easy to read.
+
+   Borders are a little lighter than the panels: visible enough to show
+   where each card and box starts, without being harsh. */
 :root {
   color-scheme: dark;
 
   --background: #0b0e17;
-  --foreground: #e6e9f2;
+  --foreground: #e8e9f2;
   --card: #121726;
-  --card-foreground: #e6e9f2;
-  --primary: #7c5cff;
-  --primary-foreground: #ffffff;
+  --card-foreground: #e8e9f2;
+  --primary: #e47cc6;
+  --primary-foreground: #1c0a18;
   --secondary: #1b2236;
-  --secondary-foreground: #e6e9f2;
+  --secondary-foreground: #e8e9f2;
   --muted: #1b2236;
-  --muted-foreground: #8b93a7;
+  --muted-foreground: #959cb0;
   --destructive: #f43f5e;
   --destructive-foreground: #ffffff;
-  --border: #232b40;
-  --input: #2c3550;
-  --ring: #7c5cff;
+  --border: #323c58;
+  --input: #3d4868;
+  --ring: #e47cc6;
   --radius: 0.75rem;
 }
 
