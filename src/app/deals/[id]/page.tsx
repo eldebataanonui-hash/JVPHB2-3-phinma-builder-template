@@ -19,10 +19,18 @@ import {
   STEP_ACTIONS,
   STEP_LABELS,
   formatManilaTime,
+  PAYMENT_METHODS,
   formatPesos,
+  paymentLabel,
   splitPrice,
 } from "@/lib/deals";
-import { advanceDeal, joinDeal, reportConcern, sendMessage } from "@/app/deals/actions";
+import {
+  advanceDeal,
+  choosePaymentMethod,
+  joinDeal,
+  reportConcern,
+  sendMessage,
+} from "@/app/deals/actions";
 
 export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   const { id } = await props.params;
@@ -40,7 +48,7 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   // RLS only returns the deal if you are its seller or buyer.
   const { data: deal } = await supabase
     .from("deals")
-    .select("id, title, description, price, step, seller_id, buyer_id, ownership_code, created_at")
+    .select("id, title, description, price, step, seller_id, buyer_id, ownership_code, payment_method, created_at")
     .eq("id", id)
     .maybeSingle();
 
@@ -175,13 +183,24 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
                 code={deal.ownership_code}
                 first={first}
                 second={second}
+                method={paymentLabel(deal.payment_method)}
               />
+              {!isSeller && deal.step === "awaiting_first_payment" && (
+                <PaymentPicker dealId={deal.id} current={deal.payment_method} />
+              )}
               {error && <p className="text-sm text-destructive">{error}</p>}
               {myTurn && (
                 <form action={advanceDeal}>
                   <input type="hidden" name="deal_id" value={deal.id} />
                   <input type="hidden" name="from_step" value={deal.step} />
-                  <Button type="submit">{action.button}</Button>
+                  {/* The buyer must choose how they'll pay before the first
+                      half. The database enforces this too. */}
+                  <Button
+                    type="submit"
+                    disabled={deal.step === "awaiting_first_payment" && !deal.payment_method}
+                  >
+                    {action.button}
+                  </Button>
                 </form>
               )}
               {!myTurn && deal.step !== "completed" && (
@@ -377,13 +396,16 @@ function StepDetails({
   code,
   first,
   second,
+  method,
 }: {
   step: string;
   isSeller: boolean;
   code: string;
   first: number;
   second: number;
+  method: string | null;
 }) {
+  const app = method ?? "your e-wallet or bank";
   const codeBox = (
     <p className="w-fit rounded-[var(--radius)] border border-border px-4 py-2 font-mono text-2xl font-semibold tracking-widest">
       {code}
@@ -417,20 +439,35 @@ function StepDetails({
         </div>
       );
     case "awaiting_first_payment":
-      return (
+      return isSeller ? (
         <p className="text-sm">
-          {isSeller ? "The buyer sends" : "Send"} the first half:{" "}
-          <span className="font-semibold">{formatPesos(first)}</span>.
-          {!isSeller && " Never send the full price now."}
+          The buyer sends the first half:{" "}
+          <span className="font-semibold">{formatPesos(first)}</span>
+          {method ? (
+            <>
+              {" "}by <span className="font-semibold">{method}</span>.
+            </>
+          ) : (
+            ". They're choosing how to pay."
+          )}{" "}
+          Share your account number in the chat below.
+        </p>
+      ) : (
+        <p className="text-sm">
+          Choose how you&apos;ll pay, then send the first half:{" "}
+          <span className="font-semibold">{formatPesos(first)}</span>. Never
+          send the full price now. Ask the seller for their account number in
+          the chat below.
         </p>
       );
     case "first_payment_sent":
       return (
         <p className="text-sm">
           {isSeller
-            ? "Open your GCash or bank app and check that "
-            : "The seller is checking that "}
-          <span className="font-semibold">{formatPesos(first)}</span> arrived.
+            ? `Open ${app} and check that `
+            : `The seller is checking ${app} for `}
+          <span className="font-semibold">{formatPesos(first)}</span>
+          {isSeller ? " arrived." : "."}
           {isSeller && " Don't trust a screenshot of a receipt."}
         </p>
       );
@@ -460,16 +497,18 @@ function StepDetails({
       return (
         <p className="text-sm">
           {isSeller ? "The buyer sends" : "Send"} the second half:{" "}
-          <span className="font-semibold">{formatPesos(second)}</span>.
+          <span className="font-semibold">{formatPesos(second)}</span> by{" "}
+          {app}.
         </p>
       );
     case "second_payment_sent":
       return (
         <p className="text-sm">
           {isSeller
-            ? "Open your GCash or bank app and check that "
-            : "The seller is checking that "}
-          <span className="font-semibold">{formatPesos(second)}</span> arrived.
+            ? `Open ${app} and check that `
+            : `The seller is checking ${app} for `}
+          <span className="font-semibold">{formatPesos(second)}</span>
+          {isSeller ? " arrived." : "."}
         </p>
       );
     case "completed":
@@ -501,5 +540,37 @@ function Checklist({
         ))}
       </ol>
     </div>
+  );
+}
+
+// The buyer picks how they'll pay. AQTech GHub never moves the money;
+// this tells the seller which app to check, and goes in the record.
+function PaymentPicker({ dealId, current }: { dealId: string; current: string | null }) {
+  return (
+    <form action={choosePaymentMethod} className="flex flex-col gap-3">
+      <input type="hidden" name="deal_id" value={dealId} />
+      <fieldset className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <legend className="mb-2 text-sm font-medium">How will you pay?</legend>
+        {PAYMENT_METHODS.map((m) => (
+          <label
+            key={m.id}
+            className="flex cursor-pointer items-center gap-2 rounded-[var(--radius)] border border-border bg-secondary px-3 py-2 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary/15"
+          >
+            <input
+              type="radio"
+              name="method"
+              value={m.id}
+              defaultChecked={current === m.id}
+              required
+              className="accent-[var(--primary)]"
+            />
+            {m.label}
+          </label>
+        ))}
+      </fieldset>
+      <Button type="submit" variant="outline" className="w-fit">
+        {current ? "Change payment method" : "Use this payment method"}
+      </Button>
+    </form>
   );
 }

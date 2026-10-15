@@ -205,6 +205,12 @@ can view it, like avatars on most sites); traders can only upload to and
 delete from their own folder. It shows on the Profile, Find traders,
 Messages and the top bar.
 
+## Payment method (ticket 14)
+Before the first half, the buyer chooses GCash, Maya (PayMaya),
+MariBank, GoTyme Bank, ShopeePay or InstaPay. The first-half button is
+locked until they do. The seller sees which app to check. AQTech GHub
+never holds or moves money: this only records the agreed method.
+
 ## Stretch: listing photos (ticket 08)
 Only after everything above works live. The seller may add up to 4
 photos of the listed account to their Deal Room, stored in a private

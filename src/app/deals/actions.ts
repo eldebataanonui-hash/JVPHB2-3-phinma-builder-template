@@ -51,9 +51,27 @@ export async function advanceDeal(formData: FormData) {
       ? "step_already_done"
       : error.message.includes("not your turn")
         ? "not_your_turn"
-        : "failed";
+        : error.message.includes("payment method")
+          ? "choose_payment_first"
+          : "failed";
     redirect(dealUrl(dealId, `?error=${code}`));
   }
+  redirect(dealUrl(dealId));
+}
+
+export async function choosePaymentMethod(formData: FormData) {
+  const dealId = String(formData.get("deal_id") ?? "");
+  const method = String(formData.get("method") ?? "");
+
+  const supabase = await createClient();
+  // The database checks you're the buyer, it's before the first half,
+  // and the method is on the list.
+  const { error } = await supabase.rpc("choose_payment_method", {
+    p_deal_id: dealId,
+    p_method: method,
+  });
+
+  if (error) redirect(dealUrl(dealId, "?error=failed"));
   redirect(dealUrl(dealId));
 }
 

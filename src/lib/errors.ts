@@ -21,6 +21,7 @@ const ERROR_TEXT: Record<string, string> = {
   join_failed: "This deal can't be joined. It may already have a buyer, or it's your own deal.",
   not_your_turn: "It's not your turn.",
   step_already_done: "This step was already done. Refresh the page.",
+  choose_payment_first: "Choose how you'll pay first.",
   // Concerns and chat
   concern_length: "Please describe what happened in 10 to 2000 characters.",
   chat_length: "Messages must be 1 to 1000 characters.",

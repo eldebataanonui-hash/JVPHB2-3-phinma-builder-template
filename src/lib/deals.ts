@@ -40,9 +40,26 @@ export const STAGES = [
   { label: "Completed", steps: ["completed"] },
 ];
 
+// How the buyer will pay. The ids match the check in
+// supabase/sql/017-payment-method.sql. AQTech GHub never moves money;
+// this only tells the seller which app to check.
+export const PAYMENT_METHODS = [
+  { id: "gcash", label: "GCash" },
+  { id: "maya", label: "Maya (PayMaya)" },
+  { id: "maribank", label: "MariBank" },
+  { id: "gotyme", label: "GoTyme Bank" },
+  { id: "shopeepay", label: "ShopeePay" },
+  { id: "instapay", label: "InstaPay (any bank)" },
+] as const;
+
+export function paymentLabel(id: string | null) {
+  return PAYMENT_METHODS.find((m) => m.id === id)?.label ?? null;
+}
+
 // How each line in the timestamped record reads.
 export const EVENT_LABELS: Record<string, string> = {
   buyer_joined: "joined as buyer",
+  payment_method_chosen: "chose how to pay",
   code_placed: "placed the ownership code",
   code_confirmed: "confirmed seeing the code in the game",
   first_half_sent: "sent the first half",
