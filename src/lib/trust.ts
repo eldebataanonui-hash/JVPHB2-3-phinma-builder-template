@@ -37,10 +37,10 @@ export function trustCheck(f: TraderFacts): TrustItem[] {
   const completed = f.completedAsSeller + f.completedAsBuyer;
   const age = daysSince(f.joinedAt);
   const items: TrustItem[] = [{ ok: true, text: "Email confirmed" }];
-  // Optional ID check through Didit (sandbox demo for now).
+  // Optional real ID + selfie check performed by Didit.
   items.push(
     f.idVerified
-      ? { ok: true, text: "ID verified (demo, via Didit)" }
+      ? { ok: true, text: "ID verified (via Didit)" }
       : { ok: null, text: "ID not verified (optional)" },
   );
 

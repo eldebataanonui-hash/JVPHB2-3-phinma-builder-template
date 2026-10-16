@@ -25,7 +25,7 @@ export function CredentialsReveal({ dealId }: { dealId: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-[var(--radius)] border border-primary/40 bg-primary/5 p-4">
+    <div aria-live="polite" className="flex flex-col gap-3 rounded-[var(--radius)] border border-primary/40 bg-primary/5 p-4">
       <p className="flex items-center gap-2 text-sm font-semibold">
         <Lock className="h-4 w-4 text-primary" />
         Account login details (confidential)
@@ -35,9 +35,9 @@ export function CredentialsReveal({ dealId }: { dealId: string }) {
         <>
           <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
             <dt className="text-muted-foreground">Login</dt>
-            <dd className="font-mono">{creds.login}</dd>
+            <dd className="min-w-0 break-all font-mono">{creds.login}</dd>
             <dt className="text-muted-foreground">Password</dt>
-            <dd className="font-mono">{creds.password}</dd>
+            <dd className="min-w-0 break-all font-mono">{creds.password}</dd>
             {creds.note && (
               <>
                 <dt className="text-muted-foreground">Note</dt>

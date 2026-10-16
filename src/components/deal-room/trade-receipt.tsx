@@ -68,7 +68,7 @@ export function TradeReceipt({
           {rows.map((r) => (
             <div key={r.label} className="contents">
               <dt className="text-muted-foreground">{r.label}</dt>
-              <dd className="font-medium">{r.value}</dd>
+              <dd className="min-w-0 break-words font-medium">{r.value}</dd>
             </div>
           ))}
         </dl>

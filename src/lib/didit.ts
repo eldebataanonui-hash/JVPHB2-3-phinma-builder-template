@@ -1,4 +1,4 @@
-// Didit ID verification (demo). SERVER-ONLY: import this only from server
+// Didit ID verification (a real ID + selfie check). SERVER-ONLY: import this only from server
 // actions, route handlers and server components. The keys below must
 // never be NEXT_PUBLIC_ variables.
 //
@@ -10,6 +10,16 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 const BASE = "https://verification.didit.me/v3";
+
+// The site's own address, for Didit's return link. A fixed value (the
+// optional SITE_URL setting, or Vercel's production address) rather
+// than whatever the browser's request says.
+export async function siteUrl() {
+  if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/$/, "");
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  const { headers } = await import("next/headers");
+  return (await headers()).get("origin") ?? "";
+}
 
 export function diditConfigured() {
   return Boolean(

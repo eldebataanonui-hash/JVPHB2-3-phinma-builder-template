@@ -89,7 +89,7 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
               {profile.id_verified_at && (
                 <span className="inline-flex w-fit items-center gap-1 rounded-full border border-emerald-500/50 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
                   <BadgeCheck className="h-3.5 w-3.5" />
-                  ID verified (demo)
+                  ID verified
                 </span>
               )}
             </div>
@@ -180,22 +180,27 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
       {isMe && (
         <Card id="verify">
           <CardHeader>
-            <CardTitle>ID verification (optional, demo)</CardTitle>
+            <CardTitle>ID verification (optional)</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             {profile.id_verified_at ? (
               <p className="text-sm">
-                ✓ Your ID is verified. Buyers and sellers see the &quot;ID verified
-                (demo)&quot; badge on your profile.
+                ✓ Your ID is verified. Buyers and sellers see the &quot;ID
+                verified&quot; badge on your profile.
               </p>
             ) : (
               <>
                 <p className="text-sm text-muted-foreground">
-                  Verify your ID and a live selfie with Didit to earn the
-                  &quot;ID verified (demo)&quot; badge. Didit handles your ID
-                  photo and selfie; AQTech GHub never sees or stores them, only
-                  the result. This is a sandbox demo: use Didit&apos;s test
-                  data, not your real ID.
+                  Earn the &quot;ID verified&quot; badge. Didit, an identity
+                  verification company, performs a real check of your
+                  government ID and a live selfie. Didit handles your ID photo
+                  and selfie under its own privacy policy (see{" "}
+                  <a href="https://didit.me" target="_blank" rel="noopener noreferrer" className="underline">
+                    didit.me
+                  </a>
+                  ); AQTech GHub never sees or stores them, only the result
+                  (verified or not, and when). By tapping Verify my ID you
+                  agree to this. It&apos;s optional: you can trade without it.
                 </p>
                 {kyc && (
                   <p className="text-sm">

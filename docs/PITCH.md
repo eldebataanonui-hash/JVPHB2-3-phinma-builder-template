@@ -80,10 +80,11 @@ built the way to check.
 
 ### 2. "Isn't sending a password risky?"
 
-> "We'd prefer no passwords: the Lock-In Checklist moves the account's
-> email to the buyer. If a seller does send a login, it's encrypted, only
-> the buyer can open it, it's deleted the moment the trade completes,
-> and the buyer must change it before confirming full control."
+> "Sellers send the login through an encrypted box, never in chat. Only
+> the buyer can open it, and it's deleted the moment the trade completes.
+> The Lock-In Checklist then has the buyer move the account's email to
+> their own and change the password before confirming full control, so
+> the seller can't get back in."
 
 ### 3. "Can't someone fake their record with a second account?"
 
@@ -100,10 +101,10 @@ built the way to check.
 
 ### 5. "Do you verify IDs?"
 
-> "Optionally. Traders can verify an ID and a live selfie through Didit,
-> an identity verification provider, for an 'ID verified' badge. We never
-> see or store the ID or the face scan, only the result. It's in demo
-> mode for now."
+> "Optionally. Didit, an identity verification company, performs a real
+> check of a government ID and a live selfie, and the trader gets an 'ID
+> verified' badge. We never see or store the ID or the face scan, only
+> the result. Trading never requires it."
 
 ### 6. "Why would a scammer ever agree to use your site?"
 

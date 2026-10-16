@@ -213,14 +213,13 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
               {isSeller && deal.step === "awaiting_lock_in" && (
                 <CredentialsForm dealId={deal.id} sent={credentialsSent} error={cred_error} />
               )}
-              {!isSeller && credentialSteps.includes(deal.step) && (
-                credentialsSent ? (
-                  <CredentialsReveal dealId={deal.id} />
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    Waiting for the seller to send the account login details.
-                  </p>
-                )
+              {!isSeller && credentialSteps.includes(deal.step) && credentialsSent && (
+                <CredentialsReveal dealId={deal.id} />
+              )}
+              {!isSeller && deal.step === "awaiting_lock_in" && !credentialsSent && (
+                <p className="text-sm text-muted-foreground">
+                  Waiting for the seller to send the account login details.
+                </p>
               )}
               {error && <p className="text-sm text-destructive">{error}</p>}
               {myTurn && (

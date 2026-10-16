@@ -63,9 +63,11 @@ export async function TopBar() {
               {me && trialInfo(me.created_at).active && (
                 <Link
                   href="/pricing"
-                  className="hidden items-center rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary hover:bg-primary/20 md:inline-flex"
+                  className="inline-flex shrink-0 items-center rounded-full border border-primary/40 bg-primary/10 px-2 py-1 text-xs font-semibold text-primary hover:bg-primary/20 sm:px-3"
+                  aria-label={`Free trial, ${trialInfo(me.created_at).daysLeft} days left. See plans.`}
                 >
-                  Free trial · {trialInfo(me.created_at).daysLeft}d left
+                  <span className="hidden sm:inline">Free trial · </span>
+                  {trialInfo(me.created_at).daysLeft}d<span className="hidden sm:inline">&nbsp;left</span>
                 </Link>
               )}
               <NotificationBell initialCount={unread ?? 0} />

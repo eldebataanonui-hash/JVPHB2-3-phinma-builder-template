@@ -16,7 +16,7 @@ an encrypted login handover), and every step is recorded with the time.
 - **Code:** GitHub repo `eldebataanonui-hash/JVPHB2-3-phinma-builder-template`
 - **Stack (fixed):** Next.js (App Router) + TypeScript, Tailwind,
   hosted Supabase (database, login, storage, Vault), Vercel (every push
-  to `main` deploys). Optional: Didit for ID verification (demo).
+  to `main` deploys). Optional: Didit for ID verification (a real ID + selfie check).
 
 ## Where the plan lives
 
@@ -38,7 +38,8 @@ codes (JOIN-…), listing photos, live ownership code, payment method
 choice, two-half payment, Lock-In Checklist, encrypted login handover,
 chat, timestamped record, report a concern, trade receipt · notifications
 (bell, auto-refresh) · Trading Rules, About us, red flags · Plans page and
-14-day free trial (display only) · optional ID verification (demo) ·
+14-day free trial (display only) · optional ID verification (real
+Didit check; live test still pending) ·
 dark theme with soft magenta and the pixel bunny-controller logo.
 
 ## Rebuilding the database from scratch
@@ -61,7 +62,8 @@ secrets):
    true".
 
 `supabase/one-off/` holds data clean-ups that are **not** part of a
-rebuild (for example removing unfinished test deals before a demo).
+rebuild. The test-deal clean-up only touches deals between the test
+account emails you list in it; real users' deals are never removed.
 
 ## Settings (names only, never commit values)
 
@@ -83,7 +85,7 @@ this project, and never prefix a secret with `NEXT_PUBLIC_`. Keep a
 private copy of `KYC_RECORD_SECRET` in a password manager: Vercel can't
 show "Secret" values again.
 
-## Didit (ID verification demo)
+## Didit (optional ID verification, Live environment)
 
 - Workflow: **KYC Workflow** (Simple Mode) with **Liveness Detection**
   and **Face Match 1:1** on; paid extras off.
@@ -112,8 +114,9 @@ show "Secret" values again.
 ## Still open
 
 1. **Ticket 21:** one real "Verify my ID" test on the live site.
-2. **Replace the Didit webhook signing secret** (it was pasted in a
-   chat): add a new destination with the same URL, v3.0 and
+2. **MUST DO before the demo: replace the Didit webhook signing secret**
+   (it was pasted in a chat, and anyone holding it could fake an "ID
+   verified" badge): add a new destination with the same URL, v3.0 and
    status.updated, delete the old one, update `DIDIT_WEBHOOK_SECRET` in
    Vercel and `.env.local`, redeploy, then Test Webhook (expect 200).
 3. **Check the Lock-In Checklist wording** against the real MLBB

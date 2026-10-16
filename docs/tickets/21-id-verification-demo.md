@@ -1,7 +1,8 @@
-# 21 — Optional ID verification (demo) with Didit
+# 21 — Optional ID verification with Didit
 
 **What to build:** A trader can verify an ID and a live selfie through
-Didit's hosted page to earn an "ID verified (demo)" badge. It's optional
+Didit's hosted page (a real check, Didit's Live environment) to earn an
+"ID verified" badge. It's optional
 and never blocks trading. AQTech GHub stores only the result, never the
 ID photo, ID number or face scan.
 
@@ -18,7 +19,9 @@ ID photo, ID number or face scan.
 - [ ] The return page asks Didit for the result directly and checks it
       belongs to the logged-in trader (never trusts the address bar)
 - [ ] The webhook checks Didit's signature and timestamp before saving
-- [ ] Profiles show "ID verified (demo)"; the Trust check shows it as a
+- [ ] Profiles show "ID verified"; the Trust check shows it as a
       green check, or "ID not verified (optional)"
 - [ ] The database change is saved as a numbered SQL file
-- [ ] Works on the live URL with Didit's sandbox
+- [ ] Works on the live URL: one real Verify my ID run by a teammate who
+      agrees to use their own ID
+- [ ] The exposed webhook signing secret has been replaced

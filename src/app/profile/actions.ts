@@ -1,8 +1,7 @@
 "use server";
 
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { createVerificationSession, diditConfigured } from "@/lib/didit";
+import { createVerificationSession, diditConfigured, siteUrl } from "@/lib/didit";
 import { containsLink } from "@/lib/links";
 import { SOCIALS, cleanUsername, type SocialKey } from "@/lib/socials";
 import { createClient } from "@/lib/supabase/server";
@@ -52,7 +51,7 @@ export async function updateSocials(formData: FormData) {
   redirect(`${back}?socials_saved=1#socials`);
 }
 
-// Start an ID verification (demo) with Didit and send the trader to
+// Start an ID verification with Didit and send the trader to
 // Didit's secure page. Didit, not AQTech GHub, handles the ID photo and
 // the selfie.
 export async function startIdVerification() {
@@ -65,8 +64,7 @@ export async function startIdVerification() {
   const back = `/profile/${user.id}`;
   if (!diditConfigured()) redirect(`${back}?kyc_error=kyc_not_set_up#verify`);
 
-  const origin = (await headers()).get("origin");
-  const session = await createVerificationSession(user.id, `${origin}/verify/callback`);
+  const session = await createVerificationSession(user.id, `${await siteUrl()}/verify/callback`);
   if (!session) redirect(`${back}?kyc_error=failed#verify`);
   redirect(session.url);
 }

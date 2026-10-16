@@ -20,24 +20,32 @@ export default async function VerifyCallbackPage(props: PageProps<"/verify/callb
 
   const decision = sessionId ? await getVerificationDecision(sessionId) : null;
   let status = "Unknown";
+  let saved = true;
   if (decision && decision.vendor_data === user.id && decision.status) {
     status = decision.status;
-    await supabase.rpc("record_kyc_result", {
+    const { error } = await supabase.rpc("record_kyc_result", {
       p_secret: process.env.KYC_RECORD_SECRET ?? "",
       p_user_id: user.id,
       p_session_id: sessionId,
       p_status: status,
     });
+    saved = !error;
   }
 
-  const message =
-    status === "Approved"
-      ? { title: "ID verified (demo) ✓", body: "Your profile now shows the ID verified badge." }
+  const message = !saved
+    ? {
+        title: "Couldn't save your result",
+        body: "Didit finished your check, but we couldn't save it just now. It should update automatically within a few minutes; if not, tell the AQTech GHub team.",
+      }
+    : status === "Approved"
+      ? { title: "ID verified ✓", body: "Your profile now shows the ID verified badge." }
       : status === "In Review"
         ? { title: "Being reviewed", body: "Didit is reviewing your check. Your badge will appear when it's approved." }
         : status === "Declined"
           ? { title: "Not verified", body: "The check didn't pass. You can try again from your profile." }
-          : { title: "Not finished", body: "We couldn't get a result yet. If you finished the check, it may still update in a few minutes." };
+          : status === "Kyc Expired" || status === "Expired"
+            ? { title: "Check expired", body: "This verification expired. You can start a new one from your profile." }
+            : { title: "Not finished", body: "We couldn't get a result yet. If you finished the check, it may still update in a few minutes." };
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-4 py-8">

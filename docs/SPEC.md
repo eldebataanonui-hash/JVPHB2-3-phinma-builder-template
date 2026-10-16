@@ -118,7 +118,8 @@ buyer's evidence if it happens, and a cooling-off period is parked in
 Shown on Home and in every Deal Room: never pay the full price first;
 never pay "verification fees"; "no middleman needed" is a scam line; a
 price far below similar listings is a warning sign; AQTech GHub and honest
-traders never ask for your password or a GCash/bank code. Deal codes
+traders never ask for your own passwords or a GCash/bank code (a sold
+account's login only goes through the encrypted login box). Deal codes
 (JOIN-…) are safe to share; the only security code ever shared is the
 Moonton binding code, at the Lock-In step.
 
@@ -287,6 +288,25 @@ planned for paid plans (clearly marked planned). Every account gets a
 profile. Nothing is charged and nothing is locked: after the trial,
 everything stays free during beta.
 
+## Deal completed and trade receipt (ticket 19)
+When a deal completes, both traders get a "Deal completed"
+notification, and the Deal Room shows a printable trade receipt (deal
+code as receipt number, account, price and both halves, payment method,
+both traders, completion time and every step's time). On your own
+profile, finished deals move to Sold (seller) and Bought (buyer).
+
+## Optional ID verification with Didit (ticket 21)
+On their own profile, a trader can tap Verify my ID. Didit, an identity
+verification company, performs a real check of a government ID and a
+live selfie (with face match) on its own hosted page. AQTech GHub stores
+only the result (`profiles.id_verified_at` and the private `kyc_checks`
+row), never the ID photo, ID number or face scan. Verified traders get an
+"ID verified" badge and a green line in the Trust check. It is optional
+and never required to trade. Results are saved only through
+`record_kyc_result`, which needs a server-only secret kept in Supabase
+Vault; Didit's webhook is accepted only with a valid signature and a
+recent timestamp.
+
 ## Stretch: listing photos (ticket 08)
 Only after everything above works live. The seller may add up to 4
 photos of the listed account to their Deal Room, stored in a private
@@ -317,7 +337,6 @@ On the live URL:
       details, record or concerns.
 
 ## Out of scope
-- Government ID verification
 - A full admin panel in the app
 - Roblox, Genshin and other games
 - Holding money for users (escrow), or payment processing of any kind

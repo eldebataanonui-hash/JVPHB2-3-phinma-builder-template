@@ -8,10 +8,6 @@ stays small enough to actually ship by Session 3.
 
 ## From /grill-with-docs (2026-10-15)
 
-- **Government ID verification.** Planned next step, through a licensed
-  ID-verification provider. Parked because a free version would mean
-  storing sensitive IDs (Data Privacy Act of 2012), manual review by an
-  admin (a second type of user), and no reliable way to spot fake IDs.
 - **More games.** Roblox first, then others such as Genshin. Each needs
   its own Lock-In Checklist because account recovery works differently.
 - **Escrow / holding money for users.** Needs licensing and a paid
@@ -44,9 +40,6 @@ stays small enough to actually ship by Session 3.
   counts as abandoned after 3 days. Let the seller reset a deal before
   the first payment, and count "abandoned" only against whoever's turn
   it was. (Found in code review.)
-- **Phone push notifications or email alerts** for deal steps and
-  messages. In-app notifications (the bell) work now; push needs a
-  service and email hits the free sending limit.
 
 ## From the second code review (2026-10-15)
 
@@ -60,18 +53,15 @@ stays small enough to actually ship by Session 3.
 - **Longer deal codes** (10 to 12 characters) if the site grows.
 - **Mark notifications read with a button press**, not when a page loads
   (a prefetch can mark things read that nobody saw).
-- **Email receipts and alerts** (e.g. "Deal completed" to Gmail). Needs
+- **Email receipts and alerts** (e.g. "Deal completed" to Gmail), and
+  phone push notifications. Needs
   an email service (Brevo or Resend) with a server-side API key and
   sender verification; Supabase's built-in email only sends sign-up
   emails to team members. For now: in-app notifications and the
   printable trade receipt.
-- **(Now built as an optional sandbox demo, ticket 21.) Real** government ID and face (biometric) verification through a licensed
-  KYC provider. Discussed again on 2026-10-15 and kept parked: it needs
-  a paid outside service and makes the team responsible for sensitive
-  personal information under the Data Privacy Act. Pitch it as the next
-  step. A free, in-stack alternative is Supabase's built-in two-factor
-  login (authenticator app codes).
 - **Real subscriptions and billing** (Monthly, Bi-annual, Annual). Needs
   a payment provider such as PayMongo or Stripe, a server-side secret
   key, decided prices, terms of service and a refund policy. Today the
   Plans page is display-only and the trial locks nothing.
+- **Two-factor login** (Supabase's built-in authenticator-app codes) for
+  stronger account security.
