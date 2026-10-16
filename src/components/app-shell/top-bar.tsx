@@ -6,6 +6,7 @@ import { BackButton } from "@/components/back-button";
 import { Logo } from "@/components/logo";
 import { NotificationBell } from "@/components/notification-bell";
 import { trialInfo } from "@/lib/plans";
+import { plural } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/server";
 import { logOut } from "@/app/auth/actions";
 
@@ -65,7 +66,7 @@ export async function TopBar() {
                 <Link
                   href="/pricing"
                   className="inline-flex shrink-0 items-center rounded-full border border-primary/40 bg-primary/10 px-2 py-1 text-xs font-semibold text-primary hover:bg-primary/20 sm:px-3"
-                  aria-label={`Free trial, ${trial.daysLeft} days left. See plans.`}
+                  aria-label={`Free trial, ${plural(trial.daysLeft, "day")} left. See plans.`}
                 >
                   <span className="hidden sm:inline">Free trial · </span>
                   {trial.daysLeft}d<span className="hidden sm:inline">&nbsp;left</span>

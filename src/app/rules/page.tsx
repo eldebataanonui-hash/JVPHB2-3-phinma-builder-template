@@ -13,6 +13,7 @@ import {
   Split,
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 // The Trading Rules: public, so anyone can read them before signing up.
 // Laid out like a game's rulebook: the match flow, the fouls, what to do
@@ -45,7 +46,7 @@ const IF_WRONG = [
 
 const TEAM_CAN = [
   "Review every concern alongside the deal's record, which nobody can edit",
-  "Contact both traders by email",
+  "Contact both traders by email if needed",
   "Respond to concerns within 48 hours",
 ];
 
@@ -67,7 +68,7 @@ export default function RulesPage() {
         </h1>
         <p className="max-w-xl text-base text-muted-foreground">
           By trading on AQTech GHub, both traders agree to these rules. Play
-          fair, follow the steps, and nobody gets scammed.
+          fair, follow the steps, and you make a scam much harder.
         </p>
         <nav aria-label="Sections" className="flex flex-wrap gap-2 pt-1 text-sm">
           {[
@@ -108,7 +109,7 @@ export default function RulesPage() {
           kicker="Fouls"
           title="What counts as a broken deal"
           tone="danger"
-          note="Each one goes on your record and can be reported to our team."
+          note="Any of these can be reported to our team. Abandoned deals also count on your record."
         />
         <ul className="flex flex-col gap-2 rounded-[var(--radius)] border-2 border-red-500/50 bg-red-500/5 p-3 sm:p-4">
           {FOULS.map((foul) => (
@@ -151,7 +152,7 @@ export default function RulesPage() {
 
       <div className="flex flex-wrap gap-3">
         <Link href="/deals/new" className={buttonVariants()}>
-          Start a safe deal
+          Start a deal (sellers)
         </Link>
         <Link href="/" className={buttonVariants({ variant: "outline" })}>
           Back to home
@@ -175,9 +176,10 @@ function SectionTitle({
   return (
     <div className="flex flex-col gap-1">
       <p
-        className={`text-xs font-semibold uppercase tracking-[0.2em] ${
-          tone === "danger" ? "text-red-400" : "text-primary"
-        }`}
+        className={cn(
+          "text-xs font-semibold uppercase tracking-[0.2em]",
+          tone === "danger" ? "text-red-400" : "text-primary",
+        )}
       >
         {kicker}
       </p>
@@ -191,17 +193,18 @@ function TeamList({ title, items, good }: { title: string; items: string[]; good
   const Icon = good ? CircleCheck : CircleX;
   return (
     <div
-      className={`flex flex-col gap-3 rounded-[var(--radius)] border p-4 ${
-        good ? "border-emerald-500/40 bg-emerald-500/5" : "border-border bg-card"
-      }`}
+      className={cn(
+        "flex flex-col gap-3 rounded-[var(--radius)] border p-4",
+        good ? "border-emerald-500/40 bg-emerald-500/5" : "border-border bg-card",
+      )}
     >
-      <h3 className={`text-lg font-bold uppercase tracking-wide ${good ? "text-emerald-400" : "text-muted-foreground"}`}>
+      <h3 className={cn("text-lg font-bold uppercase tracking-wide", good ? "text-emerald-400" : "text-muted-foreground")}>
         {title}
       </h3>
       <ul className="flex flex-col gap-2 text-sm">
         {items.map((item) => (
           <li key={item} className="flex items-start gap-2">
-            <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${good ? "text-emerald-400" : "text-muted-foreground"}`} />
+            <Icon className={cn("mt-0.5 h-4 w-4 shrink-0", good ? "text-emerald-400" : "text-muted-foreground")} />
             <span>{item}</span>
           </li>
         ))}

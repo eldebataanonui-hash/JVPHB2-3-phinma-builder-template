@@ -5,7 +5,7 @@
 // guide, not a guarantee.
 
 import type { Rating } from "@/lib/reviews";
-import { DAY_MS } from "@/lib/utils";
+import { DAY_MS, plural } from "@/lib/utils";
 
 export type TraderFacts = {
   joinedAt: string;
@@ -60,13 +60,13 @@ export function trustCheck(f: TraderFacts): TrustItem[] {
       : { ok: null, text: "ID not verified (optional)" },
   );
 
-  if (age < 7) items.push({ ok: false, text: `New account: joined ${age === 0 ? "today" : `${age} day${age === 1 ? "" : "s"} ago`}` });
+  if (age < 7) items.push({ ok: false, text: `New account: joined ${age === 0 ? "today" : `${plural(age, "day")} ago`}` });
   else items.push({ ok: true, text: `Member for ${age} days` });
 
   if (completed > 0) {
     items.push({
       ok: true,
-      text: `${completed} finished deal${completed === 1 ? "" : "s"} (${f.completedAsSeller} as seller, ${f.completedAsBuyer} as buyer)`,
+      text: `${plural(completed, "finished deal")} (${f.completedAsSeller} as seller, ${f.completedAsBuyer} as buyer)`,
     });
   } else {
     items.push({ ok: false, text: "No finished deals yet" });
@@ -78,13 +78,13 @@ export function trustCheck(f: TraderFacts): TrustItem[] {
   } else if (r.reviews >= MIN_REVIEWS && r.average < LOW_RATING) {
     items.push({ ok: false, text: `Low rating: ${r.average.toFixed(1)}★ from ${r.reviews} reviews` });
   } else if (r.average >= 4) {
-    items.push({ ok: true, text: `Rated ${r.average.toFixed(1)}★ from ${r.reviews} review${r.reviews === 1 ? "" : "s"} by real trades` });
+    items.push({ ok: true, text: `Rated ${r.average.toFixed(1)}★ from ${plural(r.reviews, "review")} by real trades` });
   } else {
-    items.push({ ok: null, text: `Rated ${r.average.toFixed(1)}★ from ${r.reviews} review${r.reviews === 1 ? "" : "s"}` });
+    items.push({ ok: null, text: `Rated ${r.average.toFixed(1)}★ from ${plural(r.reviews, "review")}` });
   }
 
   if (f.abandoned > 0) {
-    items.push({ ok: false, text: `${f.abandoned} abandoned deal${f.abandoned === 1 ? "" : "s"}` });
+    items.push({ ok: false, text: `${plural(f.abandoned, "abandoned deal")}` });
   }
 
   // Social usernames are typed in by the trader and not checked, so they

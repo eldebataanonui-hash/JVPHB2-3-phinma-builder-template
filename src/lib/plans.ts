@@ -55,7 +55,7 @@ export const PLANS: Plan[] = [
     price: 249,
     period: "every 6 months",
     forWho: "Trading every ranked season",
-    why: "Covers about two MLBB ranked seasons at ₱41.50 a month.",
+    why: "Covers about two MLBB ranked seasons, for less than paying monthly.",
     perks: [...PRO_PERKS, "Concerns answered within 24 hours (free: 48)"],
   },
   {

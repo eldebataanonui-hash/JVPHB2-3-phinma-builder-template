@@ -287,7 +287,10 @@ plans: Monthly ₱49, Bi-annual ₱249 (save 15%) and Annual ₱399 (save
 perks. Pro perks are for visibility, never safety. A "Which plan fits
 you?" calculator works out the cheapest plan for the months you'll trade
 and the cost per account. Logged-in traders can pick a plan; the pick is
-saved (`plan_picks`, 031) and nobody is charged (ticket 24). Every account gets a
+saved (`plan_picks`, 031) and nobody is charged (ticket 24). Pro perks
+start when payments start; none are switched on yet, and the page shows
+them with a clock, never a tick. Your pick also shows on your own
+profile's "Your plan" card. Every account gets a
 14-day free trial counted from sign-up, shown in the top bar and on your
 profile. Nothing is charged and nothing is locked: after the trial,
 everything stays free during beta.

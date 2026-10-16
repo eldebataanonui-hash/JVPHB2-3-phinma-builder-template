@@ -5,7 +5,7 @@ import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { tagsFor } from "@/lib/reviews";
-import { cn } from "@/lib/utils";
+import { cn, plural } from "@/lib/utils";
 import { submitReview } from "@/app/deals/actions";
 
 const WORDS = ["", "Bad", "Poor", "Okay", "Good", "Excellent"];
@@ -40,7 +40,7 @@ export function ReviewForm({
               type="button"
               onClick={() => setStars(n)}
               onMouseEnter={() => setHover(n)}
-              aria-label={`${n} star${n === 1 ? "" : "s"}`}
+              aria-label={plural(n, "star")}
               aria-pressed={stars === n}
               className="rounded p-1"
             >

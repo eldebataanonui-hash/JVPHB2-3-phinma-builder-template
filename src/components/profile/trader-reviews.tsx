@@ -3,6 +3,7 @@ import { type Review, ReviewItem } from "@/components/review-item";
 import { Stars } from "@/components/stars";
 import { type Rating, tagLabel } from "@/lib/reviews";
 import { createClient } from "@/lib/supabase/server";
+import { plural } from "@/lib/utils";
 
 // Reviews of a trader, from their completed deals: the average, the
 // most common tags and the latest reviews. RLS only returns revealed
@@ -60,7 +61,7 @@ export async function TraderReviews({
             <div className="flex flex-col gap-0.5">
               <Stars value={rating.average} />
               <span className="text-xs text-muted-foreground">
-                from {rating.reviews} review{rating.reviews === 1 ? "" : "s"}
+                from {plural(rating.reviews, "review")}
               </span>
             </div>
             {rating.topTags.length > 0 && (
@@ -88,7 +89,7 @@ export async function TraderReviews({
                 authorName={nameOf(r.reviewer_id)}
                 note={
                   hiddenMine.has(r.id)
-                    ? "Your review: only you can see it until they review you too, and it isn't in the average yet."
+                    ? "Your review: only you can see it until they review you too, or 7 days after the deal completed. It isn't in the average yet."
                     : undefined
                 }
               />

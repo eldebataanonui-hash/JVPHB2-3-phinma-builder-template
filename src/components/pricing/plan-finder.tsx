@@ -91,7 +91,8 @@ export function PlanFinder() {
           ? `That's ${formatPesos(allMonthly - total)} less than paying monthly. `
           : ""}
         Clark lost {formatPesos(TYPICAL_SCAM_LOSS)} in one scam. The safety steps
-        are free either way; a plan makes buyers notice you and trust you faster.
+        are free either way; once payments start, a plan will help buyers notice
+        you faster.
       </p>
     </div>
   );

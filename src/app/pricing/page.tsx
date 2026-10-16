@@ -75,8 +75,8 @@ export default async function PricingPage(props: PageProps<"/pricing">) {
         </h1>
         <p className="max-w-2xl text-base text-muted-foreground">
           Every trader gets the live code, two-half payments, Lock-In and
-          reviews for free. Pro plans help honest traders get noticed, so
-          buyers pick you over a stranger on Facebook. A whole year costs less
+          reviews for free. Once payments start, Pro plans will help honest
+          traders get noticed, so buyers pick you over a stranger on Facebook. A whole year costs less
           than a quarter of one {formatPesos(TYPICAL_SCAM_LOSS)} scam.
         </p>
         {trial ? (
