@@ -57,10 +57,14 @@ stays small enough to actually ship by Session 3.
   sender verification; Supabase's built-in email only sends sign-up
   emails to team members. For now: in-app notifications and the
   printable trade receipt.
-- **Real subscriptions and billing** (Monthly, Bi-annual, Annual). Needs
-  a payment provider such as PayMongo or Stripe, a server-side secret
-  key, decided prices, terms of service and a refund policy. Today the
-  Plans page is display-only and the trial locks nothing.
+- **Real subscriptions and billing** (Monthly ₱49, Bi-annual ₱249,
+  Annual ₱399). Needs a payment provider such as PayMongo or Stripe
+  (outside the pinned stack, takes a fee per payment), a server-side
+  secret key, a registered business, terms of service and a refund
+  policy. Today traders can pick a plan and nothing is charged.
+- **Pro perks switched on** (Pro badge, 10 photos, priority in Suggested
+  traders, 24-hour concern replies). They only make sense once people
+  actually pay.
 - **Replying to a review**, and reporting an unfair review to the team.
   (Added with ratings, 2026-10-16.)
 - **Two-factor login** (Supabase's built-in authenticator-app codes) for

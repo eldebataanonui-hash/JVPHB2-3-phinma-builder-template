@@ -281,9 +281,13 @@ change the password and move the bound email at once, because the seller
 still knows the password.
 
 ## Plans and free trial (ticket 22)
-A Plans page shows Monthly, Bi-annual and Annual plans with prices "to be
-announced" and "Coming soon" buttons, what's included today, and perks
-planned for paid plans (clearly marked planned). Every account gets a
+A Plans page shows Free (every safety feature, forever) and three Pro
+plans: Monthly ₱49, Bi-annual ₱249 (save 15%) and Annual ₱399 (save
+32%, best value), each with who it's for, why it's worth it and its
+perks. Pro perks are for visibility, never safety. A "Which plan fits
+you?" calculator works out the cheapest plan for the months you'll trade
+and the cost per account. Logged-in traders can pick a plan; the pick is
+saved (`plan_picks`, 031) and nobody is charged (ticket 24). Every account gets a
 14-day free trial counted from sign-up, shown in the top bar and on your
 profile. Nothing is charged and nothing is locked: after the trial,
 everything stays free during beta.
