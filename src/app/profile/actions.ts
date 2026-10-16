@@ -158,7 +158,7 @@ export async function addPaymentAccount(formData: FormData) {
     fail(
       error.code === "23505"
         ? "pay_account_duplicate"
-        : error.message.includes("up to 10")
+        : error.code === "P0010"
           ? "pay_account_limit"
           : "failed",
     );
@@ -176,6 +176,8 @@ export async function removePaymentAccount(formData: FormData) {
   if (!user) redirect("/login");
 
   // RLS only lets you delete your own accounts.
-  if (Number.isInteger(id)) await supabase.from("payment_accounts").delete().eq("id", id);
+  if (!Number.isInteger(id) || id < 1) redirect(`/profile/${user.id}#payment-accounts`);
+  const { error } = await supabase.from("payment_accounts").delete().eq("id", id);
+  if (error) redirect(`/profile/${user.id}?pay_error=failed#payment-accounts`);
   redirect(`/profile/${user.id}#payment-accounts`);
 }

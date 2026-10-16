@@ -107,7 +107,9 @@ export async function PaymentAccounts({ error, saved }: { error: string | null; 
             </div>
             <p className="text-xs text-muted-foreground">
               For GCash, Maya and ShopeePay, use the mobile number linked to the
-              wallet. Never enter a PIN, password or OTP here.
+              wallet. For MariBank, GoTyme and InstaPay, use the account number.
+              The bank name is only used for InstaPay. Never enter a PIN,
+              password or OTP here.
             </p>
             {error && <p className="text-sm text-destructive">{error}</p>}
             {saved && <p className="text-sm">Saved.</p>}

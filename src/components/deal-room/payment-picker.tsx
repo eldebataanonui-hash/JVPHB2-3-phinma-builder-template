@@ -39,7 +39,7 @@ export function PaymentPicker({
             {current === m.id ? "✓ " : ""}
             {m.label}
             <span className="block text-xs font-normal text-muted-foreground">
-              {accepted.includes(m.id) ? "Seller has an account" : "No seller account saved"}
+              {accepted.includes(m.id) ? "Seller accepts" : "No account saved"}
             </span>
           </button>
         ))}

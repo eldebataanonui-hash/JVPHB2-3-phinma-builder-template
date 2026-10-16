@@ -42,8 +42,9 @@ export const STAGES = [
   { label: "Completed", steps: ["completed"] },
 ];
 
-// How the buyer will pay. The ids match the check in
-// supabase/sql/017-payment-method.sql. AQTech GHub never moves money;
+// How the buyer will pay. The ids match the checks in
+// supabase/sql/017-payment-method.sql and 032-payment-accounts.sql: add a
+// method in all three places. AQTech GHub never moves money;
 // this only tells the seller which app to check.
 export const PAYMENT_METHODS = [
   { id: "gcash", label: "GCash" },

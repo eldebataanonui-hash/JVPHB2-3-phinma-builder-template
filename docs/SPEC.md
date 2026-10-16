@@ -121,7 +121,8 @@ price far below similar listings is a warning sign; AQTech GHub and honest
 traders never ask for your own passwords or a GCash/bank code (a sold
 account's login only goes through the encrypted login box). Deal codes
 (JOIN-…) are safe to share; the only security code ever shared is the
-Moonton binding code, at the Lock-In step.
+Moonton binding code, at the Lock-In step. Never pay a different number
+than the account shown in the Deal Room (ticket 25).
 
 ## Data
 Row Level Security is ON for every table, with the policies below. On
@@ -190,6 +191,14 @@ Reports sent to the AQTech GHub team.
 - **Create:** only the database's own triggers (deal steps, Deal Room
   chat, direct messages). Nobody can create one directly.
 
+### `payment_accounts`
+- **Read:** only your own rows. The other trader sees accounts only
+  through the "Payment accounts for a deal" function below.
+- **Create:** your own, with method, bank name (required for InstaPay),
+  account name and number (digits, spaces, + and - only; links blocked).
+  At most 10 each. The same number written differently counts as one.
+- **Delete:** your own. There is no edit: remove and add again.
+
 ### Storage: `avatars` bucket
 Public pictures (anyone with the link can view one). JPG, PNG or WebP,
 2 MB max, at most 5 files per trader. Traders can only upload to and
@@ -208,6 +217,11 @@ website can't skip them. All need a logged-in trader.
 - **Advance step**: moves a deal to its next step and adds a
   `deal_events` row, only if the caller is the right person for the
   current step (and a payment method is chosen before the first half).
+- **Payment accounts for a deal** (033): the other trader's saved
+  accounts, only to the deal's seller or buyer, only at the payment
+  steps. The buyer choosing how to pay sees the seller's accounts; once a
+  method is chosen, each trader sees only the other's account for that
+  method. Nothing is shown at other steps or after completion.
 - **Trader record**: returns how many deals a trader has completed and
   how many they have abandoned, as seller or buyer. Abandoned means a
   deal with a buyer that was not completed within 3 days. Deals still in
@@ -319,10 +333,12 @@ Each trader saves up to 10 e-wallet or bank accounts on their own
 profile: method (GCash, Maya, MariBank, GoTyme, ShopeePay, InstaPay with
 bank name), account name, and the account number or linked phone
 number. The list is private. Inside a deal, the other trader sees it
-only while the deal is in progress: the buyer's payment picker marks
-which methods the seller has an account for, and at each payment step
-the buyer sees "Send ₱… to" the seller's account (with a Copy button)
-and the seller sees "Expect ₱… from" the buyer's account. A new red flag
+only at the payment steps (after the ownership code is confirmed): the
+buyer choosing how to pay sees what the seller accepts, then "Send ₱…
+to" the seller's account for the chosen method (with a Copy button, and
+"You sent" after tapping sent), and the seller sees "Expect ₱… from" the
+buyer's account for that method. A seller with no saved account is
+nudged to add one. A new red flag
 warns against paying a different number sent in chat. AQTech GHub still
 never moves money. Data: `payment_accounts` (032).
 

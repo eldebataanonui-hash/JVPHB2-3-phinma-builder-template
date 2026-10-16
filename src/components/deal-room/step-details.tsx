@@ -61,14 +61,15 @@ export function StepDetails({
           ) : (
             ". They're choosing how to pay."
           )}{" "}
-          Share your account number in the chat below.
+          Your saved payment account shows to the buyer here, so don&apos;t
+          send numbers in chat.
         </p>
       ) : (
         <p className="text-sm">
           Choose how you&apos;ll pay, then send the first half:{" "}
           <span className="font-semibold">{formatPesos(first)}</span>. Never
-          send the full price now. Ask the seller for their account number in
-          the chat below.
+          send the full price now. The seller&apos;s saved account shows below;
+          only pay to the account shown here, never a number sent in chat.
         </p>
       );
     case "first_payment_sent":

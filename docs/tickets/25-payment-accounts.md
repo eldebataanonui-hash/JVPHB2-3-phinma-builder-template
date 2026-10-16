@@ -20,6 +20,11 @@ wrong number.
 - [x] Seller: "Expect ₱… from" the buyer's account
 - [x] Red flag: "Send it to my other GCash number instead."
 - [x] 032 run in Supabase; check shows three policies
+- [x] Privacy fix from code review (033): numbers only at the payment
+      steps, only the chosen method once picked; step text no longer
+      says to ask for numbers in chat; seller nudge; "You sent" after
+      sending; Rules foul added
+- [ ] 033 run in Supabase; check shows deal_payment_accounts
 - [ ] Live: add accounts, see them in a deal from the other side; a
       stranger and a logged-out visitor see nothing
 - [x] Logged-out visitor can't read, add or remove accounts, or call deal_payment_accounts

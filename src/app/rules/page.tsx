@@ -32,6 +32,7 @@ const FOULS = [
   "Taking the account back after the buyer confirmed full control.",
   "Asking for payment, fees or security codes outside the Deal Room. (Sharing a deal code, JOIN-…, is fine.)",
   "Asking anyone for their own passwords or a GCash/bank code. The only security code ever shared is the Moonton binding code, in the Deal Room chat, at the Lock-In step.",
+  "Asking to be paid to a number other than the account shown in the Deal Room.",
   "Sending a sold account's login anywhere except the encrypted login box in the Deal Room.",
   "Sending links in the Deal Room chat, or moving the deal to another app to send them.",
   "Leaving a deal unfinished for more than 3 days. It counts as abandoned on your record.",

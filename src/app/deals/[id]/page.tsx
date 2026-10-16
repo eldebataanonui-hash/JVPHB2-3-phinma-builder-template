@@ -95,15 +95,26 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
     .eq("deal_id", deal.id)
     .order("id");
 
-  // The other trader's payment accounts. Only returned to the deal's
-  // seller and buyer, and only while the deal is in progress (032).
-  const { data: otherAccounts } = deal.buyer_id
-    ? await supabase.rpc("deal_payment_accounts", { p_deal_id: deal.id })
-    : { data: [] };
-
   const { first, second } = splitPrice(deal.price);
   const payingFirst = ["awaiting_first_payment", "first_payment_sent"].includes(deal.step);
   const payingSecond = ["awaiting_second_payment", "second_payment_sent"].includes(deal.step);
+  const paymentSent = ["first_payment_sent", "second_payment_sent"].includes(deal.step);
+
+  // The other trader's payment accounts. The database only returns them
+  // at the payment steps (and only the chosen method once one is picked),
+  // to the deal's seller and buyer (033).
+  const { data: otherAccounts } =
+    deal.buyer_id && (payingFirst || payingSecond)
+      ? await supabase.rpc("deal_payment_accounts", { p_deal_id: deal.id })
+      : { data: [] };
+
+  // A seller with no saved account gets a nudge to add one. RLS only
+  // counts your own accounts.
+  const beforeLockIn = ["waiting_for_buyer", "awaiting_code", "code_placed", "awaiting_first_payment", "first_payment_sent"];
+  const { count: myAccountCount } =
+    isSeller && beforeLockIn.includes(deal.step)
+      ? await supabase.from("payment_accounts").select("id", { count: "exact", head: true })
+      : { count: null };
   const action = STEP_ACTIONS[deal.step];
   const myTurn = Boolean(action) && (action.actor === "seller") === isSeller;
   // Login details are sent at the handover step and readable by the
@@ -186,6 +197,21 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
         </Card>
       )}
 
+      {myAccountCount === 0 && (
+        <Card className="border-primary/60">
+          <CardContent className="flex flex-col gap-2 pt-6 text-sm">
+            <p className="font-semibold">Add where you want to be paid</p>
+            <p className="text-muted-foreground">
+              Buyers see your saved GCash, Maya or bank account here when it&apos;s
+              time to pay, so nobody has to ask for a number in chat.
+            </p>
+            <Link href={`/profile/${user.id}#payment-accounts`} className="w-fit underline">
+              Add a payment account
+            </Link>
+          </CardContent>
+        </Card>
+      )}
+
       {deal.buyer_id && (
         <>
           <ol className="grid grid-cols-3 gap-2 text-xs sm:grid-cols-6">
@@ -240,6 +266,7 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
                   amount={payingFirst ? first : second}
                   otherName={otherName}
                   accounts={otherAccounts ?? []}
+                  sent={paymentSent}
                 />
               )}
               {isSeller && deal.step === "awaiting_lock_in" && (
