@@ -20,6 +20,7 @@ export async function TopBar() {
   const { data: me } = user
     ? await supabase.from("profiles").select("display_name, avatar_path, created_at").eq("id", user.id).maybeSingle()
     : { data: null };
+  const trial = me ? trialInfo(me.created_at) : null;
 
   // Unread notifications for the bell. RLS only counts your own.
   const { count: unread } = user
@@ -60,14 +61,14 @@ export async function TopBar() {
         <div className="flex shrink-0 items-center gap-2">
           {user ? (
             <>
-              {me && trialInfo(me.created_at).active && (
+              {trial?.active && (
                 <Link
                   href="/pricing"
                   className="inline-flex shrink-0 items-center rounded-full border border-primary/40 bg-primary/10 px-2 py-1 text-xs font-semibold text-primary hover:bg-primary/20 sm:px-3"
-                  aria-label={`Free trial, ${trialInfo(me.created_at).daysLeft} days left. See plans.`}
+                  aria-label={`Free trial, ${trial.daysLeft} days left. See plans.`}
                 >
                   <span className="hidden sm:inline">Free trial · </span>
-                  {trialInfo(me.created_at).daysLeft}d<span className="hidden sm:inline">&nbsp;left</span>
+                  {trial.daysLeft}d<span className="hidden sm:inline">&nbsp;left</span>
                 </Link>
               )}
               <NotificationBell initialCount={unread ?? 0} />

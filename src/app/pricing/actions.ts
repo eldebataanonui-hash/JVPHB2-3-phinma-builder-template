@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 // switched on. RLS only lets you save or change your own pick.
 export async function pickPlan(formData: FormData) {
   const plan = planById(String(formData.get("plan") ?? ""));
-  if (!plan) redirect("/pricing?error=failed#plans");
+  if (!plan) redirect("/pricing?error=plan_failed#plans");
 
   const supabase = await createClient();
   const {
@@ -16,20 +16,13 @@ export async function pickPlan(formData: FormData) {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/pricing");
 
-  const { data: existing } = await supabase
+  // One step: add your pick, or change it if you already have one. The
+  // database fills in who you are, so a double click can't fail.
+  const { error } = await supabase
     .from("plan_picks")
-    .select("plan")
-    .eq("user_id", user.id)
-    .maybeSingle();
+    .upsert({ plan: plan.id }, { onConflict: "user_id" });
 
-  const { error } = existing
-    ? await supabase
-        .from("plan_picks")
-        .update({ plan: plan.id, picked_at: new Date().toISOString() })
-        .eq("user_id", user.id)
-    : await supabase.from("plan_picks").insert({ plan: plan.id });
-
-  if (error) redirect("/pricing?error=failed#plans");
+  if (error) redirect("/pricing?error=plan_failed#plans");
   redirect("/pricing?picked=1#plans");
 }
 
@@ -40,6 +33,7 @@ export async function clearPlanPick() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/pricing");
 
-  await supabase.from("plan_picks").delete().eq("user_id", user.id);
+  const { error } = await supabase.from("plan_picks").delete().eq("user_id", user.id);
+  if (error) redirect("/pricing?error=plan_failed#plans");
   redirect("/pricing#plans");
 }

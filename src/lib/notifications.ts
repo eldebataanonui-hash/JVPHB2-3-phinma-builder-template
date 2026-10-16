@@ -18,7 +18,7 @@ const TEXT: Record<string, (who: string, deal: string, method: string | null) =>
   second_half_received: (who, deal) => `${who} confirmed the second half arrived for "${deal}".`,
   deal_completed: (_who, deal) => `Deal completed: "${deal}". 🎉 Your trade receipt is ready.`,
   review_received: (who, deal) =>
-    `⭐ ${who} reviewed you for "${deal}". It shows once you review them too, or after 7 days.`,
+    `⭐ ${who} reviewed you for "${deal}". Reviews show once both traders review, or 7 days after the deal completed.`,
   deal_message: (who, deal) => `${who} sent a message in "${deal}".`,
   direct_message: (who) => `${who} sent you a message.`,
 };

@@ -10,6 +10,8 @@ charged) and work out which plan fits them.
 
 - [x] Prices in one place (`src/lib/plans.ts`): Monthly ₱49, Bi-annual
       ₱249, Annual ₱399; savings and per-month prices worked out from them
+- [x] Pro perks shown with a clock under "start when payments start",
+      never a green tick (code review)
 - [x] Free plan card removed (team choice); each plan lists "Every safety feature (free for all traders)"
 - [x] Each plan: who it's for, why it's worth it, perks (visibility, not
       safety)

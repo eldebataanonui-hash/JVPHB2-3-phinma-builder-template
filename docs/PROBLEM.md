@@ -94,8 +94,8 @@ is built.
 - Phone or SMS verification
 - A marketplace or listings search (deals still start on Facebook)
 - In-site chat
-- Star ratings and written reviews (only completed-deal counts for now;
-  later added as ticket 23)
+- Star ratings and written reviews (at the MVP cut; added afterwards as
+  ticket 23)
 - A cooling-off period and dispute handling after the deal
 - Blocking links inside the Deal Room (the MVP shows warnings instead)
 

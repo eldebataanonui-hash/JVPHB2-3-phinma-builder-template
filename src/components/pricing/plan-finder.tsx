@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { Calculator } from "lucide-react";
-import { PLANS, TYPICAL_SCAM_LOSS, formatPeso } from "@/lib/plans";
+import { formatPesos } from "@/lib/deals";
+import { ANNUAL, BIANNUAL, MONTHLY, TYPICAL_SCAM_LOSS } from "@/lib/plans";
+import { plural } from "@/lib/utils";
 
 // "Which plan fits you?" Move the sliders; it works out the cheapest
 // way to cover the months you'll trade, and the cost per account traded.
@@ -13,13 +15,12 @@ export function PlanFinder() {
   // Cheapest mix: some years of Annual, some Bi-annual blocks, and the
   // months left over on Monthly. Tries every mix, so it's always exact.
   function cheapest(m: number) {
-    const [monthly, biannual, annual] = PLANS;
     let best = { total: Infinity, years: 0, halves: 0, left: 0 };
     for (let years = 0; years <= Math.ceil(m / 12); years++) {
       const rest = Math.max(0, m - years * 12);
       for (let halves = 0; halves <= Math.ceil(rest / 6); halves++) {
         const left = Math.max(0, rest - halves * 6);
-        const total = years * annual.price + halves * biannual.price + left * monthly.price;
+        const total = years * ANNUAL.price + halves * BIANNUAL.price + left * MONTHLY.price;
         if (total < best.total) best = { total, years, halves, left };
       }
     }
@@ -28,11 +29,12 @@ export function PlanFinder() {
       best.halves && `${best.halves > 1 ? `${best.halves}× ` : ""}Bi-annual`,
       best.left && `${best.left > 1 ? `${best.left}× ` : ""}Monthly`,
     ].filter(Boolean);
-    return { total: best.total, label: parts.join(" + ") };
+    const covered = best.years * 12 + best.halves * 6 + best.left;
+    return { total: best.total, label: parts.join(" + "), covered };
   }
 
-  const { total, label: best } = cheapest(months);
-  const allMonthly = months * PLANS[0].price;
+  const { total, label: best, covered } = cheapest(months);
+  const allMonthly = months * MONTHLY.price;
   const perAccount = total / accounts;
   const scamShare = Math.round((total / TYPICAL_SCAM_LOSS) * 100);
 
@@ -76,16 +78,19 @@ export function PlanFinder() {
 
       <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Stat label="Cheapest way" value={best} />
-        <Stat label={`Total for ${months} month${months === 1 ? "" : "s"}`} value={formatPeso(total)} />
-        <Stat label="Per account traded" value={formatPeso(Math.round(perAccount * 100) / 100)} />
-        <Stat label="Of one ₱1,700 scam" value={`${scamShare}%`} />
+        <Stat
+          label={`Total for ${plural(months, "month")}${covered > months ? ` (covers ${covered})` : ""}`}
+          value={formatPesos(total)}
+        />
+        <Stat label="Per account traded" value={formatPesos(Math.round(perAccount * 100) / 100)} />
+        <Stat label={`Compared with one ${formatPesos(TYPICAL_SCAM_LOSS)} scam`} value={`${scamShare}%`} />
       </dl>
 
       <p className="text-sm text-muted-foreground">
         {total < allMonthly
-          ? `That's ${formatPeso(allMonthly - total)} less than paying monthly. `
+          ? `That's ${formatPesos(allMonthly - total)} less than paying monthly. `
           : ""}
-        Clark lost {formatPeso(TYPICAL_SCAM_LOSS)} in one scam. The safety steps
+        Clark lost {formatPesos(TYPICAL_SCAM_LOSS)} in one scam. The safety steps
         are free either way; a plan makes buyers notice you and trust you faster.
       </p>
     </div>

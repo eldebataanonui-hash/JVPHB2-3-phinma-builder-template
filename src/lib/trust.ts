@@ -5,6 +5,7 @@
 // guide, not a guarantee.
 
 import type { Rating } from "@/lib/reviews";
+import { DAY_MS } from "@/lib/utils";
 
 export type TraderFacts = {
   joinedAt: string;
@@ -25,10 +26,9 @@ const MIN_REVIEWS = 3;
 
 export type TrustItem = { ok: boolean | null; text: string };
 
-const DAY = 86_400_000;
 
 export function daysSince(iso: string) {
-  return Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / DAY));
+  return Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / DAY_MS));
 }
 
 export function trustLevel(f: TraderFacts) {

@@ -81,7 +81,8 @@ export function ReviewForm({
 
       <p className="text-xs text-muted-foreground">
         Reviews can&apos;t be edited or deleted. {otherName} sees yours once
-        they review you too, or after 7 days, so nobody can rate in revenge.
+        they review you too, or 7 days after the deal completed, so nobody
+        can rate in revenge.
       </p>
 
       <Button type="submit" className="w-fit" disabled={!stars}>

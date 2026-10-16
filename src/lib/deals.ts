@@ -1,3 +1,5 @@
+import { DAY_MS } from "@/lib/utils";
+
 // Plain-English labels for each deal step. The step names match the
 // check constraint in supabase/sql/006-create-deals.sql.
 export const STEP_LABELS: Record<string, string> = {
@@ -90,14 +92,16 @@ export function splitPrice(price: number) {
   return { first, second: price - first };
 }
 
+// "₱1,700", or "₱41.50" when there are centavos.
 export function formatPesos(amount: number) {
-  return `₱${amount.toLocaleString("en-PH")}`;
+  const whole = Number.isInteger(amount);
+  return `₱${amount.toLocaleString("en-PH", { minimumFractionDigits: whole ? 0 : 2, maximumFractionDigits: 2 })}`;
 }
 
 // "Active today", "Active 3 days ago": rough on purpose, so it shows
 // who's around without tracking exactly when.
 export function formatLastActive(iso: string) {
-  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000);
+  const days = Math.floor((Date.now() - new Date(iso).getTime()) / DAY_MS);
   if (days < 1) return "Active today";
   if (days === 1) return "Active yesterday";
   if (days < 30) return `Active ${days} days ago`;

@@ -6,6 +6,8 @@
 // charged. Real billing needs a payment provider (see docs/LATER.md).
 // The safety features are free for everyone, always.
 
+import { DAY_MS } from "@/lib/utils";
+
 export const TRIAL_DAYS = 14;
 
 // What Clark lost in one scam. Used to show what a plan costs next to
@@ -26,7 +28,9 @@ export type Plan = {
   highlight?: boolean;
 };
 
-// Paid perks. None of them are safety features: those stay free.
+// Paid perks. None of them are safety features: those stay free. None
+// are switched on yet: they start when payments start (docs/LATER.md),
+// and the Plans page says so next to every one.
 const PRO_PERKS = [
   "Pro badge on your profile and trader card",
   "Up to 10 listing photos per deal (free: 4)",
@@ -51,7 +55,7 @@ export const PLANS: Plan[] = [
     price: 249,
     period: "every 6 months",
     forWho: "Trading every ranked season",
-    why: "Covers about two MLBB ranked seasons, so your badge and reviews keep working while you trade.",
+    why: "Covers about two MLBB ranked seasons at ₱41.50 a month.",
     perks: [...PRO_PERKS, "Concerns answered within 24 hours (free: 48)"],
   },
   {
@@ -76,26 +80,25 @@ export function planById(id: string) {
   return PLANS.find((p) => p.id === id) ?? null;
 }
 
+// Looked up by id, not by position, so reordering PLANS can't break the
+// savings maths.
+export const MONTHLY = planById("monthly")!;
+export const BIANNUAL = planById("biannual")!;
+export const ANNUAL = planById("annual")!;
+
 export function perMonth(plan: Plan) {
-  return plan.price / plan.months;
+  return Math.round((plan.price / plan.months) * 100) / 100;
 }
 
 // Percent saved against paying Monthly for the same number of months.
 export function savingPercent(plan: Plan) {
-  const monthly = PLANS[0];
-  const full = monthly.price * plan.months;
+  const full = MONTHLY.price * plan.months;
   return Math.round(((full - plan.price) / full) * 100);
 }
 
-export function formatPeso(n: number) {
-  return `₱${n.toLocaleString("en-PH", { maximumFractionDigits: 2, minimumFractionDigits: Number.isInteger(n) ? 0 : 2 })}`;
-}
-
-const DAY = 86_400_000;
-
 // The free trial runs for TRIAL_DAYS from the day the profile was made.
 export function trialInfo(createdAt: string) {
-  const endsAt = new Date(new Date(createdAt).getTime() + TRIAL_DAYS * DAY);
-  const daysLeft = Math.max(0, Math.ceil((endsAt.getTime() - Date.now()) / DAY));
+  const endsAt = new Date(new Date(createdAt).getTime() + TRIAL_DAYS * DAY_MS);
+  const daysLeft = Math.max(0, Math.ceil((endsAt.getTime() - Date.now()) / DAY_MS));
   return { endsAt, daysLeft, active: daysLeft > 0 };
 }

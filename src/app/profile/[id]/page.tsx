@@ -18,7 +18,8 @@ import { createClient } from "@/lib/supabase/server";
 import { startIdVerification, updateBio, updateSocials } from "@/app/profile/actions";
 import { BadgeCheck } from "lucide-react";
 import { SOCIALS } from "@/lib/socials";
-import { trialInfo } from "@/lib/plans";
+import { planById, trialInfo } from "@/lib/plans";
+import { plural } from "@/lib/utils";
 import { AtSign, ExternalLink } from "lucide-react";
 import { STEP_LABELS, formatPesos } from "@/lib/deals";
 
@@ -71,6 +72,13 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
     idVerified: Boolean(profile.id_verified_at),
     rating,
   };
+
+  // Your trial, and the plan you picked on the Plans page (yours only).
+  const trial = trialInfo(profile.created_at);
+  const { data: pick } = isMe
+    ? await supabase.from("plan_picks").select("plan").eq("user_id", id).maybeSingle()
+    : { data: null };
+  const myPlan = pick ? planById(pick.plan) : null;
 
   // Your own verification status (kyc_checks is readable only by you).
   const { data: kyc } = isMe
@@ -128,7 +136,7 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
 
       <TraderInsights facts={facts} />
 
-      <TraderReviews traderId={id} rating={rating} />
+      <TraderReviews traderId={id} viewerId={user.id} rating={rating} />
 
       {!isMe && <SellingNow sellerId={id} sellerName={profile.display_name} />}
 
@@ -168,18 +176,22 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
               See plans
             </Link>
           </CardHeader>
-          <CardContent>
-            {trialInfo(profile.created_at).active ? (
+          <CardContent className="flex flex-col gap-2">
+            {trial.active ? (
               <p className="text-sm">
                 <span className="font-semibold">Free trial</span>:{" "}
-                {trialInfo(profile.created_at).daysLeft} day
-                {trialInfo(profile.created_at).daysLeft === 1 ? "" : "s"} left. Full
-                access to every feature.
+                {plural(trial.daysLeft, "day")} left. Full access to every feature.
               </p>
             ) : (
               <p className="text-sm">
                 <span className="font-semibold">Beta access</span>: your free trial
                 has ended, but everything stays free while AQTech GHub is in beta.
+              </p>
+            )}
+            {myPlan && (
+              <p className="text-sm">
+                <span className="font-semibold">Your pick: {myPlan.name}</span>. Not
+                charged: payments aren&apos;t switched on yet.
               </p>
             )}
           </CardContent>

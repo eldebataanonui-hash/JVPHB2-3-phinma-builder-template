@@ -29,6 +29,8 @@ const ERROR_TEXT: Record<string, string> = {
   review_link: "Links aren't allowed in reviews.",
   review_done: "You already reviewed this deal.",
   review_closed: "The review window has closed. Reviews are open for 7 days after a deal completes.",
+  // Plans
+  plan_failed: "Couldn't save your plan pick. Please try again.",
   // Concerns and chat
   concern_length: "Please describe what happened in 10 to 2000 characters.",
   chat_length: "Messages must be 1 to 1000 characters.",

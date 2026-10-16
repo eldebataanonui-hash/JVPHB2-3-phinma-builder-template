@@ -6,7 +6,8 @@ are taken and nothing is locked yet.
 
 **Blocked by:** 03
 
-**Status:** done
+**Status:** done. Prices, perks and plan picks were later replaced by
+ticket 24; the checklist below describes the original display-only page.
 
 - [x] Plans page with three plans; prices "to be announced"; buttons
       "Coming soon"; Annual marked "Best value"

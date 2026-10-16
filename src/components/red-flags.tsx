@@ -21,7 +21,7 @@ const RED_FLAGS = [
     instead: "A price far below similar accounts is bait.",
   },
   {
-    line: "Send me your password or GCash code.",
+    line: "Send me your password or the OTP / GCash code.",
     instead: "Never share your own passwords, or GCash or bank codes. AQTech GHub and honest traders never ask.",
   },
   {

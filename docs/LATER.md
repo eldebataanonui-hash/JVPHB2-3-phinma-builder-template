@@ -63,8 +63,9 @@ stays small enough to actually ship by Session 3.
   secret key, a registered business, terms of service and a refund
   policy. Today traders can pick a plan and nothing is charged.
 - **Pro perks switched on** (Pro badge, 10 photos, priority in Suggested
-  traders, 24-hour concern replies). They only make sense once people
-  actually pay.
+  traders, 24-hour concern replies, top placement in Suggested traders,
+  Founding trader badge). They only make sense once people actually pay;
+  the Plans page shows them as "start when payments start".
 - **Replying to a review**, and reporting an unfair review to the team.
   (Added with ratings, 2026-10-16.)
 - **Two-factor login** (Supabase's built-in authenticator-app codes) for

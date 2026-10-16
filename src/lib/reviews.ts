@@ -2,8 +2,10 @@
 // rules (who, when, one each, hidden until both review) live in
 // supabase/sql/030-reviews.sql.
 
+import { DAY_MS } from "@/lib/utils";
+
 // The quick tags a reviewer can tap. Ids match the SQL list.
-export const REVIEW_TAGS = [
+const REVIEW_TAGS = [
   { id: "as_described", label: "As described", for: "seller" },
   { id: "smooth_handover", label: "Smooth handover", for: "both" },
   { id: "fast_replies", label: "Fast replies", for: "both" },
@@ -11,7 +13,7 @@ export const REVIEW_TAGS = [
   { id: "paid_on_time", label: "Paid on time", for: "buyer" },
 ] as const;
 
-export const REVIEW_WINDOW_DAYS = 7;
+const REVIEW_WINDOW_DAYS = 7;
 
 export function tagLabel(id: string) {
   return REVIEW_TAGS.find((t) => t.id === id)?.label ?? id;
@@ -36,5 +38,5 @@ export function ratingFrom(
 
 export function reviewWindowOpen(completedAt: string | null) {
   if (!completedAt) return false;
-  return Date.now() - new Date(completedAt).getTime() < REVIEW_WINDOW_DAYS * 86_400_000;
+  return Date.now() - new Date(completedAt).getTime() < REVIEW_WINDOW_DAYS * DAY_MS;
 }

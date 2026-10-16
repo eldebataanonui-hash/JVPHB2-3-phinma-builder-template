@@ -37,8 +37,8 @@ Find traders with suggestions · direct messages · Deal Rooms with deal
 codes (JOIN-…), listing photos, live ownership code, payment method
 choice, two-half payment, Lock-In Checklist, encrypted login handover,
 chat, timestamped record, report a concern, trade receipt · notifications
-(bell, auto-refresh) · Trading Rules, About us, red flags · Plans page and
-14-day free trial (display only) · optional ID verification (real
+(bell, auto-refresh) · Trading Rules, About us, red flags · Plans page (₱49 / ₱249 / ₱399,
+plan picks, nothing charged) and 14-day free trial · optional ID verification (real
 Didit check; live test still pending) ·
 dark theme with soft magenta and the pixel bunny-controller logo.
 

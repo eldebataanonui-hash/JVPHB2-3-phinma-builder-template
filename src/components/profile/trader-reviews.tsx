@@ -7,15 +7,34 @@ import { createClient } from "@/lib/supabase/server";
 // Reviews of a trader, from their completed deals: the average, the
 // most common tags and the latest reviews. RLS only returns revealed
 // reviews (plus any you wrote yourself).
-export async function TraderReviews({ traderId, rating }: { traderId: string; rating: Rating | null }) {
+export async function TraderReviews({
+  traderId,
+  viewerId,
+  rating,
+}: {
+  traderId: string;
+  viewerId: string;
+  rating: Rating | null;
+}) {
   const supabase = await createClient();
   const { data } = await supabase
     .from("deal_reviews")
-    .select("id, reviewer_id, reviewee_role, stars, tags, comment, created_at")
+    .select("id, deal_id, reviewer_id, reviewee_role, stars, tags, comment, created_at")
     .eq("reviewee_id", traderId)
     .order("created_at", { ascending: false })
     .limit(10);
-  const reviews: Review[] = data ?? [];
+  const reviews: (Review & { deal_id: string })[] = data ?? [];
+
+  // RLS also returns reviews you wrote yourself, even while they're still
+  // hidden. Those aren't in the average yet, so label them.
+  const hiddenMine = new Set<number>();
+  for (const r of reviews.filter((r) => r.reviewer_id === viewerId)) {
+    const { data: revealed } = await supabase.rpc("review_is_revealed", {
+      p_deal_id: r.deal_id,
+      p_reviewer_id: r.reviewer_id,
+    });
+    if (revealed === false) hiddenMine.add(r.id);
+  }
 
   const authorIds = [...new Set(reviews.map((r) => r.reviewer_id))];
   const { data: authors } = authorIds.length
@@ -63,7 +82,16 @@ export async function TraderReviews({ traderId, rating }: { traderId: string; ra
         {reviews.length > 0 && (
           <ul className="flex flex-col gap-2">
             {reviews.map((r) => (
-              <ReviewItem key={r.id} review={r} authorName={nameOf(r.reviewer_id)} />
+              <ReviewItem
+                key={r.id}
+                review={r}
+                authorName={nameOf(r.reviewer_id)}
+                note={
+                  hiddenMine.has(r.id)
+                    ? "Your review: only you can see it until they review you too, and it isn't in the average yet."
+                    : undefined
+                }
+              />
             ))}
           </ul>
         )}

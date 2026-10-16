@@ -15,7 +15,15 @@ export type Review = {
 
 // One review: stars, who wrote it, tags and comment. "Verified trade"
 // because a review can only come from a completed Deal Room.
-export function ReviewItem({ review, authorName }: { review: Review; authorName: string }) {
+export function ReviewItem({
+  review,
+  authorName,
+  note,
+}: {
+  review: Review;
+  authorName: string;
+  note?: string;
+}) {
   const authorRole = review.reviewee_role === "seller" ? "buyer" : "seller";
   return (
     <li className="flex flex-col gap-2 rounded-[var(--radius)] border border-border p-3">
@@ -39,6 +47,7 @@ export function ReviewItem({ review, authorName }: { review: Review; authorName:
         </div>
       )}
       {review.comment && <p className="whitespace-pre-wrap break-words text-sm">{review.comment}</p>}
+      {note && <p className="text-xs text-amber-400">{note}</p>}
     </li>
   );
 }
