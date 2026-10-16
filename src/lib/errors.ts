@@ -41,6 +41,7 @@ const ERROR_TEXT: Record<string, string> = {
   concern_length: "Please describe what happened in 10 to 2000 characters.",
   chat_length: "Messages must be 1 to 1000 characters.",
   chat_link: "Links aren't allowed in chat. They're how phishing scams work.",
+  chat_rate: "You're sending messages too fast. Wait a few minutes and try again.",
   // Profile description
   bio_length: "Your description can be up to 500 characters.",
   bio_link: "Links aren't allowed in your description.",

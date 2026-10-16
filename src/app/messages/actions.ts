@@ -18,6 +18,9 @@ export async function sendDirectMessage(formData: FormData) {
     .from("direct_messages")
     .insert({ recipient_id: recipientId, body });
 
-  if (error) redirect(`${back}?error=failed`);
+  if (error) {
+    const code = error.code === "23514" ? "chat_link" : error.code === "42501" ? "chat_rate" : "failed";
+    redirect(`${back}?error=${code}`);
+  }
   redirect(back);
 }

@@ -92,7 +92,12 @@ export async function sendMessage(formData: FormData) {
   // RLS checks you're the seller or buyer, and that a buyer has joined.
   const { error } = await supabase.from("messages").insert({ deal_id: dealId, body });
 
-  if (error) redirect(dealUrl(dealId, "?chat_error=failed", "#chat"));
+  if (error) {
+    // 23514 = a database check refused the text (such as a link);
+    // 42501 = the send rule refused it (too many messages too fast).
+    const code = error.code === "23514" ? "chat_link" : error.code === "42501" ? "chat_rate" : "failed";
+    redirect(dealUrl(dealId, `?chat_error=${code}`, "#chat"));
+  }
   redirect(dealUrl(dealId, "", "#chat"));
 }
 
