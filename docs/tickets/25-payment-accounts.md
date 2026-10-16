@@ -24,7 +24,7 @@ wrong number.
       steps, only the chosen method once picked; step text no longer
       says to ask for numbers in chat; seller nudge; "You sent" after
       sending; Rules foul added
-- [ ] 033 run in Supabase; check shows deal_payment_accounts
+- [x] 033 run in Supabase; check shows deal_payment_accounts
 - [ ] Live: add accounts, see them in a deal from the other side; a
       stranger and a logged-out visitor see nothing
 - [x] Logged-out visitor can't read, add or remove accounts, or call deal_payment_accounts
