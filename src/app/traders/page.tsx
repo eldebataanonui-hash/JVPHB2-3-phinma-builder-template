@@ -5,6 +5,8 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar } from "@/components/avatar";
 import { RecordText } from "@/components/trader-record";
+import { RatingText } from "@/components/stars";
+import { type Rating, ratingFrom } from "@/lib/reviews";
 import { formatLastActive, formatManilaDate } from "@/lib/deals";
 import { createClient } from "@/lib/supabase/server";
 
@@ -63,6 +65,11 @@ export default async function FindTradersPage(props: PageProps<"/traders">) {
     traders = data ?? [];
   }
 
+  // Everyone's star rating in one lookup.
+  const { data: ratingRows } = traders.length
+    ? await supabase.rpc("trader_ratings", { p_trader_ids: traders.map((t) => t.id) })
+    : { data: [] };
+
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
       <header className="flex flex-col gap-3">
@@ -103,7 +110,7 @@ export default async function FindTradersPage(props: PageProps<"/traders">) {
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {traders.map((t) => (
-              <TraderCard key={t.id} trader={t} />
+              <TraderCard key={t.id} trader={t} rating={ratingFrom(ratingRows, t.id)} />
             ))}
           </div>
         )}
@@ -112,7 +119,7 @@ export default async function FindTradersPage(props: PageProps<"/traders">) {
   );
 }
 
-function TraderCard({ trader }: { trader: Trader }) {
+function TraderCard({ trader, rating }: { trader: Trader; rating: Rating | null }) {
   return (
     <div className="flex flex-col gap-3 rounded-[var(--radius)] border border-border bg-card p-4">
       <div className="flex items-center gap-3">
@@ -125,7 +132,10 @@ function TraderCard({ trader }: { trader: Trader }) {
           </p>
         </div>
       </div>
-      <RecordText completed={trader.completed} abandoned={trader.abandoned} />
+      <div className="flex flex-col gap-0.5">
+        <RecordText completed={trader.completed} abandoned={trader.abandoned} />
+        <RatingText rating={rating} />
+      </div>
       {trader.bio && (
         <p className="line-clamp-2 text-sm text-muted-foreground">{trader.bio}</p>
       )}

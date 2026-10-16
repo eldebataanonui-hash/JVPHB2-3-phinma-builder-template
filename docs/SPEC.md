@@ -307,6 +307,20 @@ and never required to trade. Results are saved only through
 Vault; Didit's webhook is accepted only with a valid signature and a
 recent timestamp.
 
+## Ratings and reviews (ticket 23)
+After a deal is completed, both traders can review each other once:
+1–5 stars, optional quick tags (As described, Smooth handover, Fast
+replies, Friendly, Paid on time) and an optional comment of up to 300
+characters, with links blocked. Reviews can't be edited or deleted.
+Reviews are "blind": each stays hidden until the other trader reviews
+too, or until the 7-day review window after completion closes. Profiles
+show the average, the review count, the top tags and the latest reviews,
+each marked "Verified trade". The rating feeds the Trust check and the
+trust badge: a low average (under 3★ from 3+ reviews) shows "Mixed
+record", and "Top trader" needs 4.5★ or more once there are reviews.
+Stars also show on trader cards and next to each trader's record in a
+Deal Room. Data: `deal_reviews` (030).
+
 ## Stretch: listing photos (ticket 08)
 Only after everything above works live. The seller may add up to 4
 photos of the listed account to their Deal Room, stored in a private
@@ -342,7 +356,6 @@ On the live URL:
 - Holding money for users (escrow), or payment processing of any kind
 - Phone or SMS verification
 - A marketplace or listings search
-- Star ratings and written reviews
 - A cooling-off period after completion
 - An automatic below-market price warning
 - Phone push notifications and email alerts

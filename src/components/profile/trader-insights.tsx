@@ -32,6 +32,10 @@ export function TraderInsights({ facts }: { facts: TraderFacts }) {
   const stats = [
     { label: "Sold", value: facts.completedAsSeller },
     { label: "Bought", value: facts.completedAsBuyer },
+    {
+      label: "Rating",
+      value: facts.rating ? `★ ${facts.rating.average.toFixed(1)} (${facts.rating.reviews})` : "—",
+    },
     { label: "Completion rate", value: finished ? `${Math.round((completed / finished) * 100)}%` : "—" },
     { label: "Member since", value: formatManilaDate(facts.joinedAt) },
     {

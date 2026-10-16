@@ -44,7 +44,7 @@ dark theme with soft magenta and the pixel bunny-controller logo.
 
 ## Rebuilding the database from scratch
 
-Run every file in `supabase/sql/` **in number order** (002 → 029) in the
+Run every file in `supabase/sql/` **in number order** (002 → 030) in the
 Supabase **SQL Editor** (New query → paste the whole file → nothing
 highlighted → Run). Each file ends with a **check**; compare the result
 with what the file says to expect before moving on.

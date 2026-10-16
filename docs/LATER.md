@@ -15,8 +15,6 @@ stays small enough to actually ship by Session 3.
 - **Phone or SMS verification.** Needs a paid text-messaging service.
 - **Marketplace or listings search.** Deals still start on Facebook for
   now.
-- **Star ratings and written reviews.** The MVP only shows a
-  completed-deals count.
 - **Cooling-off period and dispute handling** after a deal is complete.
 
 ## From /to-spec (2026-10-15)
@@ -63,5 +61,7 @@ stays small enough to actually ship by Session 3.
   a payment provider such as PayMongo or Stripe, a server-side secret
   key, decided prices, terms of service and a refund policy. Today the
   Plans page is display-only and the trial locks nothing.
+- **Replying to a review**, and reporting an unfair review to the team.
+  (Added with ratings, 2026-10-16.)
 - **Two-factor login** (Supabase's built-in authenticator-app codes) for
   stronger account security.

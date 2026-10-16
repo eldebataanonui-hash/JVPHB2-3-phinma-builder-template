@@ -24,6 +24,11 @@ const ERROR_TEXT: Record<string, string> = {
   choose_payment_first: "Choose how you'll pay first.",
   credentials_first: "Send the account login details to the buyer first.",
   credentials_invalid: "Please fill in the login and password (up to 200 characters each, note up to 500).",
+  // Reviews
+  review_invalid: "Please pick 1 to 5 stars. Comments can be up to 300 characters.",
+  review_link: "Links aren't allowed in reviews.",
+  review_done: "You already reviewed this deal.",
+  review_closed: "The review window has closed. Reviews are open for 7 days after a deal completes.",
   // Concerns and chat
   concern_length: "Please describe what happened in 10 to 2000 characters.",
   chat_length: "Messages must be 1 to 1000 characters.",

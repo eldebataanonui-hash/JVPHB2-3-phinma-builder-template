@@ -10,6 +10,7 @@ import { CredentialsForm } from "@/components/deal-room/credentials-form";
 import { CredentialsReveal } from "@/components/deal-room/credentials-reveal";
 import { DealPhotos } from "@/components/deal-room/deal-photos";
 import { DealPreview } from "@/components/deal-room/deal-preview";
+import { DealReviews } from "@/components/deal-room/deal-reviews";
 import { PaymentPicker } from "@/components/deal-room/payment-picker";
 import { StepDetails } from "@/components/deal-room/step-details";
 import { TradeReceipt } from "@/components/deal-room/trade-receipt";
@@ -39,6 +40,7 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
   const concern_error = errorText(params.concern_error);
   const cred_error = errorText(params.cred_error);
   const chat_error = errorText(params.chat_error);
+  const review_error = errorText(params.review_error);
   const supabase = await createClient();
 
   const {
@@ -140,6 +142,14 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
                 "Not joined yet"
               )}
             </dd>
+            {deal.buyer_id && (
+              <>
+                <dt className="text-muted-foreground">Buyer&apos;s record</dt>
+                <dd>
+                  <TraderRecord traderId={deal.buyer_id} />
+                </dd>
+              </>
+            )}
           </dl>
         </CardContent>
       </Card>
@@ -262,6 +272,18 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
               events={events ?? []}
               credentialsSent={credentialsSent}
               names={Object.fromEntries((people ?? []).map((p) => [p.id, p.display_name]))}
+            />
+          )}
+
+          {deal.step === "completed" && (
+            <DealReviews
+              dealId={deal.id}
+              myId={user.id}
+              isSeller={isSeller}
+              otherName={otherName}
+              completedAt={deal.completed_at}
+              names={Object.fromEntries((people ?? []).map((p) => [p.id, p.display_name]))}
+              error={review_error}
             />
           )}
 

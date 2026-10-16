@@ -1,3 +1,5 @@
+import { RatingText } from "@/components/stars";
+import { ratingFrom } from "@/lib/reviews";
 import { createClient } from "@/lib/supabase/server";
 
 // "3 of 4 deals completed", counting deals as seller and as buyer.
@@ -21,10 +23,18 @@ export function RecordText({ completed, abandoned }: { completed: number; abando
   );
 }
 
-// Looks up one trader's record and shows it.
+// Looks up one trader's record and star rating and shows them.
 export async function TraderRecord({ traderId }: { traderId: string }) {
   const supabase = await createClient();
-  const { data } = await supabase.rpc("trader_record", { p_trader_id: traderId });
+  const [{ data }, { data: ratings }] = await Promise.all([
+    supabase.rpc("trader_record", { p_trader_id: traderId }),
+    supabase.rpc("trader_ratings", { p_trader_ids: [traderId] }),
+  ]);
   const record = data?.[0];
-  return <RecordText completed={record?.completed ?? 0} abandoned={record?.abandoned ?? 0} />;
+  return (
+    <div className="flex flex-col gap-0.5">
+      <RecordText completed={record?.completed ?? 0} abandoned={record?.abandoned ?? 0} />
+      <RatingText rating={ratingFrom(ratings, traderId)} />
+    </div>
+  );
 }

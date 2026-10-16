@@ -172,3 +172,37 @@ export async function joinDeal(formData: FormData) {
   if (error) redirect(dealUrl(dealId, "?error=join_failed"));
   redirect(dealUrl(dealId));
 }
+
+// A trader rates the other trader after a completed deal. The database
+// checks it's your deal, it's completed, within 7 days, one review each.
+export async function submitReview(formData: FormData) {
+  const dealId = String(formData.get("deal_id") ?? "");
+  const stars = Number(formData.get("stars"));
+  const tags = formData.getAll("tags").map(String);
+  const comment = String(formData.get("comment") ?? "").trim();
+
+  if (!Number.isInteger(stars) || stars < 1 || stars > 5 || comment.length > 300) {
+    redirect(dealUrl(dealId, "?review_error=review_invalid", "#review"));
+  }
+  if (containsLink(comment)) {
+    redirect(dealUrl(dealId, "?review_error=review_link", "#review"));
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("submit_review", {
+    p_deal_id: dealId,
+    p_stars: stars,
+    p_tags: tags,
+    p_comment: comment,
+  });
+
+  if (error) {
+    const code = error.message.includes("already reviewed")
+      ? "review_done"
+      : error.message.includes("window has closed")
+        ? "review_closed"
+        : "failed";
+    redirect(dealUrl(dealId, `?review_error=${code}`, "#review"));
+  }
+  redirect(dealUrl(dealId, "", "#review"));
+}

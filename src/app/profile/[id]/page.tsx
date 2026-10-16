@@ -9,6 +9,8 @@ import { Avatar } from "@/components/avatar";
 import { AvatarUpload } from "@/components/avatar-upload";
 import { SellingNow } from "@/components/profile/selling-now";
 import { TraderInsights, TrustBadge } from "@/components/profile/trader-insights";
+import { TraderReviews } from "@/components/profile/trader-reviews";
+import { ratingFrom } from "@/lib/reviews";
 import { TraderRecord } from "@/components/trader-record";
 import type { TraderFacts } from "@/lib/trust";
 import { errorText } from "@/lib/errors";
@@ -53,8 +55,12 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
         .order("created_at", { ascending: false })
     : { data: null };
   // The trader's record, for the trust badge, Trust check and stats.
-  const { data: statsRows } = await supabase.rpc("trader_stats", { p_trader_id: id });
+  const [{ data: statsRows }, { data: ratingRows }] = await Promise.all([
+    supabase.rpc("trader_stats", { p_trader_id: id }),
+    supabase.rpc("trader_ratings", { p_trader_ids: [id] }),
+  ]);
   const stats = statsRows?.[0];
+  const rating = ratingFrom(ratingRows, id);
   const facts: TraderFacts = {
     joinedAt: profile.created_at,
     completedAsSeller: stats?.completed_as_seller ?? 0,
@@ -63,6 +69,7 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
     lastActive: stats?.last_active ?? null,
     socialsLinked: SOCIALS.filter((s) => profile[s.key]).map((s) => s.label),
     idVerified: Boolean(profile.id_verified_at),
+    rating,
   };
 
   // Your own verification status (kyc_checks is readable only by you).
@@ -120,6 +127,8 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
       </Card>
 
       <TraderInsights facts={facts} />
+
+      <TraderReviews traderId={id} rating={rating} />
 
       {!isMe && <SellingNow sellerId={id} sellerName={profile.display_name} />}
 
