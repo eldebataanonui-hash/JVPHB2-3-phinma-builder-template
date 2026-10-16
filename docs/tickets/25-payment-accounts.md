@@ -7,7 +7,7 @@ wrong number.
 
 **Blocked by:** 14
 
-**Status:** in progress (waiting for 032 to run)
+**Status:** in progress (waiting for the team's live test)
 
 - [x] `supabase/sql/032-payment-accounts.sql`: `payment_accounts` with RLS
       on (your own rows only), insert limited to the detail columns, at
@@ -19,6 +19,7 @@ wrong number.
 - [x] Buyer: "Send ₱… to" box with the number, Copy button and name check
 - [x] Seller: "Expect ₱… from" the buyer's account
 - [x] Red flag: "Send it to my other GCash number instead."
-- [ ] 032 run in Supabase; check shows three policies
+- [x] 032 run in Supabase; check shows three policies
 - [ ] Live: add accounts, see them in a deal from the other side; a
       stranger and a logged-out visitor see nothing
+- [x] Logged-out visitor can't read, add or remove accounts, or call deal_payment_accounts
