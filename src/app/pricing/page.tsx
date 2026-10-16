@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { BadgeCheck, Check, Crown, ShieldCheck, Sparkles } from "lucide-react";
+import { BadgeCheck, Check, Crown, Sparkles } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { PlanFinder } from "@/components/pricing/plan-finder";
 import { formatManilaDate } from "@/lib/deals";
 import { errorText } from "@/lib/errors";
 import {
-  FREE_FOREVER,
   PLANS,
   TRIAL_DAYS,
   TYPICAL_SCAM_LOSS,
@@ -18,6 +17,9 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 import { clearPlanPick, pickPlan } from "@/app/pricing/actions";
+
+// Every plan, and every trader without one, gets all the safety steps.
+const ALL_SAFETY = "Every safety feature (free for all traders)";
 
 const FAQ = [
   {
@@ -108,19 +110,7 @@ export default async function PricingPage(props: PageProps<"/pricing">) {
         )}
         {error && <p className="text-sm text-destructive">{error}</p>}
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <PlanCard
-            name="Free"
-            price="₱0"
-            period="forever"
-            forWho="Every trader"
-            why="Every safety step, for every trade. Never paywalled."
-            perks={FREE_FOREVER}
-            icon="shield"
-          >
-            <p className="text-center text-xs text-muted-foreground">Included with every account</p>
-          </PlanCard>
-
+        <div className="grid gap-4 md:grid-cols-3">
           {PLANS.map((plan) => {
             const saving = savingPercent(plan);
             const count = picksFor(plan.id);
@@ -135,7 +125,7 @@ export default async function PricingPage(props: PageProps<"/pricing">) {
                 saving={saving > 0 ? `Save ${saving}%` : undefined}
                 forWho={plan.forWho}
                 why={plan.why}
-                perks={["Everything in Free", ...plan.perks]}
+                perks={[ALL_SAFETY, ...plan.perks]}
                 highlight={plan.highlight}
                 mine={isMine}
               >
@@ -196,7 +186,6 @@ function PlanCard({
   perks,
   highlight,
   mine,
-  icon,
   children,
 }: {
   name: string;
@@ -209,7 +198,6 @@ function PlanCard({
   perks: string[];
   highlight?: boolean;
   mine?: boolean;
-  icon?: "shield";
   children: React.ReactNode;
 }) {
   return (
@@ -222,11 +210,7 @@ function PlanCard({
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="flex items-center gap-1.5 text-2xl font-bold">
-          {icon === "shield" ? (
-            <ShieldCheck className="h-5 w-5 text-emerald-400" />
-          ) : (
-            <BadgeCheck className="h-5 w-5 text-primary" />
-          )}
+          <BadgeCheck className="h-5 w-5 text-primary" />
           {name}
         </h3>
         {highlight && (
@@ -257,7 +241,7 @@ function PlanCard({
         {perks.map((perk) => (
           <li key={perk} className="flex items-start gap-2">
             <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
-            <span className={perk === "Everything in Free" ? "font-semibold" : undefined}>{perk}</span>
+            <span className={perk === ALL_SAFETY ? "font-semibold" : undefined}>{perk}</span>
           </li>
         ))}
       </ul>

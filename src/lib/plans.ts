@@ -72,17 +72,6 @@ export const PLANS: Plan[] = [
   },
 ];
 
-// Free forever: every safety feature, for every trader.
-export const FREE_FOREVER = [
-  "Unlimited Deal Rooms with the live ownership code",
-  "Two-half payments with GCash, Maya, MariBank and more",
-  "Lock-In Checklist and encrypted login handover",
-  "Timestamped record and printable trade receipt",
-  "Trust check, star ratings and reviews",
-  "Chat, direct messages and notifications",
-  "Up to 4 listing photos per deal",
-];
-
 export function planById(id: string) {
   return PLANS.find((p) => p.id === id) ?? null;
 }

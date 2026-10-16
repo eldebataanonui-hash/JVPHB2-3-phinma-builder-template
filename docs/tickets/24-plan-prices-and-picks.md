@@ -10,7 +10,7 @@ charged) and work out which plan fits them.
 
 - [x] Prices in one place (`src/lib/plans.ts`): Monthly ₱49, Bi-annual
       ₱249, Annual ₱399; savings and per-month prices worked out from them
-- [x] Free plan card: every safety feature, free forever
+- [x] Free plan card removed (team choice); each plan lists "Every safety feature (free for all traders)"
 - [x] Each plan: who it's for, why it's worth it, perks (visibility, not
       safety)
 - [x] "Which plan fits you?" calculator: cheapest mix for the months you
