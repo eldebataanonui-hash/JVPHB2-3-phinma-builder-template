@@ -7,7 +7,7 @@ only "how many deals".
 
 **Blocked by:** 19
 
-**Status:** in progress (waiting for the team's live two-account test)
+**Status:** done
 
 - [x] `supabase/sql/030-reviews.sql`: `deal_reviews` with RLS on; writes
       only through `submit_review()` (participant, completed, within 7
@@ -21,6 +21,6 @@ only "how many deals".
 - [x] Trust check line and trust badge use the rating
 - [x] Stars on Find traders cards and next to each record in Deal Rooms
 - [x] 030 run in Supabase; check shows the one SELECT policy
-- [ ] Live test: two accounts review each other; the first review stays
+- [x] Live test: two accounts review each other; the first review stays
       hidden until the second is posted
 - [x] A logged-out visitor can't read reviews or call the functions

@@ -31,7 +31,7 @@ Nobody can edit that record.
 Our seller creates a deal and sends the buyer a deal code in Messages.
 
 The buyer enters it and sees the seller's Trust check before joining:
-how many trades they actually finished, how old the account is, and
+trades they actually finished, star ratings from real buyers, and
 warnings for anything risky. Fake comments can't touch it.
 
 The seller proves they own the account right now: they put our live code
@@ -42,18 +42,19 @@ an encrypted box only the buyer can open. The buyer moves the account's
 email to their own and changes the password, so the seller can't take it
 back.
 
-The buyer pays the second half. Both of them get "Deal completed," and a
-receipt with every step and its time.
+The buyer pays the second half. Both get "Deal completed," a receipt
+with every step and its time, and then they rate each other. Those
+stars only come from finished Deal Rooms, so the next buyer sees a
+reputation that fake comments can't buy.
 
 ### 4. How we'll know, and what's next (~30s) — Speaker: ______
 
 Our test buyer wasn't on our team. If they finished the trade without
 our help, it works.
 
-We never hold anyone's money. Next: freemium plans. Every trader gets
-fourteen days free, then paid plans add perks like priority placement,
-while the safety steps stay free for everyone, because safety shouldn't
-be paywalled.
+We never hold anyone's money. Next: freemium plans. Fourteen days
+free, then paid perks like priority placement, while the safety steps
+stay free for everyone.
 
 Clark lost seventeen hundred pesos because he had no way to check. We
 built the way to check.
@@ -66,6 +67,10 @@ built the way to check.
 - [ ] An MLBB account where the seller can change the in-game name
 - [ ] A dummy login (never a real password) for the encrypted login step
 - [ ] Notification bells visible on both screens
+- [ ] Seller already has a few real reviews from earlier test trades,
+      so the Trust check shows stars
+- [ ] After "Deal completed", both tap stars to show the rating step
+      (5 seconds; skip it if the demo runs long)
 - [ ] Rehearse twice; the demo beat must fit in 90 seconds
 
 ## The hardest questions
@@ -86,12 +91,19 @@ built the way to check.
 > their own and change the password before confirming full control, so
 > the seller can't get back in."
 
-### 3. "Can't someone fake their record with a second account?"
+### 3. "Can't someone fake their record and reviews with a second account?"
 
 > "They could, by trading with themselves. That's much harder than
-> posting fake comments: each fake deal needs a confirmed email and
-> every step of a real trade. Only counting deals between unrelated
-> accounts is on our list."
+> posting fake comments: each fake deal, and each review, needs a
+> confirmed email and every step of a real trade. One review per trader
+> per deal, and nobody can edit or delete one. Only counting deals
+> between unrelated accounts is on our list."
+
+**Follow-up: "What stops revenge ratings?"**
+
+> "Reviews are blind. Yours stays hidden until the other trader reviews
+> you too, or the 7-day window closes. Nobody can read a bad review and
+> then hit back."
 
 ### 4. "Moonton doesn't allow selling accounts."
 
