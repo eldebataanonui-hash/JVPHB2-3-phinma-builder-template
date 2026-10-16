@@ -32,8 +32,9 @@ export default async function Home() {
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
       <section className="flex flex-col gap-4 rounded-[var(--radius)] border border-primary/30 bg-gradient-to-br from-primary/20 via-card to-card p-6 sm:p-8">
-        <p className="w-fit rounded-full border border-primary/40 px-3 py-1 text-xs font-medium text-primary">
-          Mobile Legends account trading
+        <p className="flex w-fit items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          Scam-safe Deal Rooms for MLBB accounts
         </p>
         <h1 className="text-4xl font-bold leading-none sm:text-5xl">
           Trade accounts.
