@@ -29,6 +29,12 @@ const ERROR_TEXT: Record<string, string> = {
   review_link: "Links aren't allowed in reviews.",
   review_done: "You already reviewed this deal.",
   review_closed: "The review window has closed. Reviews are open for 7 days after a deal completes.",
+  // Payment accounts
+  pay_account_invalid:
+    "Please choose a method, enter the account name (up to 80 characters), and the account or phone number (digits, spaces, + and - only).",
+  pay_account_bank: "For InstaPay, please enter the bank name (for example BDO or BPI).",
+  pay_account_duplicate: "You've already saved that account.",
+  pay_account_limit: "You can save up to 10 payment accounts. Remove one first.",
   // Plans
   plan_failed: "Couldn't save your plan pick. Please try again.",
   // Concerns and chat

@@ -25,6 +25,10 @@ const RED_FLAGS = [
     instead: "Never share your own passwords, or GCash or bank codes. AQTech GHub and honest traders never ask.",
   },
   {
+    line: "Send it to my other GCash number instead.",
+    instead: "Only pay to the account shown in the Deal Room. A last-minute number change is a classic scam.",
+  },
+  {
     line: "Here are screenshots and a login video as proof.",
     instead: "Screenshots and videos can be faked. Only trust the live ownership code.",
   },

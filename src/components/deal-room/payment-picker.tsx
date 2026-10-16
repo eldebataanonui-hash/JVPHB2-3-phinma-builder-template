@@ -5,7 +5,16 @@ import { choosePaymentMethod } from "@/app/deals/actions";
 // The buyer picks how they'll pay: one tap on an e-wallet saves it.
 // AQTech GHub never moves the money; this tells the seller which app to
 // check, and goes in the record.
-export function PaymentPicker({ dealId, current }: { dealId: string; current: string | null }) {
+export function PaymentPicker({
+  dealId,
+  current,
+  accepted,
+}: {
+  dealId: string;
+  current: string | null;
+  // Methods the seller has saved an account for.
+  accepted: string[];
+}) {
   return (
     <form action={choosePaymentMethod} className="flex flex-col gap-2">
       <input type="hidden" name="deal_id" value={dealId} />
@@ -29,6 +38,9 @@ export function PaymentPicker({ dealId, current }: { dealId: string; current: st
           >
             {current === m.id ? "✓ " : ""}
             {m.label}
+            <span className="block text-xs font-normal text-muted-foreground">
+              {accepted.includes(m.id) ? "Seller has an account" : "No seller account saved"}
+            </span>
           </button>
         ))}
       </div>

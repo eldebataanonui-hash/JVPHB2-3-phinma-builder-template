@@ -11,6 +11,7 @@ import { CredentialsReveal } from "@/components/deal-room/credentials-reveal";
 import { DealPhotos } from "@/components/deal-room/deal-photos";
 import { DealPreview } from "@/components/deal-room/deal-preview";
 import { DealReviews } from "@/components/deal-room/deal-reviews";
+import { PaymentDestination } from "@/components/deal-room/payment-destination";
 import { PaymentPicker } from "@/components/deal-room/payment-picker";
 import { StepDetails } from "@/components/deal-room/step-details";
 import { TradeReceipt } from "@/components/deal-room/trade-receipt";
@@ -94,7 +95,15 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
     .eq("deal_id", deal.id)
     .order("id");
 
+  // The other trader's payment accounts. Only returned to the deal's
+  // seller and buyer, and only while the deal is in progress (032).
+  const { data: otherAccounts } = deal.buyer_id
+    ? await supabase.rpc("deal_payment_accounts", { p_deal_id: deal.id })
+    : { data: [] };
+
   const { first, second } = splitPrice(deal.price);
+  const payingFirst = ["awaiting_first_payment", "first_payment_sent"].includes(deal.step);
+  const payingSecond = ["awaiting_second_payment", "second_payment_sent"].includes(deal.step);
   const action = STEP_ACTIONS[deal.step];
   const myTurn = Boolean(action) && (action.actor === "seller") === isSeller;
   // Login details are sent at the handover step and readable by the
@@ -218,7 +227,20 @@ export default async function DealRoomPage(props: PageProps<"/deals/[id]">) {
                 method={paymentLabel(deal.payment_method)}
               />
               {!isSeller && deal.step === "awaiting_first_payment" && (
-                <PaymentPicker dealId={deal.id} current={deal.payment_method} />
+                <PaymentPicker
+                  dealId={deal.id}
+                  current={deal.payment_method}
+                  accepted={(otherAccounts ?? []).map((a: { method: string }) => a.method)}
+                />
+              )}
+              {(payingFirst || payingSecond) && (
+                <PaymentDestination
+                  isSeller={isSeller}
+                  method={deal.payment_method}
+                  amount={payingFirst ? first : second}
+                  otherName={otherName}
+                  accounts={otherAccounts ?? []}
+                />
               )}
               {isSeller && deal.step === "awaiting_lock_in" && (
                 <CredentialsForm dealId={deal.id} sent={credentialsSent} error={cred_error} />

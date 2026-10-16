@@ -10,6 +10,7 @@ import { AvatarUpload } from "@/components/avatar-upload";
 import { SellingNow } from "@/components/profile/selling-now";
 import { TraderInsights, TrustBadge } from "@/components/profile/trader-insights";
 import { TraderReviews } from "@/components/profile/trader-reviews";
+import { PaymentAccounts } from "@/components/profile/payment-accounts";
 import { ratingFrom } from "@/lib/reviews";
 import { TraderRecord } from "@/components/trader-record";
 import type { TraderFacts } from "@/lib/trust";
@@ -25,7 +26,8 @@ import { STEP_LABELS, formatPesos } from "@/lib/deals";
 
 export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
   const { id } = await props.params;
-  const { error: errorCode, saved, social_error, socials_saved, kyc_error } = await props.searchParams;
+  const { error: errorCode, saved, social_error, socials_saved, kyc_error, pay_error, pay_saved } =
+    await props.searchParams;
   const kycError = errorText(kyc_error);
   const error = errorText(errorCode);
   const socialError = errorText(social_error);
@@ -167,6 +169,8 @@ export default async function ProfilePage(props: PageProps<"/profile/[id]">) {
           </CardContent>
         </Card>
       )}
+
+      {isMe && <PaymentAccounts error={errorText(pay_error)} saved={Boolean(pay_saved)} />}
 
       {isMe && (
         <Card id="plan">

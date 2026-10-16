@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createVerificationSession, diditConfigured, siteUrl } from "@/lib/didit";
 import { containsLink } from "@/lib/links";
+import { cleanAccountNumber, isPaymentMethod } from "@/lib/payment-accounts";
 import { SOCIALS, cleanUsername, type SocialKey } from "@/lib/socials";
 import { createClient } from "@/lib/supabase/server";
 
@@ -121,4 +122,60 @@ export async function removeAvatar(): Promise<{ ok: boolean }> {
     await supabase.storage.from("avatars").remove([before.avatar_path]);
   }
   return { ok: true };
+}
+
+// Add an e-wallet or bank account you can be paid to. Only you can see
+// your list; the other trader sees it inside a deal you're both in.
+export async function addPaymentAccount(formData: FormData) {
+  const method = String(formData.get("method") ?? "");
+  const bankName = String(formData.get("bank_name") ?? "").trim();
+  const accountName = String(formData.get("account_name") ?? "").trim();
+  const accountNumber = cleanAccountNumber(String(formData.get("account_number") ?? ""));
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const back = `/profile/${user.id}`;
+  const fail = (code: string) => redirect(`${back}?pay_error=${code}#payment-accounts`);
+
+  if (!isPaymentMethod(method) || !accountNumber) fail("pay_account_invalid");
+  if (accountName.length < 1 || accountName.length > 80 || bankName.length > 40) fail("pay_account_invalid");
+  if (method === "instapay" && !bankName) fail("pay_account_bank");
+  if (containsLink(`${accountName} ${bankName}`)) fail("pay_account_invalid");
+
+  // The database fills in who you are and allows at most 10.
+  const { error } = await supabase.from("payment_accounts").insert({
+    method,
+    bank_name: method === "instapay" ? bankName : "",
+    account_name: accountName,
+    account_number: accountNumber,
+  });
+
+  if (error) {
+    fail(
+      error.code === "23505"
+        ? "pay_account_duplicate"
+        : error.message.includes("up to 10")
+          ? "pay_account_limit"
+          : "failed",
+    );
+  }
+  redirect(`${back}?pay_saved=1#payment-accounts`);
+}
+
+export async function removePaymentAccount(formData: FormData) {
+  const id = Number(formData.get("id"));
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  // RLS only lets you delete your own accounts.
+  if (Number.isInteger(id)) await supabase.from("payment_accounts").delete().eq("id", id);
+  redirect(`/profile/${user.id}#payment-accounts`);
 }

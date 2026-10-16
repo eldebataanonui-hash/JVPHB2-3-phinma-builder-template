@@ -314,6 +314,18 @@ and never required to trade. Results are saved only through
 Vault; Didit's webhook is accepted only with a valid signature and a
 recent timestamp.
 
+## Payment accounts (ticket 25)
+Each trader saves up to 10 e-wallet or bank accounts on their own
+profile: method (GCash, Maya, MariBank, GoTyme, ShopeePay, InstaPay with
+bank name), account name, and the account number or linked phone
+number. The list is private. Inside a deal, the other trader sees it
+only while the deal is in progress: the buyer's payment picker marks
+which methods the seller has an account for, and at each payment step
+the buyer sees "Send ₱… to" the seller's account (with a Copy button)
+and the seller sees "Expect ₱… from" the buyer's account. A new red flag
+warns against paying a different number sent in chat. AQTech GHub still
+never moves money. Data: `payment_accounts` (032).
+
 ## Ratings and reviews (ticket 23)
 After a deal is completed, both traders can review each other once:
 1–5 stars, optional quick tags (As described, Smooth handover, Fast
