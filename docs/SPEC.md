@@ -281,7 +281,7 @@ change the password and move the bound email at once, because the seller
 still knows the password.
 
 ## Plans and free trial (ticket 22)
-A Plans page shows Free (every safety feature, forever) and three Pro
+A Plans page shows three Pro
 plans: Monthly ₱49, Bi-annual ₱249 (save 15%) and Annual ₱399 (save
 32%, best value), each with who it's for, why it's worth it and its
 perks. Pro perks are for visibility, never safety. A "Which plan fits
